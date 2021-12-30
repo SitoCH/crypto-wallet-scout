@@ -1,5 +1,7 @@
 # crypto-wallet-scout Project
 
+[![Java CI with Maven](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/maven.yml/badge.svg)](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/maven.yml)
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
