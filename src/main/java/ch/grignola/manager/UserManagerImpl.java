@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 @ApplicationScoped
 public class UserManagerImpl implements UserManager {
+
     @Inject
     @IdToken
     JsonWebToken idToken;
@@ -19,8 +20,7 @@ public class UserManagerImpl implements UserManager {
 
     public User getLoggedInUser() {
         return userRepository.find("oidcId", idToken.getName())
-                .firstResultOptional()
-                .orElseGet(() -> {
+                .firstResultOptional().orElseGet(() -> {
                     User user = new User();
                     user.setOidcId(idToken.getName());
                     userRepository.persist(user);
