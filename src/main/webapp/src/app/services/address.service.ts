@@ -9,7 +9,7 @@ export class AddressService {
   constructor(private http: HttpClient) {
   }
 
-  getTestAccount() {
-    return this.http.get('/api/test/scan');
+  getAccountBalance(address: string) {
+    return this.http.get('/api/address/balance/' + address);
   }
 }

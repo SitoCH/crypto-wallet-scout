@@ -1,3 +1,11 @@
 <p>dashboard works!</p>
 
-<button (click)="test()">TEST</button>
+
+<input type="text" [(ngModel)]="accountToSearch"/>
+
+<button (click)="getAccountBalance(accountToSearch)">Search</button>
+
+
+<div>
+  {{result}}
+</div>

@@ -1,0 +1,19 @@
+package ch.grignola.service.scanner;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import java.util.List;
+
+@RegisterForReflection
+public class AddressBalance {
+
+    private List<TokenBalance> tokenBalances;
+
+    public AddressBalance(List<TokenBalance> tokenBalances) {
+        this.tokenBalances = tokenBalances;
+    }
+
+    public List<TokenBalance> getTokenBalances() {
+        return tokenBalances;
+    }
+}

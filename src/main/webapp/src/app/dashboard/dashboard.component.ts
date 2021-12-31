@@ -8,11 +8,14 @@ import { AddressService } from "../services/address.service";
 })
 export class DashboardComponent {
 
+  public accountToSearch: string = '';
+  result: string = '';
+
   constructor(private addressService: AddressService) {
   }
 
-  test() {
-    this.addressService.getTestAccount()
-      .subscribe(data => console.log(data))
+  getAccountBalance(account: string) {
+    this.addressService.getAccountBalance(account)
+      .subscribe(data => this.result = JSON.stringify(data))
   }
 }
