@@ -26,7 +26,6 @@ jobs:
       uses: actions/setup-node@v2.5.1
       with:
         node-version: '17.x'
-        cache: npm
     - name: Build with NPM
       run: npm run build
       working-directory: src/main/webapp/
