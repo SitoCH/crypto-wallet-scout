@@ -13,7 +13,9 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.rightPad;
 
 @ApplicationScoped
 public class PolygonScanServiceImpl implements PolygonScanService {
@@ -41,7 +43,7 @@ public class PolygonScanServiceImpl implements PolygonScanService {
 
     private TokenBalance toAddressBalance(String address, PolygonScanRestClient.Result tokenEvent, PolygonScanRestClient.PolygonTokenBalanceResult tokenBalance) {
         LOG.infof("Polygon token balance for address %s based on event %s: %s", address, tokenEvent, tokenBalance.getResult());
-        BigDecimal balance = new BigDecimal(tokenBalance.getResult()).divide(new BigDecimal(tokenEvent.getTokenDecimal()), MathContext.DECIMAL64).multiply(BigDecimal.TEN);
+        BigDecimal balance = new BigDecimal(tokenBalance.getResult()).divide((new BigDecimal(rightPad("1", parseInt(tokenEvent.getTokenDecimal()) + 1, '0'))), MathContext.DECIMAL64);
         return new TokenBalance(balance, tokenEvent.getTokenSymbol());
     }
 

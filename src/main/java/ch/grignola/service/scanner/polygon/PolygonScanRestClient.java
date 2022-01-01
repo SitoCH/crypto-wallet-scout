@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 import java.util.List;
 
+@ApplicationScoped
 @RegisterRestClient(baseUri = "https://api.polygonscan.com/api?module=account&tag=latest")
 public interface PolygonScanRestClient {
 
@@ -35,6 +37,10 @@ public interface PolygonScanRestClient {
         public String getResult() {
             return result;
         }
+
+        public void setResult(String result) {
+            this.result = result;
+        }
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -49,6 +55,10 @@ public interface PolygonScanRestClient {
 
         public List<Result> getResult() {
             return result;
+        }
+
+        public void setResult(List<Result> result) {
+            this.result = result;
         }
     }
 
@@ -107,6 +117,22 @@ public interface PolygonScanRestClient {
 
         public String getTokenDecimal() {
             return tokenDecimal;
+        }
+
+        public void setContractAddress(String contractAddress) {
+            this.contractAddress = contractAddress;
+        }
+
+        public void setTokenName(String tokenName) {
+            this.tokenName = tokenName;
+        }
+
+        public void setTokenSymbol(String tokenSymbol) {
+            this.tokenSymbol = tokenSymbol;
+        }
+
+        public void setTokenDecimal(String tokenDecimal) {
+            this.tokenDecimal = tokenDecimal;
         }
 
         @Override
