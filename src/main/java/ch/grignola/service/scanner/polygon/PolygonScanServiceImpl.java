@@ -3,6 +3,9 @@ package ch.grignola.service.scanner.polygon;
 import ch.grignola.service.scanner.AddressBalance;
 import ch.grignola.service.scanner.TokenBalance;
 import ch.grignola.utils.DistinctByKey;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.BlockingBucket;
+import io.github.bucket4j.Bucket;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
@@ -14,6 +17,7 @@ import java.math.MathContext;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
+import static java.time.Duration.ofMillis;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.rightPad;
 
@@ -30,11 +34,23 @@ public class PolygonScanServiceImpl implements PolygonScanService {
     String apiKey;
 
     public AddressBalance getAddressBalance(String address) {
+        Bandwidth limit = Bandwidth.simple(4, ofMillis(2500));
+        BlockingBucket bucket = Bucket.builder().addLimit(limit).build().asBlocking();
+
         LOG.infof("Loading Polygon address balance %s", address);
         List<TokenBalance> tokenBalances = polygonScanRestClient.getPolygonTokenEvents(apiKey, "tokentx", address).getResult()
                 .stream()
                 .filter(new DistinctByKey<>(PolygonScanRestClient.Result::getContractAddress)::filterByKey)
-                .map(x -> toAddressBalance(address, x, polygonScanRestClient.getPolygonTokenBalance(apiKey, "tokenbalance", address, x.getContractAddress())))
+                .map(x -> {
+                    try {
+                        bucket.consume(1);
+                        return toAddressBalance(address, x, polygonScanRestClient.getPolygonTokenBalance(apiKey, "tokenbalance", address, x.getContractAddress()));
+                    } catch (InterruptedException e) {
+                        LOG.error("BlockingBucket exception", e);
+                        Thread.currentThread().interrupt();
+                        return new TokenBalance(BigDecimal.ZERO, "ERR");
+                    }
+                })
                 .filter(x -> x.getBalance().compareTo(BigDecimal.ZERO) != 0)
                 .collect(toList());
 
