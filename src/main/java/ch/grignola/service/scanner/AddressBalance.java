@@ -7,7 +7,7 @@ import java.util.List;
 @RegisterForReflection
 public class AddressBalance {
 
-    private List<TokenBalance> tokenBalances;
+    private final List<TokenBalance> tokenBalances;
 
     public AddressBalance(List<TokenBalance> tokenBalances) {
         this.tokenBalances = tokenBalances;

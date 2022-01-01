@@ -1,10 +1,10 @@
-package ch.grignola.service.scanner.polygon;
+package ch.grignola.service.scanner.avalanche;
 
 import ch.grignola.service.scanner.TokenBalance;
 import ch.grignola.service.scanner.common.ScanService;
 
 import java.util.List;
 
-public interface PolygonScanService extends ScanService {
+public interface AvalancheScanService extends ScanService {
     List<TokenBalance> getAddressBalance(String address);
 }

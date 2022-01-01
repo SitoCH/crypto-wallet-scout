@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner.polygon;
+package ch.grignola.service.scanner.avalanche;
 
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.common.AbstractEthereumScanService;
@@ -12,27 +12,27 @@ import javax.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
-public class PolygonScanServiceImpl extends AbstractEthereumScanService implements PolygonScanService {
+public class AvalancheScanServiceImpl extends AbstractEthereumScanService implements AvalancheScanService {
 
     @Inject
     @RestClient
-    PolygonScanRestClient polygonScanRestClient;
+    AvalancheScanRestClient avalancheScanRestClient;
 
-    @ConfigProperty(name = "polygonscan.api.key")
+    @ConfigProperty(name = "snowtrace.api.key")
     String apiKey;
 
     @Override
     protected Network getNetwork() {
-        return Network.POLYGON;
+        return Network.AVALANCHE;
     }
 
     @Override
     protected EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress) {
-        return polygonScanRestClient.getTokenBalance(apiKey, "tokenbalance", address, contractAddress);
+        return avalancheScanRestClient.getTokenBalance(apiKey, "tokenbalance", address, contractAddress);
     }
 
     @Override
     protected List<EthereumTokenEventResult> getTokenEvents(String address) {
-        return polygonScanRestClient.getTokenEvents(apiKey, "tokentx", address).getResult();
+        return avalancheScanRestClient.getTokenEvents(apiKey, "tokentx", address).getResult();
     }
 }

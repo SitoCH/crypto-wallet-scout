@@ -1,6 +1,9 @@
 package ch.grignola.service.scanner.polygon;
 
-import ch.grignola.service.scanner.AddressBalance;
+import ch.grignola.service.scanner.TokenBalance;
+import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
+import ch.grignola.service.scanner.common.EthereumTokenEventResult;
+import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -37,54 +41,54 @@ class PolygonScanServiceImplTest {
 
     @BeforeEach
     public void setup() {
-        PolygonScanRestClient.PolygonTokenEventsResult eventsResult = new PolygonScanRestClient.PolygonTokenEventsResult();
+        EthereumTokenEventsResult eventsResult = new EthereumTokenEventsResult();
         eventsResult.setResult(emptyList());
 
-        when(polygonScanRestClient.getPolygonTokenEvents(any(), any(), eq(ADDRESS)))
+        when(polygonScanRestClient.getTokenEvents(any(), any(), eq(ADDRESS)))
                 .thenReturn(eventsResult);
 
-        when(polygonScanRestClient.getPolygonTokenBalance(any(), any(), eq(ADDRESS), any()))
-                .thenReturn(new PolygonScanRestClient.PolygonTokenBalanceResult());
+        when(polygonScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), any()))
+                .thenReturn(new EthereumTokenBalanceResult());
     }
 
     @Test
     void getEmptyAddressBalance() {
-        AddressBalance balance = polygonScanService.getAddressBalance(ADDRESS);
+        List<TokenBalance> balance = polygonScanService.getAddressBalance(ADDRESS);
 
-        verify(polygonScanRestClient).getPolygonTokenEvents(any(), any(), eq(ADDRESS));
-        verify(polygonScanRestClient, never()).getPolygonTokenBalance(any(), any(), eq(ADDRESS), any());
+        verify(polygonScanRestClient).getTokenEvents(any(), any(), eq(ADDRESS));
+        verify(polygonScanRestClient, never()).getTokenBalance(any(), any(), eq(ADDRESS), any());
 
-        assertTrue(balance.getTokenBalances().isEmpty());
+        assertTrue(balance.isEmpty());
     }
 
     @Test
     void getSimpleAddressBalanceWithoutMatic() {
 
-        PolygonScanRestClient.Result result = new PolygonScanRestClient.Result();
+        EthereumTokenEventResult result = new EthereumTokenEventResult();
         result.setContractAddress(TST_CONTRACT);
         result.setTokenDecimal(TST_DECIMALS);
         result.setTokenSymbol(TST_SYMBOL);
         result.setTokenName(TST_NAME);
 
-        PolygonScanRestClient.PolygonTokenEventsResult eventsResult = new PolygonScanRestClient.PolygonTokenEventsResult();
+        EthereumTokenEventsResult eventsResult = new EthereumTokenEventsResult();
         eventsResult.setResult(singletonList(result));
 
-        when(polygonScanRestClient.getPolygonTokenEvents(any(), any(), eq(ADDRESS)))
+        when(polygonScanRestClient.getTokenEvents(any(), any(), eq(ADDRESS)))
                 .thenReturn(eventsResult);
 
-        PolygonScanRestClient.PolygonTokenBalanceResult balanceResult = new PolygonScanRestClient.PolygonTokenBalanceResult();
+        EthereumTokenBalanceResult balanceResult = new EthereumTokenBalanceResult();
         balanceResult.setResult("4550");
 
-        when(polygonScanRestClient.getPolygonTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT)))
+        when(polygonScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT)))
                 .thenReturn(balanceResult);
 
-        AddressBalance addressBalance = polygonScanService.getAddressBalance(ADDRESS);
+        List<TokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
 
-        verify(polygonScanRestClient).getPolygonTokenEvents(any(), any(), eq(ADDRESS));
-        verify(polygonScanRestClient).getPolygonTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT));
+        verify(polygonScanRestClient).getTokenEvents(any(), any(), eq(ADDRESS));
+        verify(polygonScanRestClient).getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT));
 
-        assertEquals(1, addressBalance.getTokenBalances().size());
-        assertEquals(new BigDecimal("45.5"), addressBalance.getTokenBalances().get(0).getBalance());
-        assertEquals(TST_SYMBOL, addressBalance.getTokenBalances().get(0).getSymbol());
+        assertEquals(1, addressBalance.size());
+        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getBalance());
+        assertEquals(TST_SYMBOL, addressBalance.get(0).getSymbol());
     }
 }

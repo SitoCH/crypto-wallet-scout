@@ -1,6 +1,7 @@
 package ch.grignola.web;
 
 import ch.grignola.service.scanner.AddressBalance;
+import ch.grignola.service.scanner.AddressBalanceChecker;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 
 import javax.inject.Inject;
@@ -15,12 +16,12 @@ import javax.ws.rs.Produces;
 public class AddressBalanceResource {
 
     @Inject
-    PolygonScanService polygonScanService;
+    AddressBalanceChecker addressBalanceChecker;
 
     @GET
     @Path("/{address}")
     @Transactional
     public AddressBalance getAddressBalance(@PathParam("address") String address) {
-        return polygonScanService.getAddressBalance(address);
+        return addressBalanceChecker.getAddressBalance(address);
     }
 }

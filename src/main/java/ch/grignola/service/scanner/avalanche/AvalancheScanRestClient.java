@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner.polygon;
+package ch.grignola.service.scanner.avalanche;
 
 import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
@@ -9,8 +9,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.QueryParam;
 
 @ApplicationScoped
-@RegisterRestClient(baseUri = "https://api.polygonscan.com/api?module=account&tag=latest")
-public interface PolygonScanRestClient {
+@RegisterRestClient(baseUri = "https://api.snowtrace.io/api?module=account&tag=latest")
+public interface AvalancheScanRestClient {
 
     @GET
     EthereumTokenEventsResult getTokenEvents(@QueryParam("apikey") String apikey,
