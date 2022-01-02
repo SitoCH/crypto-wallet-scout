@@ -1,6 +1,6 @@
 # (Crypto) wallet scout 
 
-[![Java CI with Maven](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/maven.yml/badge.svg)](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/maven.yml)
+[![Java CI with Maven](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/ci.yml/badge.svg)](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/ci.yml)
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -46,4 +46,6 @@ Or:
 
 ```shell script
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
+
+docker build -f src/main/docker/Dockerfile.native -t quarkus/crypto-wallet-scout .
 ```
