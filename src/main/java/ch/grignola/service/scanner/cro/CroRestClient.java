@@ -1,5 +1,6 @@
-package ch.grignola.service.scanner.terra;
+package ch.grignola.service.scanner.cro;
 
+import ch.grignola.service.scanner.cro.model.CroBalanceResult;
 import ch.grignola.service.scanner.terra.model.TerraBalanceResult;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
@@ -9,11 +10,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 @ApplicationScoped
-@RegisterRestClient(baseUri = "https://fcd.terra.dev/v1/bank/")
-public interface TerraRestClient {
+@RegisterRestClient(baseUri = "https://crypto.org/explorer/api/v1/accounts/")
+public interface CroRestClient {
 
     @GET
     @Path("{address}")
-    TerraBalanceResult getBalance(@PathParam("address") String address);
+    CroBalanceResult getBalance(@PathParam("address") String address);
 
 }

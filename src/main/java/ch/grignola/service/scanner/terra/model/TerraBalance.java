@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner.terra;
+package ch.grignola.service.scanner.terra.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
