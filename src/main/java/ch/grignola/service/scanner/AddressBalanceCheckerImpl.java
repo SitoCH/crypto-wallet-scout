@@ -4,6 +4,7 @@ import ch.grignola.service.scanner.avalanche.AvalancheScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.model.AddressBalance;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
+import ch.grignola.service.scanner.terra.TerraScanService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,9 +20,11 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     PolygonScanService polygonScanService;
     @Inject
     AvalancheScanService avalancheScanService;
+    @Inject
+    TerraScanService terraScanService;
 
     private List<ScanService> getScanServices() {
-        return List.of(polygonScanService, avalancheScanService);
+        return List.of(polygonScanService, avalancheScanService, terraScanService);
     }
 
     @Override
