@@ -49,35 +49,22 @@ You can then execute your native executable with: `./target/crypto-wallet-scout-
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
 
-## Related Guides
+## Prerequisites for local development
 
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and JPA
-- REST Client ([guide](https://quarkus.io/guides/rest-client)): Call REST services
-- WebSockets ([guide](https://quarkus.io/guides/websockets)): WebSocket communication channel support
-- SmallRye Health ([guide](https://quarkus.io/guides/microprofile-health)): Monitor service health
+The following environment variables need to be set in a `.env` file in order to run the application locally:
 
-## Provided Code
+```shell script
+# Datasource
+QUARKUS_DATASOURCE_USERNAME=
+QUARKUS_DATASOURCE_PASSWORD=
+QUARKUS_DATASOURCE_JDBC_URL=j
 
-### Hibernate ORM
+# OIDC
+QUARKUS_OIDC_AUTH_SERVER_URL=
+QUARKUS_OIDC_CLIENT_ID=
+QUARKUS_OIDC_CREDENTIALS_SECRET=
 
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-### REST Client
-
-Invoke different services through REST with JSON
-
-[Related guide section...](https://quarkus.io/guides/rest-client)
-
-### SmallRye Health
-
-Monitor your application's health using SmallRye Health
-
-[Related guide section...](https://quarkus.io/guides/smallrye-health)
-
-### WebSockets
-
-WebSocket communication channel starter code
-
-[Related guide section...](https://quarkus.io/guides/websockets)
+# External API
+POLYGONSCAN_API_KEY=
+SNOWTRACE_API_KEY=
+```
