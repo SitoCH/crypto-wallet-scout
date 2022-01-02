@@ -6,21 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public
-class EthereumTokenEventsResult {
+public class EthereumTokenEventsResult {
 
     @JsonProperty("status")
-    private String status;
+    public String status;
     @JsonProperty("message")
-    private String message;
+    public String message;
     @JsonProperty("result")
-    private List<EthereumTokenEventResult> result = null;
-
-    public List<EthereumTokenEventResult> getResult() {
-        return result;
-    }
-
-    public void setResult(List<EthereumTokenEventResult> result) {
-        this.result = result;
-    }
+    public List<EthereumTokenEventResult> result = null;
 }

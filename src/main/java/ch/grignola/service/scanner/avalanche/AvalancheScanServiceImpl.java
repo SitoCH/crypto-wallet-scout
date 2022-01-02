@@ -33,6 +33,6 @@ public class AvalancheScanServiceImpl extends AbstractEthereumScanService implem
 
     @Override
     protected List<EthereumTokenEventResult> getTokenEvents(String address) {
-        return avalancheScanRestClient.getTokenEvents(apiKey, "tokentx", address).getResult();
+        return avalancheScanRestClient.getTokenEvents(apiKey, "tokentx", address).result;
     }
 }

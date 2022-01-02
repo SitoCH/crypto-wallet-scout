@@ -33,6 +33,6 @@ public class PolygonScanServiceImpl extends AbstractEthereumScanService implemen
 
     @Override
     protected List<EthereumTokenEventResult> getTokenEvents(String address) {
-        return polygonScanRestClient.getTokenEvents(apiKey, "tokentx", address).getResult();
+        return polygonScanRestClient.getTokenEvents(apiKey, "tokentx", address).result;
     }
 }

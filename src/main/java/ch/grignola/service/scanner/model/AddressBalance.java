@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner;
+package ch.grignola.service.scanner.model;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 

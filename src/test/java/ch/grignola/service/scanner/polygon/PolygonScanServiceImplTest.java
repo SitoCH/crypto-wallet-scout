@@ -1,9 +1,10 @@
 package ch.grignola.service.scanner.polygon;
 
-import ch.grignola.service.scanner.TokenBalance;
+import ch.grignola.service.quote.TokenPriceProvider;
 import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
+import ch.grignola.service.scanner.model.TokenBalance;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -35,6 +36,9 @@ class PolygonScanServiceImplTest {
     @RestClient
     PolygonScanRestClient polygonScanRestClient;
 
+    @InjectMock
+    TokenPriceProvider tokenPriceProvider;
+
     @Inject
     PolygonScanService polygonScanService;
 
@@ -42,7 +46,7 @@ class PolygonScanServiceImplTest {
     @BeforeEach
     public void setup() {
         EthereumTokenEventsResult eventsResult = new EthereumTokenEventsResult();
-        eventsResult.setResult(emptyList());
+        eventsResult.result = emptyList();
 
         when(polygonScanRestClient.getTokenEvents(any(), any(), eq(ADDRESS)))
                 .thenReturn(eventsResult);
@@ -65,22 +69,24 @@ class PolygonScanServiceImplTest {
     void getSimpleAddressBalanceWithoutMatic() {
 
         EthereumTokenEventResult result = new EthereumTokenEventResult();
-        result.setContractAddress(TST_CONTRACT);
-        result.setTokenDecimal(TST_DECIMALS);
-        result.setTokenSymbol(TST_SYMBOL);
-        result.setTokenName(TST_NAME);
+        result.contractAddress = TST_CONTRACT;
+        result.tokenDecimal = TST_DECIMALS;
+        result.tokenSymbol = TST_SYMBOL;
+        result.tokenName = TST_NAME;
 
         EthereumTokenEventsResult eventsResult = new EthereumTokenEventsResult();
-        eventsResult.setResult(singletonList(result));
+        eventsResult.result = singletonList(result);
 
         when(polygonScanRestClient.getTokenEvents(any(), any(), eq(ADDRESS)))
                 .thenReturn(eventsResult);
 
         EthereumTokenBalanceResult balanceResult = new EthereumTokenBalanceResult();
-        balanceResult.setResult("4550");
+        balanceResult.result = 4550;
 
         when(polygonScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT)))
                 .thenReturn(balanceResult);
+
+        when(tokenPriceProvider.getUsdValue(TST_SYMBOL)).thenReturn(0.1);
 
         List<TokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
 
@@ -88,7 +94,8 @@ class PolygonScanServiceImplTest {
         verify(polygonScanRestClient).getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT));
 
         assertEquals(1, addressBalance.size());
-        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getBalance());
+        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getNativeValue());
+        assertEquals(new BigDecimal("4.55"), addressBalance.get(0).getUsdValue());
         assertEquals(TST_SYMBOL, addressBalance.get(0).getSymbol());
     }
 }

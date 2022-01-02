@@ -2,6 +2,7 @@ package ch.grignola.service.scanner;
 
 import ch.grignola.service.scanner.avalanche.AvalancheScanService;
 import ch.grignola.service.scanner.common.ScanService;
+import ch.grignola.service.scanner.model.AddressBalance;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 
 import javax.enterprise.context.ApplicationScoped;

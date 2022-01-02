@@ -4,21 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public
-class EthereumTokenBalanceResult {
+public class EthereumTokenBalanceResult {
 
     @JsonProperty("status")
-    private String status;
+    public String status;
     @JsonProperty("message")
-    private String message;
+    public String message;
     @JsonProperty("result")
-    private String result;
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
+    public long result;
 }
