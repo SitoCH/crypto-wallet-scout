@@ -1,7 +1,6 @@
 package ch.grignola.service.scanner.cro;
 
 import ch.grignola.service.scanner.cro.model.CroBalanceResult;
-import ch.grignola.service.scanner.terra.model.TerraBalanceResult;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.ApplicationScoped;
