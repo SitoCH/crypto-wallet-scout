@@ -2,6 +2,7 @@ package ch.grignola.service.scanner.polygon;
 
 import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
+import ch.grignola.service.scanner.model.TokenBalance;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,4 +24,8 @@ public interface PolygonScanRestClient {
                                                @QueryParam("address") String address,
                                                @QueryParam("contractaddress") String contractAddress);
 
+    @GET
+    EthereumTokenBalanceResult getBalance(@QueryParam("apikey") String apikey,
+                            @QueryParam("action") String action,
+                            @QueryParam("address") String address);
 }

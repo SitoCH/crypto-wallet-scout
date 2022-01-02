@@ -23,4 +23,8 @@ public interface AvalancheScanRestClient {
                                                @QueryParam("address") String address,
                                                @QueryParam("contractaddress") String contractAddress);
 
+    @GET
+    EthereumTokenBalanceResult getBalance(@QueryParam("apikey") String apikey,
+                                          @QueryParam("action") String action,
+                                          @QueryParam("address") String address);
 }

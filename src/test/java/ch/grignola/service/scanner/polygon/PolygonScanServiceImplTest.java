@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -53,6 +54,12 @@ class PolygonScanServiceImplTest {
 
         when(polygonScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), any()))
                 .thenReturn(new EthereumTokenBalanceResult());
+
+        EthereumTokenBalanceResult networkTokenBalanceResult = new EthereumTokenBalanceResult();
+        networkTokenBalanceResult.result = new BigInteger("0");
+
+        when(polygonScanRestClient.getBalance(any(), any(), eq(ADDRESS)))
+                .thenReturn(networkTokenBalanceResult);
     }
 
     @Test
@@ -81,7 +88,7 @@ class PolygonScanServiceImplTest {
                 .thenReturn(eventsResult);
 
         EthereumTokenBalanceResult balanceResult = new EthereumTokenBalanceResult();
-        balanceResult.result = 4550;
+        balanceResult.result = new BigInteger("4550");
 
         when(polygonScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT)))
                 .thenReturn(balanceResult);

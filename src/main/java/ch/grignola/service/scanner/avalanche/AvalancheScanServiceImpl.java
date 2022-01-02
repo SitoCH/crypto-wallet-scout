@@ -35,4 +35,10 @@ public class AvalancheScanServiceImpl extends AbstractEthereumScanService implem
     protected List<EthereumTokenEventResult> getTokenEvents(String address) {
         return avalancheScanRestClient.getTokenEvents(apiKey, "tokentx", address).result;
     }
+
+    @Override
+    protected NetworkTokenBalance getNetworkTokenBalance(String address) {
+        EthereumTokenBalanceResult balance = avalancheScanRestClient.getBalance(apiKey, "balance", address);
+        return new NetworkTokenBalance(balance.result, "AVAX", "Avalanche", 18);
+    }
 }
