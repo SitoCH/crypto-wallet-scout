@@ -4,7 +4,7 @@ import ch.grignola.service.quote.TokenPriceProvider;
 import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
-import ch.grignola.service.scanner.model.TokenBalance;
+import ch.grignola.service.scanner.TokenBalance;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -101,8 +101,8 @@ class PolygonScanServiceImplTest {
         verify(polygonScanRestClient).getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT));
 
         assertEquals(1, addressBalance.size());
-        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getNativeValue());
-        assertEquals(new BigDecimal("4.55"), addressBalance.get(0).getUsdValue());
-        assertEquals(TST_SYMBOL, addressBalance.get(0).getSymbol());
+        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).nativeValue());
+        assertEquals(new BigDecimal("4.55"), addressBalance.get(0).usdValue());
+        assertEquals(TST_SYMBOL, addressBalance.get(0).symbol());
     }
 }

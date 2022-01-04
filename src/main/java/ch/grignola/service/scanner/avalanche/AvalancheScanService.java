@@ -1,6 +1,6 @@
 package ch.grignola.service.scanner.avalanche;
 
-import ch.grignola.service.scanner.model.TokenBalance;
+import ch.grignola.service.scanner.TokenBalance;
 import ch.grignola.service.scanner.common.ScanService;
 
 import java.util.List;

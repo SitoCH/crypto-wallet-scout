@@ -2,7 +2,7 @@ package ch.grignola.service.scanner.common;
 
 import ch.grignola.model.Network;
 import ch.grignola.service.quote.TokenPriceProvider;
-import ch.grignola.service.scanner.model.TokenBalance;
+import ch.grignola.service.scanner.TokenBalance;
 import ch.grignola.utils.DistinctByKey;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BlockingBucket;
@@ -16,6 +16,7 @@ import java.math.MathContext;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static ch.grignola.model.Allocation.LIQUID;
 import static java.lang.Integer.parseInt;
 import static java.math.BigDecimal.ZERO;
 import static java.time.Duration.ofMillis;
@@ -57,11 +58,11 @@ public abstract class AbstractEthereumScanService implements ScanService {
                         } catch (InterruptedException e) {
                             LOG.error("BlockingBucket exception", e);
                             Thread.currentThread().interrupt();
-                            return new TokenBalance(getNetwork(), ZERO, ZERO, "ERR", "Error");
+                            return new TokenBalance(getNetwork(), LIQUID, ZERO, ZERO, "ERR", "Error");
                         }
                     });
             return Stream.concat(networkTokenBalance, tokenBalances)
-                    .filter(x -> x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
+                    .filter(x -> x.usdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
                     .collect(toList());
         } catch (InterruptedException e) {
             LOG.error("BlockingBucket exception", e);
@@ -74,7 +75,7 @@ public abstract class AbstractEthereumScanService implements ScanService {
         LOG.infof("Token balance for address %s on %s based on event %s: %s", address, getNetwork(), tokenEvent, tokenBalance.result);
         BigDecimal nativeValue = new BigDecimal(tokenBalance.result).divide((new BigDecimal(rightPad("1", parseInt(tokenEvent.tokenDecimal) + 1, '0'))), MathContext.DECIMAL64);
         BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenPriceProvider.getUsdValue(tokenEvent.tokenSymbol)));
-        return new TokenBalance(getNetwork(), nativeValue, usdValue, tokenEvent.tokenSymbol, tokenEvent.tokenName);
+        return new TokenBalance(getNetwork(), LIQUID, nativeValue, usdValue, tokenEvent.tokenSymbol, tokenEvent.tokenName);
     }
 
     protected abstract Network getNetwork();
@@ -88,7 +89,7 @@ public abstract class AbstractEthereumScanService implements ScanService {
         NetworkTokenBalance balance = getNetworkTokenBalance(address);
         BigDecimal nativeValue = new BigDecimal(balance.nativeValue).divide((new BigDecimal(rightPad("1", balance.tokenDecimals + 1, '0'))), MathContext.DECIMAL64);
         BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenPriceProvider.getUsdValue(balance.tokenSymbol)));
-        return new TokenBalance(getNetwork(), nativeValue, usdValue, balance.tokenSymbol, balance.tokenName);
+        return new TokenBalance(getNetwork(), LIQUID, nativeValue, usdValue, balance.tokenSymbol, balance.tokenName);
     }
 
     protected abstract NetworkTokenBalance getNetworkTokenBalance(String address);

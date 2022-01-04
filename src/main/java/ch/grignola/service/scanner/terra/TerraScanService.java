@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.terra;
 
 import ch.grignola.service.scanner.common.ScanService;
-import ch.grignola.service.scanner.model.TokenBalance;
+import ch.grignola.service.scanner.TokenBalance;
 
 import java.util.List;
 

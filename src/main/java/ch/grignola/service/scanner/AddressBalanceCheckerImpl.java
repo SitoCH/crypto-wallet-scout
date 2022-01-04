@@ -3,7 +3,6 @@ package ch.grignola.service.scanner;
 import ch.grignola.service.scanner.avalanche.AvalancheScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.cro.CroScanService;
-import ch.grignola.service.scanner.model.AddressBalance;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 import ch.grignola.service.scanner.terra.TerraScanService;
 

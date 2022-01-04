@@ -2,7 +2,6 @@ package ch.grignola.service.scanner.polygon;
 
 import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
-import ch.grignola.service.scanner.model.TokenBalance;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.ApplicationScoped;

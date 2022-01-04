@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AddressService } from "../services/address.service";
+import { AddressBalanceResourceClient } from "../../generated/client";
 
 @Component({
   selector: 'app-dashboard',
@@ -11,11 +11,11 @@ export class DashboardComponent {
   public accountToSearch: string = '';
   result: string = '';
 
-  constructor(private addressService: AddressService) {
+  constructor(private addressService: AddressBalanceResourceClient) {
   }
 
   getAccountBalance(account: string) {
-    this.addressService.getAccountBalance(account)
-      .subscribe(data => this.result = JSON.stringify(data))
+    this.addressService.getAddressBalance(account)
+      .then(data => this.result = JSON.stringify(data))
   }
 }

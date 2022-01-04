@@ -146,6 +146,29 @@
           </systemPropertyVariables>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>cz.habarta.typescript-generator</groupId>
+        <artifactId>typescript-generator-maven-plugin</artifactId>
+        <version>2.34.976</version>
+        <executions>
+          <execution>
+            <id>generate</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <phase>process-classes</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <jsonLibrary>jackson2</jsonLibrary>
+          <classesFromAutomaticJaxrsApplication>true</classesFromAutomaticJaxrsApplication>
+          <generateJaxrsApplicationClient>true</generateJaxrsApplicationClient>
+          <outputKind>module</outputKind>
+          <outputFileType>implementationFile</outputFileType>
+          <outputFile>src/main/webapp/src/generated/client.ts</outputFile>
+          <jaxrsNamespacing>perResource</jaxrsNamespacing>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>

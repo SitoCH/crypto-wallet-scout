@@ -2,8 +2,8 @@ package ch.grignola.service.scanner.cro;
 
 import ch.grignola.model.Network;
 import ch.grignola.service.quote.TokenPriceProvider;
+import ch.grignola.service.scanner.TokenBalance;
 import ch.grignola.service.scanner.cro.model.CroBalanceResult;
-import ch.grignola.service.scanner.model.TokenBalance;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
 
+import static ch.grignola.model.Allocation.LIQUID;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.singletonList;
 
@@ -39,6 +40,6 @@ public class CroScanServiceImpl implements CroScanService {
         BigDecimal nativeValue = result.result.totalBalance.stream().findFirst().map(x -> new BigDecimal(x.amount).divide(new BigDecimal("100000000"), MathContext.DECIMAL64)).orElse(ZERO);
         BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenPriceProvider.getUsdValue("CRO")));
         LOG.infof("Token balance for address %s on Terra: %s (%s USD)", address, nativeValue, usdValue);
-        return singletonList(new TokenBalance(Network.CRO, nativeValue, usdValue, "CRO", "Crypto.com Coin"));
+        return singletonList(new TokenBalance(Network.CRO, LIQUID, nativeValue, usdValue, "CRO", "Crypto.com Coin"));
     }
 }
