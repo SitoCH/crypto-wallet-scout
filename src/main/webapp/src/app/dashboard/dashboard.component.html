@@ -3,17 +3,44 @@
   <div class="col-md-12">
     <div class="input-group">
       <input class="form-control" type="text" [(ngModel)]="accountToSearch"
-             placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+             placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch"/>
       <button class="btn btn-primary" id="btnNavbarSearch" type="button"
-              (click)="getAccountBalance(accountToSearch)"><fa-icon icon="search"></fa-icon></button>
+              (click)="getAccountBalance(accountToSearch)">
+        <fa-icon icon="search"></fa-icon>
+      </button>
     </div>
   </div>
 </div>
 
-
-
-
-
-<div>
-  {{result}}
+<div class="row" *ngIf="addressBalance">
+  <div class="col-md-12">
+    USD value: {{totalBalance | number:'1.2-2'}}$
+  </div>
 </div>
+
+<div class="row" *ngIf="addressBalance">
+  <div class="col-md-12">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Network</th>
+        <th scope="col">Token name</th>
+        <th scope="col">Native value</th>
+        <th scope="col">USD value</th>
+        <th scope="col">Allocation</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let tokenBalance of addressBalance.tokenBalances">
+        <td>{{tokenBalance.network}}</td>
+        <td>{{tokenBalance.name}}</td>
+        <td class="text-end">{{tokenBalance.nativeValue}} {{tokenBalance.symbol}}</td>
+        <td class="text-end">{{tokenBalance.usdValue | number:'1.2-2' }}</td>
+        <td>{{tokenBalance.allocation}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+

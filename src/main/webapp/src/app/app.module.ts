@@ -14,6 +14,8 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
+import { InjectableRestApplicationClient } from "./services/utils/injectable-rest-application-client.service";
+import { AddressBalanceService } from "./services/address-balance.service";
 
 @NgModule({
   declarations: [
@@ -32,7 +34,10 @@ import { far } from "@fortawesome/free-regular-svg-icons";
     NgbModule,
     FontAwesomeModule
   ],
-  providers: [],
+  providers: [
+    InjectableRestApplicationClient,
+    AddressBalanceService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
