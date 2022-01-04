@@ -10,6 +10,7 @@ import org.jboss.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.MathContext;
 import java.util.List;
 
@@ -36,9 +37,21 @@ public class TerraScanServiceImpl implements TerraScanService {
     @Override
     public List<TokenBalance> getAddressBalance(String address) {
         TerraBalanceResult result = terraRestClient.getBalance(address);
-        BigDecimal nativeValue = result.balance.stream().findFirst().map(x -> new BigDecimal(x.available).divide(new BigDecimal("1000000"), MathContext.DECIMAL64)).orElse(ZERO);
+
+        BigDecimal nativeValue = getTotalBalance(result).divide(new BigDecimal("1000000"), MathContext.DECIMAL64);
         BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenPriceProvider.getUsdValue("LUNA")));
         LOG.infof("Token balance for address %s on Terra: %s (%s USD)", address, nativeValue, usdValue);
         return singletonList(new TokenBalance(Network.TERRA, nativeValue, usdValue, "LUNA", "Terra"));
+    }
+
+    private BigDecimal getTotalBalance(TerraBalanceResult result) {
+
+        BigDecimal totalBalance = new BigDecimal(result.balance.stream().findFirst().map(x -> x.available).orElse(BigInteger.ZERO));
+
+        if (result.delegations != null) {
+            totalBalance = totalBalance.add(result.delegations.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+
+        return totalBalance;
     }
 }

@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 
 @ApplicationScoped
 public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
@@ -36,6 +35,6 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
                 .filter(x -> x.accept(address))
                 .map(x -> x.getAddressBalance(address))
                 .flatMap(Collection::stream)
-                .collect(toList()));
+                .toList());
     }
 }

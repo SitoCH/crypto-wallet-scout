@@ -12,7 +12,7 @@ public class TerraBalanceResult {
     @JsonProperty("vesting")
     public List<Object> vesting = null;
     @JsonProperty("delegations")
-    public List<Object> delegations = null;
+    public List<TerraDelegation> delegations = null;
     @JsonProperty("unbondings")
     public List<Object> unbondings = null;
 }
