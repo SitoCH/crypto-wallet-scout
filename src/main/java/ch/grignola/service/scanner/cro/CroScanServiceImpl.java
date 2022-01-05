@@ -1,5 +1,6 @@
 package ch.grignola.service.scanner.cro;
 
+import ch.grignola.model.Allocation;
 import ch.grignola.model.Network;
 import ch.grignola.service.quote.TokenPriceProvider;
 import ch.grignola.service.scanner.TokenBalance;
@@ -11,11 +12,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.List;
 
-import static ch.grignola.model.Allocation.LIQUID;
+import static ch.grignola.model.Allocation.*;
 import static java.math.BigDecimal.ZERO;
-import static java.util.Collections.singletonList;
 
 @ApplicationScoped
 public class CroScanServiceImpl implements CroScanService {
@@ -36,10 +37,33 @@ public class CroScanServiceImpl implements CroScanService {
 
     @Override
     public List<TokenBalance> getAddressBalance(String address) {
+
+        List<TokenBalance> balances = new ArrayList<>();
         CroBalanceResult result = croRestClient.getBalance(address);
-        BigDecimal nativeValue = result.result.totalBalance.stream().findFirst().map(x -> new BigDecimal(x.amount).divide(new BigDecimal("100000000"), MathContext.DECIMAL64)).orElse(ZERO);
+
+        BigDecimal liquidValue = result.result.balance.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (liquidValue.compareTo(ZERO) != 0) {
+            balances.add(toTokenBalance(address, LIQUID, liquidValue));
+        }
+
+        BigDecimal stackedValue = result.result.bondedBalance.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (stackedValue.compareTo(ZERO) != 0) {
+            balances.add(toTokenBalance(address, STACKED, stackedValue));
+        }
+
+        BigDecimal unclaimedRewardsValue = result.result.totalRewards.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (unclaimedRewardsValue.compareTo(ZERO) != 0) {
+            balances.add(toTokenBalance(address, UNCLAIMED_REWARDS, unclaimedRewardsValue));
+        }
+
+        return balances;
+    }
+
+    private TokenBalance toTokenBalance(String address, Allocation allocation, BigDecimal value) {
+        BigDecimal tokenDigits = new BigDecimal("100000000");
+        BigDecimal nativeValue = value.divide(tokenDigits, MathContext.DECIMAL64);
         BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenPriceProvider.getUsdValue("CRO")));
-        LOG.infof("Token balance for address %s on Terra: %s (%s USD)", address, nativeValue, usdValue);
-        return singletonList(new TokenBalance(Network.CRO, LIQUID, nativeValue, usdValue, "CRO", "Crypto.com Coin"));
+        LOG.infof("Token balance for address %s on CRO: %s (%s USD)", address, nativeValue, usdValue);
+        return new TokenBalance(Network.CRO, allocation, nativeValue, usdValue, "CRO", "Crypto.com Coin");
     }
 }

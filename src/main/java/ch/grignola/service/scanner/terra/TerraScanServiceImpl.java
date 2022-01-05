@@ -43,23 +43,24 @@ public class TerraScanServiceImpl implements TerraScanService {
 
         List<TokenBalance> balances = new ArrayList<>();
 
-        BigDecimal tokenDigits = new BigDecimal("1000000");
+
         BigDecimal liquidValue = new BigDecimal(result.balance.stream().findFirst().map(x -> x.available).orElse(BigInteger.ZERO));
         if (liquidValue.compareTo(ZERO) != 0) {
-            balances.add(toTokenBalance(address, LIQUID, liquidValue, tokenDigits));
+            balances.add(toTokenBalance(address, LIQUID, liquidValue));
         }
 
         if (result.delegations != null) {
             BigDecimal allocatedValue = result.delegations.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
             if (allocatedValue.compareTo(ZERO) != 0) {
-                balances.add(toTokenBalance(address, STACKED, allocatedValue, tokenDigits));
+                balances.add(toTokenBalance(address, STACKED, allocatedValue));
             }
         }
 
         return balances;
     }
 
-    private TokenBalance toTokenBalance(String address, Allocation allocation, BigDecimal value, BigDecimal tokenDigits) {
+    private TokenBalance toTokenBalance(String address, Allocation allocation, BigDecimal value) {
+        BigDecimal tokenDigits = new BigDecimal("1000000");
         BigDecimal nativeValue = value.divide(tokenDigits, MathContext.DECIMAL64);
         BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenPriceProvider.getUsdValue("LUNA")));
         LOG.infof("Token balance for address %s on Terra: %s (%s USD)", address, nativeValue, usdValue);
