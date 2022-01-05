@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-01-05 22:33:47.
+// Generated using typescript-generator version 2.34.976 on 2022-01-05 23:41:43.
 
 export interface AddressBalance {
     tokenBalances: TokenBalance[];
@@ -15,9 +15,41 @@ export interface TokenBalance {
     name: string;
 }
 
+export interface UserCollectionSummary {
+    name: string;
+}
+
 export interface HttpClient {
 
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
+}
+
+export class LoginResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /login
+     * Java method: ch.grignola.web.LoginResource.get
+     */
+    get(): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`login` });
+    }
+}
+
+export class AddressBalanceResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/address/balance/{address}
+     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
+     */
+    getAddressBalance(address: string): RestResponse<AddressBalance> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
+    }
 }
 
 export class AsynchronousDispatcherClient {
@@ -50,45 +82,17 @@ export class AsynchronousDispatcherClient {
     }
 }
 
-export class AddressBalanceResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/address/balance/{address}
-     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
-     */
-    getAddressBalance(address: string): RestResponse<AddressBalance> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
-    }
-}
-
 export class UserCollectionResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /api/collection/{address}
-     * Java method: ch.grignola.web.UserCollectionResource.getAddressBalance
+     * HTTP GET /api/collection
+     * Java method: ch.grignola.web.UserCollectionResource.getUserCollections
      */
-    getAddressBalance(address: string): RestResponse<AddressBalance> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${address}` });
-    }
-}
-
-export class LoginResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /login
-     * Java method: ch.grignola.web.LoginResource.get
-     */
-    get(): RestResponse<any> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`login` });
+    getUserCollections(): RestResponse<UserCollectionSummary[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection` });
     }
 }
 

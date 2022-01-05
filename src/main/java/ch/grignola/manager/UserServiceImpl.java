@@ -9,7 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class UserManagerImpl implements UserManager {
+public class UserServiceImpl implements UserService {
 
     @Inject
     @IdToken

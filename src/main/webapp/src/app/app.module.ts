@@ -16,6 +16,7 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { InjectableRestApplicationClient } from "./services/utils/injectable-rest-application-client.service";
 import { AddressBalanceService } from "./services/address-balance.service";
+import { UserCollectionsComponent } from './user-collections/user-collections.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { AddressBalanceService } from "./services/address-balance.service";
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    SidenavComponent
+    SidenavComponent,
+    UserCollectionsComponent
   ],
   imports: [
     BrowserModule,
