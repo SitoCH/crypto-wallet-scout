@@ -9,7 +9,8 @@ import { AddressBalance, Allocation } from "../../generated/client";
 })
 export class DashboardComponent {
 
-  public accountToSearch: string = '';
+  accountToSearch = '';
+  searchRunning = false;
   addressBalance: AddressBalance | null = null;
   totalBalance: number | null = null;
   liquidBalance: number | null = null;
@@ -21,8 +22,10 @@ export class DashboardComponent {
 
   getAccountBalance(account: string) {
     this.addressBalance = null;
+    this.searchRunning = true;
     this.addressService.getAddressBalance(account)
       .then(data => {
+        this.searchRunning = false;
         this.addressBalance = data;
         this.totalBalance = data.tokenBalances.reduce((sum, current) => sum + current.usdValue, 0);
         this.liquidBalance = this.getBalanceByAllocation(data, Allocation.LIQUID);

@@ -8,7 +8,8 @@
                  placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch"/>
           <button class="btn btn-primary" id="btnNavbarSearch" type="button"
                   (click)="getAccountBalance(accountToSearch)">
-            <fa-icon icon="search"></fa-icon>
+            <fa-icon icon="search" *ngIf="!searchRunning"></fa-icon>
+            <fa-icon icon="spinner" *ngIf="searchRunning" [spin]="true"></fa-icon>
           </button>
         </div>
       </div>
