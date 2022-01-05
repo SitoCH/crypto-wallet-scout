@@ -167,6 +167,7 @@
           <outputFileType>implementationFile</outputFileType>
           <outputFile>src/main/webapp/src/generated/client.ts</outputFile>
           <jaxrsNamespacing>perResource</jaxrsNamespacing>
+          <mapEnum>asEnum</mapEnum>
         </configuration>
       </plugin>
     </plugins>

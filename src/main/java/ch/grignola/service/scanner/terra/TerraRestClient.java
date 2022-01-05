@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 @ApplicationScoped
-@RegisterRestClient(baseUri = "https://fcd.terra.dev/v1/bank/")
+@RegisterRestClient(baseUri = "https://fcd.terra.dev/v1/staking/")
 public interface TerraRestClient {
 
     @GET

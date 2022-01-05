@@ -7,12 +7,16 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TerraBalanceResult {
-    @JsonProperty("balance")
-    public List<TerraBalance> balance = null;
-    @JsonProperty("vesting")
-    public List<Object> vesting = null;
-    @JsonProperty("delegations")
-    public List<TerraDelegation> delegations = null;
-    @JsonProperty("unbondings")
-    public List<Object> unbondings = null;
+    @JsonProperty("redelegations")
+    public List<Object> redelegations = null;
+    @JsonProperty("delegationTotal")
+    public String delegationTotal;
+    @JsonProperty("undelegations")
+    public List<Object> undelegations = null;
+    @JsonProperty("rewards")
+    public TerraRewards rewards;
+    @JsonProperty("myDelegations")
+    public List<TerraDelegation> myDelegations = null;
+    @JsonProperty("availableLuna")
+    public String availableLuna;
 }
