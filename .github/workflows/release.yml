@@ -35,11 +35,8 @@ jobs:
       - setup
     steps:
     - name: Change NPM version
-      uses: reedyuk/npm-version@1.1.1
-      with:
-        version: '${{ github.event.inputs.version }}'
-        package: ./src/main/webapp/
-        git-tag-version: false
+      run: npm version {{ github.event.inputs.version }}
+      working-directory: src/main/webapp/
     - name: Change Maven version
       run: versions:set -DnewVersion={{ github.event.inputs.version }}-SNAPSHOT
   build:
