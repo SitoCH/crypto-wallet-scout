@@ -21,7 +21,6 @@ import static java.lang.Integer.parseInt;
 import static java.math.BigDecimal.ZERO;
 import static java.time.Duration.ofMillis;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.rightPad;
 
 public abstract class AbstractEthereumScanService implements ScanService {
@@ -62,8 +61,8 @@ public abstract class AbstractEthereumScanService implements ScanService {
                         }
                     });
             return Stream.concat(networkTokenBalance, tokenBalances)
-                    .filter(x -> x.usdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
-                    .collect(toList());
+                    .filter(x -> x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
+                    .toList();
         } catch (InterruptedException e) {
             LOG.error("BlockingBucket exception", e);
             Thread.currentThread().interrupt();

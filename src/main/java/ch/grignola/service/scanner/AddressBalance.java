@@ -1,5 +1,6 @@
 package ch.grignola.service.scanner;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public final class AddressBalance {
         this.tokenBalances = tokenBalances;
     }
 
+    @JsonProperty("tokenBalances")
     public List<TokenBalance> tokenBalances() {
         return tokenBalances;
     }

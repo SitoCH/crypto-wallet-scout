@@ -101,8 +101,8 @@ class PolygonScanServiceImplTest {
         verify(polygonScanRestClient).getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT));
 
         assertEquals(1, addressBalance.size());
-        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).nativeValue());
-        assertEquals(new BigDecimal("4.55"), addressBalance.get(0).usdValue());
-        assertEquals(TST_SYMBOL, addressBalance.get(0).symbol());
+        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getNativeValue());
+        assertEquals(new BigDecimal("4.55"), addressBalance.get(0).getUsdValue());
+        assertEquals(TST_SYMBOL, addressBalance.get(0).getSymbol());
     }
 }
