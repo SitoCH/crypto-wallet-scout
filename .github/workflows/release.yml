@@ -37,7 +37,7 @@ jobs:
     - name: Change NPM version
       uses: reedyuk/npm-version@1.1.1
       with:
-        version: '{{ github.event.inputs.version }}'
+        version: '${{ github.event.inputs.version }}'
         package: src/main/webapp/
         git-tag-version: false
     - name: Change Maven version
