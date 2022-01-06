@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-01-06 23:37:28.
+// Generated using typescript-generator version 2.34.976 on 2022-01-06 23:21:38.
 
 export interface AddressBalance {
     tokenBalances: TokenBalance[];
@@ -28,20 +28,6 @@ export interface HttpClient {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
 }
 
-export class AddressBalanceResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/address/balance/{address}
-     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
-     */
-    getAddressBalance(address: string): RestResponse<AddressBalance> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
-    }
-}
-
 export class UserCollectionResourceClient {
 
     constructor(protected httpClient: HttpClient) {
@@ -61,6 +47,20 @@ export class UserCollectionResourceClient {
      */
     newUserCollection(newUserCollection: NewUserCollection): RestResponse<UserCollectionSummary> {
         return this.httpClient.request({ method: "POST", url: uriEncoding`api/collection`, data: newUserCollection });
+    }
+}
+
+export class AddressBalanceResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/address/balance/{address}
+     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
+     */
+    getAddressBalance(address: string): RestResponse<AddressBalance> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
     }
 }
 
