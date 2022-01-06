@@ -8,9 +8,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule } from "@angular/forms";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { SidenavComponent } from './sidenav/sidenav.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
@@ -20,6 +17,10 @@ import { UserCollectionsComponent } from './user-collections/user-collections.co
 import { environment } from "../environments/environment";
 import { NgxsModule } from "@ngxs/store";
 import { UserCollectionsState } from "./state/user-collections.state";
+import { NetworkLogoComponent } from './common/network-logo/network-logo.component';
+import { HeaderComponent } from "./layout/header/header.component";
+import { FooterComponent } from "./layout/footer/footer.component";
+import { SidenavComponent } from "./layout/sidenav/sidenav.component";
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { UserCollectionsState } from "./state/user-collections.state";
     HeaderComponent,
     FooterComponent,
     SidenavComponent,
-    UserCollectionsComponent
+    UserCollectionsComponent,
+    NetworkLogoComponent
   ],
   imports: [
     BrowserModule,

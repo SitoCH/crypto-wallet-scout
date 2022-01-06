@@ -78,7 +78,9 @@
           </thead>
           <tbody>
           <tr *ngFor="let tokenBalance of addressBalance.tokenBalances">
-            <td>{{tokenBalance.network}}</td>
+            <td>
+              <app-network-logo [network]="tokenBalance.network"></app-network-logo>
+            </td>
             <td>{{tokenBalance.name}}</td>
             <td class="text-end">{{tokenBalance.nativeValue}} {{tokenBalance.symbol}}</td>
             <td class="text-end">{{tokenBalance.usdValue | number:'1.2-2' }} $</td>
