@@ -31,6 +31,8 @@ jobs:
       working-directory: src/main/webapp/
   set-version:
     runs-on: ubuntu-latest
+    needs:
+      - setup
     steps:
     - name: Change NPM version
       uses: reedyuk/npm-version@1.1.1
@@ -42,6 +44,8 @@ jobs:
       run: versions:set -DnewVersion={{ github.event.inputs.version }}-SNAPSHOT
   build:
     runs-on: ubuntu-latest
+    needs:
+      - set-version
     steps:
     - name: Build with NPM
       run: npm run build
@@ -50,6 +54,8 @@ jobs:
       run: mvn -B package --file pom.xml -Pnative -Dquarkus.native.container-build=true
   publish:
     runs-on: ubuntu-latest
+    needs:
+      - build
     steps:
       - name: Login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
@@ -59,6 +65,8 @@ jobs:
         run: docker push sito/crypto-wallet-scout:{{ github.event.inputs.version }}
   commit-and-push:
     runs-on: ubuntu-latest
+    needs:
+      - publish
     steps:
       - uses: EndBug/add-and-commit@v7
         with:
