@@ -33,7 +33,7 @@ jobs:
       run: 'npm version ${{ github.event.inputs.version }}'
       working-directory: src/main/webapp/
     - name: Change Maven version
-      run: 'versions:set -DnewVersion=${{ github.event.inputs.version }}-SNAPSHOT'
+      run: 'mvn versions:set -DnewVersion=${{ github.event.inputs.version }}-SNAPSHOT'
     - name: Build with NPM
       run: npm run build
       working-directory: src/main/webapp/
