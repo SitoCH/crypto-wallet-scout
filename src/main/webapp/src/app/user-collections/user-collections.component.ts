@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AddressBalanceService } from "../services/address-balance.service";
-import { UserCollectionService } from "../services/user-collection.service";
+import { UserCollectionsState } from "../state/user-collections.state";
+import { Observable } from "rxjs";
+import { UserCollectionSummary } from "../../generated/client";
+import { Select, Store } from "@ngxs/store";
+import { GetUserCollections } from "../state/user-collections.actions";
 
 @Component({
   selector: 'app-user-collections',
@@ -9,11 +12,14 @@ import { UserCollectionService } from "../services/user-collection.service";
 })
 export class UserCollectionsComponent implements OnInit {
 
-  constructor(private userCollectionService: UserCollectionService) {
+  // @ts-ignore
+  @Select(UserCollectionsState) userCollections$: Observable<UserCollectionSummary[]>;
+
+  constructor(private store: Store) {
   }
 
   ngOnInit(): void {
-    //this.userCollectionService.getUserCollections().then()
+    this.store.dispatch(new GetUserCollections());
   }
 
 }

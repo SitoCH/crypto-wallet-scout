@@ -17,6 +17,9 @@ import { far } from "@fortawesome/free-regular-svg-icons";
 import { InjectableRestApplicationClient } from "./services/utils/injectable-rest-application-client.service";
 import { AddressBalanceService } from "./services/address-balance.service";
 import { UserCollectionsComponent } from './user-collections/user-collections.component';
+import { environment } from "../environments/environment";
+import { NgxsModule } from "@ngxs/store";
+import { UserCollectionsState } from "./state/user-collections.state";
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import { UserCollectionsComponent } from './user-collections/user-collections.co
     HttpClientModule,
     FormsModule,
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgxsModule.forRoot([UserCollectionsState], {
+      developmentMode: !environment.production
+    })
   ],
   providers: [
     InjectableRestApplicationClient,

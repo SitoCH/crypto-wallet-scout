@@ -1,1 +1,3 @@
-<p>user-collections works!</p>
+<div *ngFor="let userCollection of userCollections$ | async">
+  {{ userCollection.name}}
+</div>
