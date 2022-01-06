@@ -1,3 +1,31 @@
-<div *ngFor="let userCollection of userCollections$ | async">
-  {{ userCollection.name}}
+<h1 class="mt-4">Dashboard</h1>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="input-group">
+          <input class="form-control" type="text" [(ngModel)]="newCollectionName"
+                 placeholder="Name" aria-label="Name" aria-describedby="btnNavbarSearch"/>
+          <button class="btn btn-primary" id="btnNavbarSearch" type="button"
+                  (click)="addNewCollection(newCollectionName)">
+            <fa-icon icon="plus" ></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card mb-4">
+      <div class="card-body">
+        <div *ngFor="let userCollection of userCollections$ | async">
+          {{ userCollection.name}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

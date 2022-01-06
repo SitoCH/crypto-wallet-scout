@@ -1,9 +1,17 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-01-05 23:41:43.
+// Generated using typescript-generator version 2.34.976 on 2022-01-06 01:39:42.
 
 export interface AddressBalance {
     tokenBalances: TokenBalance[];
+}
+
+export interface NewUserCollection {
+    name: string;
+}
+
+export interface UserCollectionSummary {
+    name: string;
 }
 
 export interface TokenBalance {
@@ -15,27 +23,9 @@ export interface TokenBalance {
     name: string;
 }
 
-export interface UserCollectionSummary {
-    name: string;
-}
-
 export interface HttpClient {
 
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
-}
-
-export class LoginResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /login
-     * Java method: ch.grignola.web.LoginResource.get
-     */
-    get(): RestResponse<any> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`login` });
-    }
 }
 
 export class AddressBalanceResourceClient {
@@ -49,6 +39,28 @@ export class AddressBalanceResourceClient {
      */
     getAddressBalance(address: string): RestResponse<AddressBalance> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
+    }
+}
+
+export class UserCollectionResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/collection
+     * Java method: ch.grignola.web.UserCollectionResource.getUserCollections
+     */
+    getUserCollections(): RestResponse<UserCollectionSummary[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection` });
+    }
+
+    /**
+     * HTTP POST /api/collection
+     * Java method: ch.grignola.web.UserCollectionResource.newUserCollection
+     */
+    newUserCollection(newUserCollection: NewUserCollection): RestResponse<UserCollectionSummary> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/collection`, data: newUserCollection });
     }
 }
 
@@ -82,17 +94,17 @@ export class AsynchronousDispatcherClient {
     }
 }
 
-export class UserCollectionResourceClient {
+export class LoginResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /api/collection
-     * Java method: ch.grignola.web.UserCollectionResource.getUserCollections
+     * HTTP GET /login
+     * Java method: ch.grignola.web.LoginResource.get
      */
-    getUserCollections(): RestResponse<UserCollectionSummary[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection` });
+    get(): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`login` });
     }
 }
 

@@ -1,7 +1,7 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { UserCollectionSummary } from "../../generated/client";
 import { UserCollectionService } from "../services/user-collection.service";
-import { GetUserCollections } from "./user-collections.actions";
+import { AddUserCollection, GetUserCollections } from "./user-collections.actions";
 import { Injectable } from "@angular/core";
 
 export class UserCollectionSummaryModel {
@@ -33,4 +33,15 @@ export class UserCollectionsState {
     }));
   }
 
+  @Action(AddUserCollection)
+  addUserCollection(ctx: StateContext<UserCollectionSummaryModel>, action: AddUserCollection) {
+    return this.userCollectionService.newUserCollection({name: action.payload}).then(
+      newCollection => {
+        const state = ctx.getState();
+        ctx.setState({
+          ...state,
+          userCollections: [...state.userCollections, newCollection]
+        });
+      });
+  }
 }

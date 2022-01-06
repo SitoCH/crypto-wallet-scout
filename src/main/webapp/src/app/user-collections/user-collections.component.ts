@@ -3,7 +3,7 @@ import { UserCollectionsState } from "../state/user-collections.state";
 import { Observable } from "rxjs";
 import { UserCollectionSummary } from "../../generated/client";
 import { Select, Store } from "@ngxs/store";
-import { GetUserCollections } from "../state/user-collections.actions";
+import { AddUserCollection, GetUserCollections } from "../state/user-collections.actions";
 
 @Component({
   selector: 'app-user-collections',
@@ -12,8 +12,9 @@ import { GetUserCollections } from "../state/user-collections.actions";
 })
 export class UserCollectionsComponent implements OnInit {
 
+  newCollectionName = '';
   // @ts-ignore
-  @Select(UserCollectionsState) userCollections$: Observable<UserCollectionSummary[]>;
+  @Select(UserCollectionsState.getUserCollections) userCollections$: Observable<UserCollectionSummary[]>;
 
   constructor(private store: Store) {
   }
@@ -22,4 +23,7 @@ export class UserCollectionsComponent implements OnInit {
     this.store.dispatch(new GetUserCollections());
   }
 
+  addNewCollection(newCollectionName: string) {
+    this.store.dispatch(new AddUserCollection(newCollectionName));
+  }
 }
