@@ -5,12 +5,15 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        default: '1.0.0'
 
 jobs:
-  build:
-
+  setup:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 17
@@ -26,10 +29,37 @@ jobs:
     - name: Install NPM
       run: npm ci
       working-directory: src/main/webapp/
+  set-version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Change NPM version
+      uses: reedyuk/npm-version@1.1.1
+      with:
+        version: '1.0.1'
+        package: 'subproject-directory/'
+        git-tag-version: false
+    - name: Change Maven version
+      run: versions:set -DnewVersion={{ github.event.inputs.version }}-SNAPSHOT
+  build:
+    runs-on: ubuntu-latest
+    steps:
     - name: Build with NPM
       run: npm run build
       working-directory: src/main/webapp/
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Pnative -Dquarkus.native.container-build=true
-    - name: Dockerize
-      run: docker build -f src/main/docker/Dockerfile.native -t quarkus/crypto-wallet-scout .
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login
+        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+      - name: Dockerize
+        run: docker build -f src/main/docker/Dockerfile.native -t quarkus/crypto-wallet-scout:{{ github.event.inputs.version }} .
+      - name: Publish
+        run: docker push sito/crypto-wallet-scout:{{ github.event.inputs.version }}
+  commit-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
