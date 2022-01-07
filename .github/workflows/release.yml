@@ -39,12 +39,24 @@ jobs:
       working-directory: src/main/webapp/
     - name: Build with Maven
       run: mvn -B package --file pom.xml -Pnative -Dquarkus.native.container-build=true
-    - name: Login
+    - name: Docker login
       run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
     - name: Dockerize
       run: 'docker build -f src/main/docker/Dockerfile.native -t sito/crypto-wallet-scout:${{ github.event.inputs.version }} .'
-    - name: Publish
+    - name: Publish to Docker Hub
       run: 'docker push sito/crypto-wallet-scout:${{ github.event.inputs.version }}'
     - uses: EndBug/add-and-commit@v7
+      name: Commit the changes
       with:
         default_author: github_actions
+        message: 'Release ${{ github.event.inputs.version }}'
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.event.inputs.version }}
+        release_name: Release ${{ github.event.inputs.version }}
+        draft: true
+        prerelease: true
