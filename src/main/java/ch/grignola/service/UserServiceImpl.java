@@ -1,8 +1,7 @@
-package ch.grignola.manager;
+package ch.grignola.service;
 
 import ch.grignola.model.User;
 import ch.grignola.repository.UserRepository;
-import io.quarkus.oidc.IdToken;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,17 +11,16 @@ import javax.inject.Inject;
 public class UserServiceImpl implements UserService {
 
     @Inject
-    @IdToken
-    JsonWebToken idToken;
+    JsonWebToken token;
 
     @Inject
     UserRepository userRepository;
 
     public User getLoggedInUser() {
-        return userRepository.find("oidcId", idToken.getName())
+        return userRepository.find("oidcId", token.getSubject())
                 .firstResultOptional().orElseGet(() -> {
                     User user = new User();
-                    user.setOidcId(idToken.getName());
+                    user.setOidcId(token.getSubject());
                     userRepository.persist(user);
                     return user;
                 });

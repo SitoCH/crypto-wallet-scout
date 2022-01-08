@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from "./dashboard/dashboard.component";
-import { HomeComponent } from "./home/home.component";
-import { UserCollectionsComponent } from "./user-collections/user-collections.component";
+import { HomeComponent } from "./components/main/home/home.component";
+import { DashboardComponent } from "./components/main/dashboard/dashboard.component";
+import { UserCollectionsComponent } from "./components/main/user-collections/user-collections.component";
+import { IsLoggedInGuard } from "./auth/is-logged-in.guard";
+
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'collections', component: UserCollectionsComponent}
+  {path: 'dashboard', component: DashboardComponent, canActivate: [IsLoggedInGuard]},
+  {path: 'collections', component: UserCollectionsComponent, canActivate: [IsLoggedInGuard]}
 ];
 
 @NgModule({

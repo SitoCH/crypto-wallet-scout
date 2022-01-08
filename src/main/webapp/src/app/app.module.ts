@@ -3,9 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from "@angular/common/http";
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { HomeComponent } from './home/home.component';
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { FormsModule } from "@angular/forms";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,14 +11,18 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { InjectableRestApplicationClient } from "./services/utils/injectable-rest-application-client.service";
 import { AddressBalanceService } from "./services/address-balance.service";
-import { UserCollectionsComponent } from './user-collections/user-collections.component';
 import { environment } from "../environments/environment";
 import { NgxsModule } from "@ngxs/store";
 import { UserCollectionsState } from "./state/user-collections.state";
-import { NetworkLogoComponent } from './common/network-logo/network-logo.component';
 import { HeaderComponent } from "./layout/header/header.component";
 import { FooterComponent } from "./layout/footer/footer.component";
 import { SidenavComponent } from "./layout/sidenav/sidenav.component";
+import { NetworkLogoComponent } from "./components/common/network-logo/network-logo.component";
+import { UserCollectionsComponent } from "./components/main/user-collections/user-collections.component";
+import { HomeComponent } from "./components/main/home/home.component";
+import { DashboardComponent } from "./components/main/dashboard/dashboard.component";
+import { OAuthInterceptor } from "./auth/oauth-interceptor.service";
+import { AuthConfigModule } from "./auth/auth-config.module";
 
 @NgModule({
   declarations: [
@@ -40,13 +42,15 @@ import { SidenavComponent } from "./layout/sidenav/sidenav.component";
     FormsModule,
     NgbModule,
     FontAwesomeModule,
+    AuthConfigModule,
     NgxsModule.forRoot([UserCollectionsState], {
       developmentMode: !environment.production
-    })
+    }),
   ],
   providers: [
     InjectableRestApplicationClient,
-    AddressBalanceService
+    AddressBalanceService,
+    {provide: HTTP_INTERCEPTORS, useClass: OAuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

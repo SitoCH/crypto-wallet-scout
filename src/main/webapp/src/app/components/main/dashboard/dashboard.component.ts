@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AddressBalanceService } from "../services/address-balance.service";
-import { AddressBalance, Allocation } from "../../generated/client";
+import { AddressBalance, Allocation } from "../../../../generated/client";
+import { AddressBalanceService } from "../../../services/address-balance.service";
 
 @Component({
   selector: 'app-dashboard',

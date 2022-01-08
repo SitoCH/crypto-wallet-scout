@@ -1,6 +1,6 @@
 package ch.grignola.web;
 
-import ch.grignola.manager.UserService;
+import ch.grignola.service.UserService;
 import ch.grignola.model.UserCollection;
 import ch.grignola.repository.UserCollectionRepository;
 import com.fasterxml.jackson.annotation.JsonProperty;

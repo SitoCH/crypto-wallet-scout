@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { OidcSecurityService } from "angular-auth-oidc-client";
+import { map, Observable } from "rxjs";
+
 
 @Component({
   selector: 'app-sidenav',
@@ -7,9 +10,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidenavComponent implements OnInit {
 
-  constructor() { }
+  isAuthenticated$: Observable<boolean> ;
 
-  ngOnInit(): void {
+  constructor(public oidcSecurityService: OidcSecurityService) {
+
+    this.oidcSecurityService.checkAuth()
+
+    this.isAuthenticated$ = this.oidcSecurityService.isAuthenticated$.pipe(map(result => result.isAuthenticated));
   }
 
+  doLogin() {
+    this.oidcSecurityService.authorize();
+  }
+
+  ngOnInit(): void {
+    //this.isAuthenticated$ = this.oidcSecurityService.isAuthenticated$.pipe(map(result => result.isAuthenticated));
+  }
 }

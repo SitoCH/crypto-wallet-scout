@@ -23,7 +23,7 @@ export class UserCollectionsState {
   }
 
   @Action(GetUserCollections)
-  getTodos({getState, setState}: StateContext<UserCollectionSummaryModel>) {
+  getUserCollections({getState, setState}: StateContext<UserCollectionSummaryModel>) {
     return this.userCollectionService.getUserCollections().then(((result) => {
       const state = getState();
       setState({

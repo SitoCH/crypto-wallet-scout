@@ -1,4 +1,4 @@
-package ch.grignola.manager;
+package ch.grignola.service;
 
 import ch.grignola.model.User;
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Network } from "../../../generated/client";
+import { Network } from "../../../../generated/client";
 
 @Component({
   selector: 'app-network-logo',

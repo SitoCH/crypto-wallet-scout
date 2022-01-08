@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserCollectionsState } from "../state/user-collections.state";
 import { Observable } from "rxjs";
-import { UserCollectionSummary } from "../../generated/client";
 import { Select, Store } from "@ngxs/store";
-import { AddUserCollection, GetUserCollections } from "../state/user-collections.actions";
+import { AddUserCollection, GetUserCollections } from "../../../state/user-collections.actions";
+import { UserCollectionSummary } from "../../../../generated/client";
+import { UserCollectionsState } from "../../../state/user-collections.state";
 
 @Component({
   selector: 'app-user-collections',
@@ -13,8 +13,8 @@ import { AddUserCollection, GetUserCollections } from "../state/user-collections
 export class UserCollectionsComponent implements OnInit {
 
   newCollectionName = '';
-  // @ts-ignore
-  @Select(UserCollectionsState.getUserCollections) userCollections$: Observable<UserCollectionSummary[]>;
+  @Select(UserCollectionsState.getUserCollections)
+  userCollections$!: Observable<UserCollectionSummary[]>;
 
   constructor(private store: Store) {
   }
