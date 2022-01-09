@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.common;
 
 import ch.grignola.model.Network;
-import ch.grignola.service.quote.TokenPriceProvider;
+import ch.grignola.service.token.TokenPriceProvider;
 import ch.grignola.service.scanner.TokenBalance;
 import ch.grignola.utils.DistinctByKey;
 import io.github.bucket4j.Bandwidth;

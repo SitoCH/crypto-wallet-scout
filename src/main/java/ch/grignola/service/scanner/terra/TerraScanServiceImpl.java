@@ -2,7 +2,7 @@ package ch.grignola.service.scanner.terra;
 
 import ch.grignola.model.Allocation;
 import ch.grignola.model.Network;
-import ch.grignola.service.quote.TokenPriceProvider;
+import ch.grignola.service.token.TokenPriceProvider;
 import ch.grignola.service.scanner.TokenBalance;
 import ch.grignola.service.scanner.terra.model.TerraBalanceResult;
 import org.eclipse.microprofile.rest.client.inject.RestClient;

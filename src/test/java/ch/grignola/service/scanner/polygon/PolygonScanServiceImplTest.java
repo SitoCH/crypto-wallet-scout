@@ -1,6 +1,6 @@
 package ch.grignola.service.scanner.polygon;
 
-import ch.grignola.service.quote.TokenPriceProvider;
+import ch.grignola.service.token.TokenPriceProvider;
 import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventsResult;

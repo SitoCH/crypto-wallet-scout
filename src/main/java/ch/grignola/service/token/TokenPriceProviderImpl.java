@@ -1,4 +1,4 @@
-package ch.grignola.service.quote;
+package ch.grignola.service.token;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
@@ -19,9 +19,8 @@ public class TokenPriceProviderImpl implements TokenPriceProvider {
         return coingeckoRestClient.getCoins().stream()
                 .filter(x -> x.symbol.equalsIgnoreCase(symbol))
                 .findFirst()
-                .map(x -> coingeckoRestClient.getTicker(x.id))
-                .flatMap(x -> x.tickers.stream().findFirst())
-                .map(x -> x.convertedLast.usd)
+                .map(x -> coingeckoRestClient.get(x.id))
+                .map(x -> x.marketData.currentPrice.usd)
                 .orElseGet(() -> {
                     LOG.warnf("Missing coin quote for %s", symbol);
                     return 0f;

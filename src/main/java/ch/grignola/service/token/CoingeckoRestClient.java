@@ -1,7 +1,8 @@
-package ch.grignola.service.quote;
+package ch.grignola.service.token;
 
-import ch.grignola.service.quote.model.CoingeckoCoin;
-import ch.grignola.service.quote.model.CoingeckoCoinTicker;
+import ch.grignola.service.token.model.CoingeckoCoin;
+import ch.grignola.service.token.model.CoingeckoCoinDetail;
+import ch.grignola.service.token.model.CoingeckoCoinTicker;
 import io.quarkus.cache.CacheResult;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
@@ -19,6 +20,11 @@ public interface CoingeckoRestClient {
     @Path("/list")
     @CacheResult(cacheName = "coingecko-coins-cache")
     List<CoingeckoCoin> getCoins();
+
+    @GET
+    @Path("/{id}")
+    @CacheResult(cacheName = "coingecko-coins-detail-cache")
+    CoingeckoCoinDetail get(@PathParam("id") String id);
 
     @GET
     @Path("/{id}/tickers")

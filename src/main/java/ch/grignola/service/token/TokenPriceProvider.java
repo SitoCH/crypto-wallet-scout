@@ -1,4 +1,4 @@
-package ch.grignola.service.quote;
+package ch.grignola.service.token;
 
 public interface TokenPriceProvider {
 

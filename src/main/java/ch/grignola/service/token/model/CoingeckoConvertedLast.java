@@ -1,4 +1,4 @@
-package ch.grignola.service.quote.model;
+package ch.grignola.service.token.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
