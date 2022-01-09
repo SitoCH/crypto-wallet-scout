@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Select } from "@ngxs/store";
+import { AuthenticationState } from "../../../state/authentication.state";
+import { Observable } from "rxjs";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-home',
@@ -7,9 +11,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  @Select(AuthenticationState.isAuthenticated) isAuthenticated$: Observable<boolean> | undefined;
+
+  constructor(private router: Router) {
+  }
 
   ngOnInit(): void {
+    this.isAuthenticated$?.subscribe(isAuthenticated => {
+      if (isAuthenticated) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
   }
 
 }

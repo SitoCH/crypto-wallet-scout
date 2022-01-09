@@ -8,7 +8,7 @@
                  placeholder="Name" aria-label="Name" aria-describedby="btnNavbarSearch"/>
           <button class="btn btn-primary" id="btnNavbarSearch" type="button"
                   (click)="addNewCollection(newCollectionName)">
-            <fa-icon icon="plus" ></fa-icon>
+            <fa-icon icon="plus"></fa-icon>
           </button>
         </div>
       </div>
@@ -16,16 +16,13 @@
   </div>
 </div>
 
-<div class="row">
+
+<div class="row" *ngFor="let userCollection of userCollections$ | async">
   <div class="col-md-12">
     <div class="card mb-4">
+      <div class="card-header"> {{ userCollection.name}}</div>
       <div class="card-body">
-        <div *ngFor="let userCollection of userCollections$ | async">
-          {{ userCollection.name}}
-        </div>
       </div>
     </div>
   </div>
 </div>
-
-
