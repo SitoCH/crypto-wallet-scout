@@ -18,7 +18,7 @@ export const stsConfigLoader = (configurationService: ConfigurationService) => {
       ignoreNonceAfterRefresh: true,
       triggerAuthorizationResultEvent: true,
       logLevel: LogLevel.Warn,
-      historyCleanupOff: true,
+      historyCleanupOff: false,
     };
   })));
 };

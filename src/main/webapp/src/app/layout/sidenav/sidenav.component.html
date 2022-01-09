@@ -3,23 +3,29 @@
     <div class="sb-sidenav-menu">
       <div class="nav">
         <div class="sb-sidenav-menu-heading">Core</div>
-        <a class="nav-link" (click)="doLogin()" role="button">
+        <a class="nav-link" (click)="doLogin()" role="button" *ngIf="!(isAuthenticated$ | async)">
           <div class="sb-nav-link-icon">
             <fa-icon icon="user-alt"></fa-icon>
           </div>
           Login
         </a>
-        <a class="nav-link" routerLink="/dashboard">
+        <a class="nav-link" routerLink="/dashboard" *ngIf="isAuthenticated$ | async">
           <div class="sb-nav-link-icon">
             <fa-icon icon="tachometer-alt"></fa-icon>
           </div>
           Dashboard
         </a>
-        <a class="nav-link" routerLink="/collections">
+        <a class="nav-link" routerLink="/collections" *ngIf="isAuthenticated$ | async">
           <div class="sb-nav-link-icon">
             <fa-icon icon="layer-group"></fa-icon>
           </div>
           Collections
+        </a>
+        <a class="nav-link" (click)="doLogout()" role="button" *ngIf="isAuthenticated$ | async">
+          <div class="sb-nav-link-icon">
+            <fa-icon icon="user-alt"></fa-icon>
+          </div>
+          Logout
         </a>
       </div>
     </div>

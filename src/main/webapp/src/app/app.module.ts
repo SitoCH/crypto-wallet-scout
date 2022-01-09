@@ -25,6 +25,7 @@ import { OAuthInterceptor } from "./auth/oauth-interceptor.service";
 import { AuthConfigModule } from "./auth/auth-config.module";
 import { ApplicationState } from "./state/application.state";
 import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
+import { AuthenticationState } from "./state/authentication.state";
 
 @NgModule({
   declarations: [
@@ -48,9 +49,13 @@ import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
     NgxsStoragePluginModule.forRoot({
       key: [ApplicationState]
     }),
-    NgxsModule.forRoot([UserCollectionsState, ApplicationState], {
-      developmentMode: !environment.production
-    }),
+    NgxsModule.forRoot([
+        UserCollectionsState,
+        ApplicationState,
+        AuthenticationState],
+      {
+        developmentMode: !environment.production
+      }),
   ],
   providers: [
     InjectableRestApplicationClient,
