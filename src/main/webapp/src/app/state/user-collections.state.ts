@@ -1,8 +1,18 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { UserCollectionSummary } from "../../generated/client";
 import { UserCollectionService } from "../services/user-collection.service";
-import { AddUserCollection, GetUserCollections } from "./user-collections.actions";
 import { Injectable } from "@angular/core";
+
+export class GetUserCollections {
+  static readonly type = '[UserCollections] Get';
+}
+
+export class AddUserCollection {
+  static readonly type = '[UserCollections] Add';
+
+  constructor(public payload: string) {
+  }
+}
 
 export class UserCollectionSummaryModel {
   userCollections: UserCollectionSummary[] = [];

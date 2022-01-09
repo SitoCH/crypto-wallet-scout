@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { OidcSecurityService } from "angular-auth-oidc-client";
+import { Select } from "@ngxs/store";
+import { ApplicationState } from "./state/application.state";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -7,9 +10,8 @@ import { OidcSecurityService } from "angular-auth-oidc-client";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'webapp';
-  downloadCount = '';
-  navbarCollapsed = true;
+
+  @Select(ApplicationState.isSidebarClosed) isSidebarClosed$: Observable<boolean> | undefined;
 
   constructor(public oidcSecurityService: OidcSecurityService) {
   }

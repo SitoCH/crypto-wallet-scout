@@ -23,6 +23,8 @@ import { HomeComponent } from "./components/main/home/home.component";
 import { DashboardComponent } from "./components/main/dashboard/dashboard.component";
 import { OAuthInterceptor } from "./auth/oauth-interceptor.service";
 import { AuthConfigModule } from "./auth/auth-config.module";
+import { ApplicationState } from "./state/application.state";
+import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
 
 @NgModule({
   declarations: [
@@ -43,7 +45,10 @@ import { AuthConfigModule } from "./auth/auth-config.module";
     NgbModule,
     FontAwesomeModule,
     AuthConfigModule,
-    NgxsModule.forRoot([UserCollectionsState], {
+    NgxsStoragePluginModule.forRoot({
+      key: [ApplicationState]
+    }),
+    NgxsModule.forRoot([UserCollectionsState, ApplicationState], {
       developmentMode: !environment.production
     }),
   ],
