@@ -15,6 +15,6 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    this.oidcSecurityService.checkAuth();
+    this.oidcSecurityService.checkAuth().subscribe(data => console.log(data));
   }
 }
