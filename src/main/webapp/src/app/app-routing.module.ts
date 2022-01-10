@@ -7,7 +7,7 @@ import { IsLoggedInGuard } from "./auth/is-logged-in.guard";
 import { SearchAddressComponent } from "./components/main/search-address/search-address.component";
 import {
   UserCollectionAddressDetailComponent
-} from "./components/common/user-collection-address-detail/user-collection-address-detail.component";
+} from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
 
 
 const routes: Routes = [
@@ -15,7 +15,11 @@ const routes: Routes = [
   {path: 'dashboard', component: DashboardComponent, canActivate: [IsLoggedInGuard]},
   {path: 'search', component: SearchAddressComponent, canActivate: [IsLoggedInGuard]},
   {path: 'collections', component: UserCollectionsComponent, canActivate: [IsLoggedInGuard]},
-  {path: 'collection/:id/address/:address', component: UserCollectionAddressDetailComponent, canActivate: [IsLoggedInGuard]}
+  {
+    path: 'collection/:id/address/:address',
+    component: UserCollectionAddressDetailComponent,
+    canActivate: [IsLoggedInGuard]
+  }
 ];
 
 @NgModule({

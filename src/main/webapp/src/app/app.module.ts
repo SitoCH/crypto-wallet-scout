@@ -35,7 +35,7 @@ import {
 } from './components/common/address-balance-overview/address-balance-overview.component';
 import {
   UserCollectionAddressDetailComponent
-} from "./components/common/user-collection-address-detail/user-collection-address-detail.component";
+} from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
 
 @NgModule({
   declarations: [
