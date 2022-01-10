@@ -1,0 +1,1 @@
+create table Token (id bigint not null, coinGeckoSymbol varchar(255), name varchar(255), symbol varchar(255), primary key (id)) engine=InnoDB;
