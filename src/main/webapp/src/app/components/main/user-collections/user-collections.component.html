@@ -27,12 +27,18 @@
           <thead>
           <tr>
             <th scope="col">Address</th>
+            <th scope="col"></th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let address of userCollection.addresses">
             <td>
               {{address}}
+            </td>
+            <td>
+              <a [routerLink]="['/collection/', userCollection.id, 'address', address ]">
+                <fa-icon icon="search-plus"></fa-icon>
+              </a>
             </td>
           </tr>
           </tbody>

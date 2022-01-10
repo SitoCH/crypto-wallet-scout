@@ -15,6 +15,12 @@
           </div>
           Dashboard
         </a>
+        <a class="nav-link" routerLink="/search" *ngIf="isAuthenticated$ | async">
+          <div class="sb-nav-link-icon">
+            <fa-icon icon="search"></fa-icon>
+          </div>
+          Search
+        </a>
         <a class="nav-link" routerLink="/collections" *ngIf="isAuthenticated$ | async">
           <div class="sb-nav-link-icon">
             <fa-icon icon="layer-group"></fa-icon>

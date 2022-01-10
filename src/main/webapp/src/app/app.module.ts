@@ -26,6 +26,16 @@ import { AuthConfigModule } from "./auth/auth-config.module";
 import { ApplicationState } from "./state/application.state";
 import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
 import { AuthenticationState } from "./state/authentication.state";
+import { SearchAddressComponent } from './components/main/search-address/search-address.component';
+import {
+  AddressBalanceTableComponent
+} from './components/common/address-balance-table/address-balance-table.component';
+import {
+  AddressBalanceOverviewComponent
+} from './components/common/address-balance-overview/address-balance-overview.component';
+import {
+  UserCollectionAddressDetailComponent
+} from "./components/common/user-collection-address-detail/user-collection-address-detail.component";
 
 @NgModule({
   declarations: [
@@ -36,7 +46,11 @@ import { AuthenticationState } from "./state/authentication.state";
     FooterComponent,
     SidenavComponent,
     UserCollectionsComponent,
-    NetworkLogoComponent
+    NetworkLogoComponent,
+    SearchAddressComponent,
+    AddressBalanceTableComponent,
+    AddressBalanceOverviewComponent,
+    UserCollectionAddressDetailComponent
   ],
   imports: [
     BrowserModule,
