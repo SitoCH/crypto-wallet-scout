@@ -1,6 +1,7 @@
 package ch.grignola.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -8,11 +9,7 @@ public class UserCollection {
     private Long id;
     private User user;
     private String name;
-
-    private Set<UserCollectionAddress> userCollectionAddresses;
-
-    public UserCollection() {
-    }
+    private Set<UserCollectionAddress> userCollectionAddresses = new HashSet<>();
 
     @Id
     @GeneratedValue
@@ -41,7 +38,21 @@ public class UserCollection {
         this.name = name;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userCollection")
+
+    public void addUserCollectionAddresses(UserCollectionAddress userCollectionAddress) {
+        userCollectionAddresses.add(userCollectionAddress);
+        userCollectionAddress.setUserCollection(this);
+    }
+
+    public void removeUserCollectionAddresses(UserCollectionAddress userCollectionAddress) {
+        userCollectionAddresses.remove(userCollectionAddress);
+        userCollectionAddress.setUserCollection(null);
+    }
+
+    @OneToMany(fetch = FetchType.EAGER,
+            mappedBy = "userCollection",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     public Set<UserCollectionAddress> getUserCollectionAddresses() {
         return userCollectionAddresses;
     }

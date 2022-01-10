@@ -22,6 +22,21 @@
     <div class="card mb-4">
       <div class="card-header"> {{ userCollection.name}}</div>
       <div class="card-body">
+        <table class="table table-striped table-bordered"
+               *ngIf="userCollection.addresses.length > 0">
+          <thead>
+          <tr>
+            <th scope="col">Address</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let address of userCollection.addresses">
+            <td>
+              {{address}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

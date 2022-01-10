@@ -45,7 +45,7 @@ public class UserCollectionResource {
                     if (collection.getUser().getOidcId().equals(user.getOidcId()) && collection.getUserCollectionAddresses().stream().noneMatch(x -> x.getAddress().equals(address))) {
                         UserCollectionAddress userCollectionAddress = new UserCollectionAddress();
                         userCollectionAddress.setAddress(address);
-                        collection.getUserCollectionAddresses().add(userCollectionAddress);
+                        collection.addUserCollectionAddresses(userCollectionAddress);
                         userCollectionRepository.persist(collection);
                         LOG.infof("User %s added address %s to collection %s ",
                                 user.getId(), address, collection.getId());

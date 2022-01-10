@@ -4,6 +4,7 @@ import { Select, Store } from "@ngxs/store";
 import { ApplicationState } from "./state/application.state";
 import { Observable } from "rxjs";
 import { SetAuthentication } from "./state/authentication.state";
+import { GetUserCollections } from "./state/user-collections.state";
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent {
   ngOnInit() {
     this.oidcSecurityService.checkAuth().subscribe(data => {
       this.store.dispatch(new SetAuthentication(data.isAuthenticated));
+      this.store.dispatch(new GetUserCollections());
     });
   }
 }

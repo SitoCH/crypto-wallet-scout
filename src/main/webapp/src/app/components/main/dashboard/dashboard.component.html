@@ -65,37 +65,41 @@
 <div class="row" *ngIf="addressBalance">
   <div class="col-md-12">
     <div class="card mb-4">
-      <div class="card-header">Token list</div>
-      <div class="card-body">
+      <div class="card-header">Token list
 
+        <ng-template #content let-modal>
+          <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Add to collection</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <div class="input-group">
+                  <select name="selectedUserCollection" [(ngModel)]="selectedUserCollectionId">
+                    <option *ngFor="let userCollections of userCollections$ | async"
+                            [ngValue]="userCollections.id">
+                      {{ userCollections.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close()" [disabled]="!selectedUserCollectionId">
+              Save
+            </button>
+          </div>
+        </ng-template>
+        <fa-icon [icon]="['far', 'star']" class="fa-pull-right" role="button"
+                 (click)="open(content)" *ngIf="(userCollections$ | async)?.length || 0 > 0"></fa-icon>
+      </div>
+      <div class="card-body">
         <div>
 
-          <ng-template #content let-modal>
-            <div class="modal-header">
-              <h4 class="modal-title" id="modal-basic-title">Add to collection</h4>
-              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <label>Collection</label>
-                  <div class="input-group">
-                    <select [(ngModel)]="selectedUserCollectionId" name="selectedUserCollection">
-                      <option *ngFor="let userCollections of userCollections$ | async" [ngValue]="userCollections.id">
-                        {{ userCollections.name }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
-            </div>
-          </ng-template>
-          <fa-icon [icon]="['far', 'star']" (click)="open(content)"></fa-icon>
         </div>
 
         <table class="table table-striped table-bordered">

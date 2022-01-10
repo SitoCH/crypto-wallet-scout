@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AddressBalance, Allocation, UserCollectionSummary } from "../../../../generated/client";
 import { AddressBalanceService } from "../../../services/address-balance.service";
 import { Select, Store } from "@ngxs/store";
-import {
-  AddAddressToCollection,
-  GetUserCollections,
-  UserCollectionsState
-} from "../../../state/user-collections.state";
+import { AddAddressToCollection, UserCollectionsState } from "../../../state/user-collections.state";
 import { Observable } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -15,7 +11,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 
   @Select(UserCollectionsState.getUserCollections)
   userCollections$!: Observable<UserCollectionSummary[]>;
@@ -33,10 +29,6 @@ export class DashboardComponent implements OnInit {
   constructor(private addressService: AddressBalanceService,
               private store: Store,
               private modalService: NgbModal) {
-  }
-
-  ngOnInit(): void {
-    this.store.dispatch(new GetUserCollections());
   }
 
   getAccountBalance(account: string) {
@@ -60,13 +52,10 @@ export class DashboardComponent implements OnInit {
   }
 
   open(content: any) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      //this.closeResult = `Closed with: ${result}`;
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then(_ => {
       if (this.selectedUserCollectionId) {
         this.store.dispatch(new AddAddressToCollection(this.selectedUserCollectionId, this.accountToSearch));
       }
-    }, (reason) => {
-      //this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
 }
