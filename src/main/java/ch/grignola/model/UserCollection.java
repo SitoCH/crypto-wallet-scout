@@ -1,15 +1,18 @@
 package ch.grignola.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class UserCollection {
     private Long id;
     private User user;
     private String name;
+
+    private Set<UserCollectionAddress> userCollectionAddresses;
+
+    public UserCollection() {
+    }
 
     @Id
     @GeneratedValue
@@ -36,5 +39,14 @@ public class UserCollection {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "userCollection")
+    public Set<UserCollectionAddress> getUserCollectionAddresses() {
+        return userCollectionAddresses;
+    }
+
+    public void setUserCollectionAddresses(Set<UserCollectionAddress> userCollectionAddresses) {
+        this.userCollectionAddresses = userCollectionAddresses;
     }
 }

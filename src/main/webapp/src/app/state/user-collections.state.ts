@@ -14,6 +14,13 @@ export class AddUserCollection {
   }
 }
 
+export class AddAddressToCollection {
+  static readonly type = '[UserCollections] AddAddressToCollection';
+
+  constructor(public collectionId: number, public address: string) {
+  }
+}
+
 export class UserCollectionSummaryModel {
   userCollections: UserCollectionSummary[] = [];
 }
@@ -53,5 +60,19 @@ export class UserCollectionsState {
           userCollections: [...state.userCollections, newCollection]
         });
       });
+  }
+
+  @Action(AddAddressToCollection)
+  addAddressToCollection(ctx: StateContext<UserCollectionSummaryModel>, action: AddAddressToCollection) {
+    return this.userCollectionService.addAddress(action.collectionId, action.address).then(
+      () => {
+        return this.userCollectionService.getUserCollections()
+      }).then(collections => {
+      const state = ctx.getState();
+      ctx.setState({
+        ...state,
+        userCollections: collections
+      });
+    });
   }
 }
