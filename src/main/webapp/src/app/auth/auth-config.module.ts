@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
-import { AuthModule, LogLevel, StsConfigHttpLoader, StsConfigLoader } from 'angular-auth-oidc-client';
+import {
+  AuthModule,
+  LogLevel,
+  OpenIdConfiguration,
+  StsConfigHttpLoader,
+  StsConfigLoader
+} from 'angular-auth-oidc-client';
 import { ConfigurationService } from "../services/configuration.service";
 import { from } from "rxjs";
 
 export const stsConfigLoader = (configurationService: ConfigurationService) => {
-  return new StsConfigHttpLoader(from(configurationService.getConfiguration().then((config) => {
+  return new StsConfigHttpLoader(from(configurationService.getConfiguration().then((config): OpenIdConfiguration => {
     return {
       authority: config.authServerUrl,
       redirectUrl: window.location.origin,

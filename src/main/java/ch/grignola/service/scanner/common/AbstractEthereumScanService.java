@@ -88,7 +88,7 @@ public abstract class AbstractEthereumScanService implements ScanService {
         bucket.consume(1);
         NetworkTokenBalance balance = getNetworkTokenBalance(address);
         String image = tokenProvider.getImageSmall(balance.tokenSymbol);
-        BigDecimal nativeValue = new BigDecimal(balance.nativeValue).divide((new BigDecimal(rightPad("1", balance.tokenDecimals + 1, '0'))), MathContext.DECIMAL64);
+        BigDecimal nativeValue = new BigDecimal(balance.nativeValue).divide(new BigDecimal(rightPad("1", balance.tokenDecimals + 1, '0')), MathContext.DECIMAL64);
         BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenProvider.getUsdValue(balance.tokenSymbol)));
         return new TokenBalance(getNetwork(), LIQUID, nativeValue, usdValue, balance.tokenSymbol, balance.tokenName, image);
     }
