@@ -33,7 +33,7 @@ public abstract class AbstractEthereumScanService implements ScanService {
     private final BlockingBucket bucket;
 
     protected AbstractEthereumScanService() {
-        Bandwidth limit = Bandwidth.simple(5, ofMillis(4500));
+        Bandwidth limit = Bandwidth.simple(5, ofMillis(4000));
         bucket = Bucket.builder().addLimit(limit).build().asBlocking();
     }
 
