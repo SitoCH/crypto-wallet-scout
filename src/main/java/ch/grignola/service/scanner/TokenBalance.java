@@ -19,15 +19,18 @@ public final class TokenBalance {
     private final String symbol;
     @JsonProperty("name")
     private final String name;
+    @JsonProperty("image")
+    private final String image;
 
     public TokenBalance(Network network, Allocation allocation, BigDecimal nativeValue,
-                        BigDecimal usdValue, String symbol, String name) {
+                        BigDecimal usdValue, String symbol, String name, String image) {
         this.network = network;
         this.allocation = allocation;
         this.nativeValue = nativeValue;
         this.usdValue = usdValue;
         this.symbol = symbol;
         this.name = name;
+        this.image = image;
     }
 
     public BigDecimal getUsdValue() {

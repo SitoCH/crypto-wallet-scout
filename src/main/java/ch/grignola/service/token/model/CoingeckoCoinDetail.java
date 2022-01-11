@@ -1097,18 +1097,6 @@ class High24h {
 }
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class Image {
-
-    @JsonProperty("thumb")
-    public String thumb;
-    @JsonProperty("small")
-    public String small;
-    @JsonProperty("large")
-    public String large;
-
-}
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
 class Links {
 
     @JsonProperty("homepage")

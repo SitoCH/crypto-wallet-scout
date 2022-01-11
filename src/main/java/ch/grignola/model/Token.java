@@ -10,6 +10,8 @@ public class Token {
     private String name;
     private String symbol;
     private String coinGeckoSymbol;
+    private String coinGeckoId;
+    private String imageSmall;
 
     @Id
     @GeneratedValue
@@ -43,5 +45,21 @@ public class Token {
 
     public void setCoinGeckoSymbol(String coinGeckoSymbol) {
         this.coinGeckoSymbol = coinGeckoSymbol;
+    }
+
+    public String getImageSmall() {
+        return imageSmall;
+    }
+
+    public void setImageSmall(String imageSmall) {
+        this.imageSmall = imageSmall;
+    }
+
+    public String getCoinGeckoId() {
+        return coinGeckoId;
+    }
+
+    public void setCoinGeckoId(String coinGeckoId) {
+        this.coinGeckoId = coinGeckoId;
     }
 }

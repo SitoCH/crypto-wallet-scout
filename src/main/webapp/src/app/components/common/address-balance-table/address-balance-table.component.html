@@ -25,7 +25,8 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-dark" (click)="modal.close()" [disabled]="!selectedUserCollectionId">
+            <button type="button" class="btn btn-outline-dark" (click)="modal.close()"
+                    [disabled]="!selectedUserCollectionId">
               Save
             </button>
           </div>
@@ -42,8 +43,9 @@
           <thead>
           <tr>
             <th scope="col">Network</th>
-            <th scope="col">Token name</th>
+            <th scope="col">Token</th>
             <th scope="col">Native value</th>
+            <th scope="col"></th>
             <th scope="col">USD value</th>
             <th scope="col">Allocation</th>
           </tr>
@@ -53,8 +55,9 @@
             <td>
               <app-network-logo [network]="tokenBalance.network"></app-network-logo>
             </td>
-            <td>{{tokenBalance.name}}</td>
-            <td class="text-end">{{tokenBalance.nativeValue}} {{tokenBalance.symbol}}</td>
+            <td><img [src]="tokenBalance.image" [alt]="tokenBalance.name" class="token-logo"/></td>
+            <td class="text-end">{{tokenBalance.nativeValue | number:'1.2-4' }}</td>
+            <td>{{tokenBalance.symbol}}</td>
             <td class="text-end">{{tokenBalance.usdValue | number:'1.2-2' }} $</td>
             <td>{{tokenBalance.allocation}}</td>
           </tr>

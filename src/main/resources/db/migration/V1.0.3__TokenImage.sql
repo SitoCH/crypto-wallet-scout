@@ -1,0 +1,1 @@
+alter table Token add column imageSmall varchar(255);
