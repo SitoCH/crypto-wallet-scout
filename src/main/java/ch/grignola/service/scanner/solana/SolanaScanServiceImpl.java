@@ -33,7 +33,7 @@ public class SolanaScanServiceImpl implements SolanaScanService {
 
     @Override
     public boolean accept(String address) {
-        return address.length() == 44;
+        return !address.startsWith("terra") && address.length() == 44;
     }
 
     @Override
