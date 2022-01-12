@@ -25,6 +25,7 @@ export const stsConfigLoader = (configurationService: ConfigurationService) => {
       triggerAuthorizationResultEvent: true,
       logLevel: LogLevel.Debug,
       historyCleanupOff: false,
+      storage: new LocalStorage()
     };
   })));
 };
@@ -36,8 +37,7 @@ export const stsConfigLoader = (configurationService: ConfigurationService) => {
         provide: StsConfigLoader,
         useFactory: stsConfigLoader,
         deps: [ConfigurationService],
-      },
-      storage: new LocalStorage()
+      }
     }),
   ],
   exports: [AuthModule],
