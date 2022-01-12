@@ -8,6 +8,7 @@ import {
 } from 'angular-auth-oidc-client';
 import { ConfigurationService } from "../services/configuration.service";
 import { from } from "rxjs";
+import { LocalStorage } from "./local-storage";
 
 export const stsConfigLoader = (configurationService: ConfigurationService) => {
   return new StsConfigHttpLoader(from(configurationService.getConfiguration().then((config): OpenIdConfiguration => {
@@ -22,7 +23,7 @@ export const stsConfigLoader = (configurationService: ConfigurationService) => {
       useRefreshToken: true,
       ignoreNonceAfterRefresh: true,
       triggerAuthorizationResultEvent: true,
-      logLevel: LogLevel.Warn,
+      logLevel: LogLevel.Debug,
       historyCleanupOff: false,
     };
   })));
@@ -36,6 +37,7 @@ export const stsConfigLoader = (configurationService: ConfigurationService) => {
         useFactory: stsConfigLoader,
         deps: [ConfigurationService],
       },
+      storage: new LocalStorage()
     }),
   ],
   exports: [AuthModule],
