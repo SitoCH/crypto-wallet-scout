@@ -1,15 +1,13 @@
 <app-header></app-header>
 
-<div [ngClass]="{'sb-sidenav-toggled': isSidebarClosed$ | async}">
-  <div id="layoutSidenav">
-    <app-sidenav></app-sidenav>
-    <div id="layoutSidenav_content">
-      <main>
-        <div class="container-fluid px-4">
-          <router-outlet></router-outlet>
-        </div>
-      </main>
-      <app-footer></app-footer>
+<app-sidenav></app-sidenav>
+
+<main role="main" class="main-content">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <router-outlet></router-outlet>
+      </div>
     </div>
   </div>
-</div>
+</main>

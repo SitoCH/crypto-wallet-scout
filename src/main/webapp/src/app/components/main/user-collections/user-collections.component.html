@@ -1,12 +1,13 @@
-<h1 class="mt-4">Collections</h1>
+<h2 class="page-title">Collections</h2>
 <div class="row">
-  <div class="col-md-12">
-    <div class="card mb-4">
+  <div class="col-md-12 my-4">
+    <div class="card shadow">
       <div class="card-body">
+        <h5 class="card-title">Add new collection</h5>
+        <p class="card-text"></p>
         <div class="input-group">
-          <input class="form-control" type="text" [(ngModel)]="newCollectionName"
-                 placeholder="Name" aria-label="Name" aria-describedby="btnNavbarSearch"/>
-          <button class="btn btn-primary" id="btnNavbarSearch" type="button"
+          <input class="form-control" type="text" [(ngModel)]="newCollectionName" />
+          <button class="btn btn-primary" type="button"
                   (click)="addNewCollection(newCollectionName)">
             <fa-icon icon="plus"></fa-icon>
           </button>
@@ -16,13 +17,13 @@
   </div>
 </div>
 
-
 <div class="row" *ngFor="let userCollection of userCollections$ | async">
-  <div class="col-md-12">
-    <div class="card mb-4">
-      <div class="card-header"> {{ userCollection.name}}</div>
+  <div class="col-md-12 my-4">
+    <div class="card shadow">
       <div class="card-body">
-        <table class="table table-striped table-bordered"
+        <h5 class="card-title">{{ userCollection.name}}</h5>
+        <p class="card-text"></p>
+        <table class="table table-bordered table-hover mb-0"
                *ngIf="userCollection.addresses.length > 0">
           <thead>
           <tr>
@@ -37,7 +38,7 @@
             </td>
             <td>
               <a [routerLink]="['/collection/', userCollection.id, 'address', address ]">
-                <fa-icon icon="search-plus"></fa-icon>
+                <fa-icon icon="search"></fa-icon>
               </a>
             </td>
           </tr>

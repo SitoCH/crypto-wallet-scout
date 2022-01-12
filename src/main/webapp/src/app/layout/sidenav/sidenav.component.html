@@ -1,39 +1,40 @@
-<div id="layoutSidenav_nav">
-  <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-    <div class="sb-sidenav-menu">
-      <div class="nav">
-        <div class="sb-sidenav-menu-heading">Core</div>
-        <a class="nav-link" (click)="doLogin()" role="button" *ngIf="!(isAuthenticated$ | async)">
-          <div class="sb-nav-link-icon">
-            <fa-icon icon="user-alt"></fa-icon>
-          </div>
-          Login
-        </a>
-        <a class="nav-link" routerLink="/dashboard" *ngIf="isAuthenticated$ | async">
-          <div class="sb-nav-link-icon">
-            <fa-icon icon="tachometer-alt"></fa-icon>
-          </div>
-          Dashboard
-        </a>
-        <a class="nav-link" routerLink="/search" *ngIf="isAuthenticated$ | async">
-          <div class="sb-nav-link-icon">
-            <fa-icon icon="search"></fa-icon>
-          </div>
-          Search
-        </a>
-        <a class="nav-link" routerLink="/collections" *ngIf="isAuthenticated$ | async">
-          <div class="sb-nav-link-icon">
-            <fa-icon icon="layer-group"></fa-icon>
-          </div>
-          Collections
-        </a>
-        <a class="nav-link" (click)="doLogout()" role="button" *ngIf="isAuthenticated$ | async">
-          <div class="sb-nav-link-icon">
-            <fa-icon icon="user-alt"></fa-icon>
-          </div>
-          Logout
-        </a>
-      </div>
+<aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
+  <nav class="vertnav navbar navbar-light">
+    <!-- nav bar -->
+    <div class="w-100 mb-4 d-flex">
+      <a class="navbar-brand mx-auto mt-2 flex-fill text-center" routerLink="/">Home</a>
     </div>
+    <ul class="navbar-nav flex-fill w-100 mb-2">
+      <li class="nav-item w-100">
+        <a class="nav-link" (click)="doLogin()" *ngIf="!(isAuthenticated$ | async)">
+          <fa-icon icon="user-alt"></fa-icon>
+          <span class="ml-3 item-text">Login</span>
+        </a>
+      </li>
+      <li class="nav-item w-100">
+        <a class="nav-link" routerLink="/dashboard" *ngIf="isAuthenticated$ | async">
+          <fa-icon icon="tachometer-alt"></fa-icon>
+          <span class="ml-3 item-text">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item w-100">
+        <a class="nav-link" routerLink="/search" *ngIf="isAuthenticated$ | async">
+          <fa-icon icon="search"></fa-icon>
+          <span class="ml-3 item-text">Search</span>
+        </a>
+      </li>
+      <li class="nav-item w-100">
+        <a class="nav-link" routerLink="/collections" *ngIf="isAuthenticated$ | async">
+          <fa-icon icon="layer-group"></fa-icon>
+          <span class="ml-3 item-text">Collections</span>
+        </a>
+      </li>
+      <li class="nav-item w-100">
+        <a class="nav-link" (click)="doLogout()" *ngIf="isAuthenticated$ | async">
+          <fa-icon icon="user-alt"></fa-icon>
+          <span class="ml-3 item-text">Logout</span>
+        </a>
+      </li>
+    </ul>
   </nav>
-</div>
+</aside>

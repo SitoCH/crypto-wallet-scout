@@ -15,7 +15,6 @@ import { environment } from "../environments/environment";
 import { NgxsModule } from "@ngxs/store";
 import { UserCollectionsState } from "./state/user-collections.state";
 import { HeaderComponent } from "./layout/header/header.component";
-import { FooterComponent } from "./layout/footer/footer.component";
 import { SidenavComponent } from "./layout/sidenav/sidenav.component";
 import { NetworkLogoComponent } from "./components/common/network-logo/network-logo.component";
 import { UserCollectionsComponent } from "./components/main/user-collections/user-collections.component";
@@ -43,7 +42,6 @@ import {
     DashboardComponent,
     HomeComponent,
     HeaderComponent,
-    FooterComponent,
     SidenavComponent,
     UserCollectionsComponent,
     NetworkLogoComponent,

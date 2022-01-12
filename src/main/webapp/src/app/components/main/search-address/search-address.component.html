@@ -1,12 +1,13 @@
-<h1 class="mt-4">Search</h1>
+<h2 class="page-title">Search</h2>
 <div class="row">
-  <div class="col-md-12">
-    <div class="card mb-4">
+  <div class="col-md-12 my-4">
+    <div class="card shadow">
       <div class="card-body">
+        <h5 class="card-title">Search</h5>
+        <p class="card-text"></p>
         <div class="input-group">
-          <input class="form-control" type="text" [(ngModel)]="accountToSearch"
-                 placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch"/>
-          <button class="btn btn-primary" id="btnNavbarSearch" type="button"
+          <input class="form-control" type="text" [(ngModel)]="accountToSearch"/>
+          <button class="btn btn-primary" type="button"
                   (click)="getAccountBalance(accountToSearch)">
             <fa-icon icon="search" *ngIf="!searchRunning"></fa-icon>
             <fa-icon icon="spinner" *ngIf="searchRunning" [spin]="true"></fa-icon>
@@ -17,7 +18,11 @@
   </div>
 </div>
 
-<app-address-balance-overview [addressBalance]="addressBalance!"></app-address-balance-overview>
+<div *ngIf="firstSearchDone">
+  <app-address-balance-overview [addressBalance]="addressBalance!"></app-address-balance-overview>
 
-<app-address-balance-table [addressBalance]="addressBalance!"
-                           [address]="accountToSearch"></app-address-balance-table>
+  <app-address-balance-table [addressBalance]="addressBalance!"
+                             [address]="accountToSearch"></app-address-balance-table>
+</div>
+
+

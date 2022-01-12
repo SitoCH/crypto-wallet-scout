@@ -10,6 +10,7 @@ import { AddressBalanceService } from "../../../services/address-balance.service
 export class SearchAddressComponent {
 
   accountToSearch = '';
+  firstSearchDone = false;
   searchRunning = false;
   addressBalance: AddressBalance | null = null;
 
@@ -17,6 +18,7 @@ export class SearchAddressComponent {
   }
 
   getAccountBalance(account: string) {
+    this.firstSearchDone = true;
     this.addressBalance = null;
     this.searchRunning = true;
     this.addressService.getAddressBalance(account)

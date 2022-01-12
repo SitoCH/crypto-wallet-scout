@@ -13,7 +13,7 @@ import { GetUserCollections } from "./state/user-collections.state";
 })
 export class AppComponent {
 
-  @Select(ApplicationState.isSidebarClosed) isSidebarClosed$: Observable<boolean> | undefined;
+  @Select(ApplicationState.isSidebarClosed) isSidebarClosed$!: Observable<boolean>;
 
   constructor(private oidcSecurityService: OidcSecurityService,
               private store: Store) {
@@ -23,6 +23,15 @@ export class AppComponent {
     this.oidcSecurityService.checkAuth().subscribe(data => {
       this.store.dispatch(new SetAuthentication(data.isAuthenticated));
       this.store.dispatch(new GetUserCollections());
+    });
+
+    this.isSidebarClosed$.subscribe(isSidebarClosed => {
+      const bodyTag = document.body;
+      if (isSidebarClosed) {
+        bodyTag.classList.add('collapsed');
+      } else {
+        bodyTag.classList.remove('collapsed');
+      }
     });
   }
 }
