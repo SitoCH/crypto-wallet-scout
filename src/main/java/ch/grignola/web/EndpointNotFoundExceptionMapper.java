@@ -20,7 +20,7 @@ public class EndpointNotFoundExceptionMapper implements ExceptionMapper<NotFound
 
     @Override
     public Response toResponse(NotFoundException e) {
-        final InputStream indexIS = Thread.currentThread().getContextClassLoader().getResourceAsStream("index.html");
+        final InputStream indexIS = Thread.currentThread().getContextClassLoader().getResourceAsStream("/META-INF/resources/index.html");
         final InputStreamReader isr = new InputStreamReader(indexIS, StandardCharsets.UTF_8);
         final StringBuilder sb = new StringBuilder();
         int c;
