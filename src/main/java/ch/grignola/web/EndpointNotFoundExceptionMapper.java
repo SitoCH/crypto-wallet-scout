@@ -4,6 +4,7 @@ import io.quarkus.arc.Priority;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -31,6 +32,9 @@ public class EndpointNotFoundExceptionMapper implements ExceptionMapper<NotFound
         } catch (IOException ex) {
             return Response.temporaryRedirect(URI.create("/")).build();
         }
-        return Response.ok(sb.toString(), MediaType.TEXT_HTML_TYPE).build();
+
+        return Response.ok(sb.toString(), MediaType.TEXT_HTML_TYPE)
+                .cacheControl(CacheControl.valueOf("no-cache, no-store, must-revalidate"))
+                .build();
     }
 }
