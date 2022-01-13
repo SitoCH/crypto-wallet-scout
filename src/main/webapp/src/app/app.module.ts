@@ -16,7 +16,6 @@ import { NgxsModule } from "@ngxs/store";
 import { UserCollectionsState } from "./state/user-collections.state";
 import { HeaderComponent } from "./layout/header/header.component";
 import { SidenavComponent } from "./layout/sidenav/sidenav.component";
-import { NetworkLogoComponent } from "./components/common/network-logo/network-logo.component";
 import { UserCollectionsComponent } from "./components/main/user-collections/user-collections.component";
 import { HomeComponent } from "./components/main/home/home.component";
 import { DashboardComponent } from "./components/main/dashboard/dashboard.component";
@@ -35,6 +34,7 @@ import {
 import {
   UserCollectionAddressDetailComponent
 } from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
+import { TokenLogoComponent } from './components/common/token-logo/token-logo.component';
 
 @NgModule({
   declarations: [
@@ -44,11 +44,11 @@ import {
     HeaderComponent,
     SidenavComponent,
     UserCollectionsComponent,
-    NetworkLogoComponent,
     SearchAddressComponent,
     AddressBalanceTableComponent,
     AddressBalanceOverviewComponent,
-    UserCollectionAddressDetailComponent
+    UserCollectionAddressDetailComponent,
+    TokenLogoComponent
   ],
   imports: [
     BrowserModule,

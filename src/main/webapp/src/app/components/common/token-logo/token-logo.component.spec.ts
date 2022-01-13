@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NetworkLogoComponent } from './network-logo.component';
+import { TokenLogoComponent } from './token-logo.component';
 
-describe('NetworkLogoComponent', () => {
-  let component: NetworkLogoComponent;
-  let fixture: ComponentFixture<NetworkLogoComponent>;
+describe('TokenLogoComponent', () => {
+  let component: TokenLogoComponent;
+  let fixture: ComponentFixture<TokenLogoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NetworkLogoComponent ]
+      declarations: [ TokenLogoComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NetworkLogoComponent);
+    fixture = TestBed.createComponent(TokenLogoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,28 @@
+.circle {
+  border-radius: 50%;
+}
+
+.circle-small {
+  width: 20px;
+  height: 20px;
+  background: white;
+  position: absolute;
+  z-index: 100;
+}
+
+.circle-large {
+  width: 30px;
+  height: 30px;
+  background: white;
+  position: relative;
+  left: 10px;
+}
+
+.image-small {
+  width: 20px;
+}
+
+.image-large {
+   width: 30px;
+ }
+

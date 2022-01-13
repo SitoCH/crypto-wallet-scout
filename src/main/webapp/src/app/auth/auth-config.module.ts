@@ -23,7 +23,7 @@ export const stsConfigLoader = (configurationService: ConfigurationService) => {
       useRefreshToken: true,
       ignoreNonceAfterRefresh: true,
       triggerAuthorizationResultEvent: true,
-      logLevel: LogLevel.Debug,
+      logLevel: LogLevel.Warn,
       historyCleanupOff: false,
       storage: new LocalStorage()
     };
