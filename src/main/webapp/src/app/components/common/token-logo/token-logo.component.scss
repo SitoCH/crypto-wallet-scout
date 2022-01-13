@@ -1,28 +1,31 @@
-.circle {
+.token-circle {
   border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
 }
 
-.circle-small {
+.token-circle-small {
   width: 20px;
   height: 20px;
-  background: white;
   position: absolute;
   z-index: 100;
 }
 
-.circle-large {
+.token-circle-large {
   width: 30px;
   height: 30px;
-  background: white;
   position: relative;
   left: 10px;
 }
 
-.image-small {
+.token-image-small {
   width: 20px;
 }
 
-.image-large {
-   width: 30px;
- }
+.token-image-large {
+  width: 30px;
+}
 
