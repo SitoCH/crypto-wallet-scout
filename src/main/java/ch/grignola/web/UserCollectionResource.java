@@ -85,7 +85,9 @@ public class UserCollectionResource {
         public UserCollectionSummary(UserCollection userCollection) {
             this.id = userCollection.getId();
             this.name = userCollection.getName();
-            this.addresses = userCollection.getUserCollectionAddresses().stream().map(UserCollectionAddress::getAddress).toList();
+            this.addresses = userCollection.getUserCollectionAddresses().stream()
+                    .map(UserCollectionAddress::getAddress)
+                    .sorted().toList();
         }
     }
 }

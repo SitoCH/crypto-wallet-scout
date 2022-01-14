@@ -6,7 +6,7 @@
         <h5 class="card-title">Add new collection</h5>
         <p class="card-text"></p>
         <div class="input-group">
-          <input class="form-control" type="text" [(ngModel)]="newCollectionName" />
+          <input class="form-control" type="text" [(ngModel)]="newCollectionName"/>
           <button class="btn btn-primary" type="button"
                   (click)="addNewCollection(newCollectionName)">
             <fa-icon icon="plus"></fa-icon>
@@ -23,18 +23,18 @@
       <div class="card-body">
         <h5 class="card-title">{{ userCollection.name}}</h5>
         <p class="card-text"></p>
-        <table class="table table-bordered table-hover mb-0"
+        <table class="table table-bordered table-ellipsis mb-0"
                *ngIf="userCollection.addresses.length > 0">
           <thead>
           <tr>
-            <th scope="col">Address</th>
-            <th scope="col"></th>
+            <th scope="col" class="w-100">Address</th>
+            <th scope="col" class="action-column"></th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let address of userCollection.addresses">
             <td>
-              {{address}}
+              <span>{{address}}</span>
             </td>
             <td>
               <a [routerLink]="['/collection/', userCollection.id, 'address', address ]">
