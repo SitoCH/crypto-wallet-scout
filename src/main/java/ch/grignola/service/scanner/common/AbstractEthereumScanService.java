@@ -2,7 +2,6 @@ package ch.grignola.service.scanner.common;
 
 import ch.grignola.model.Network;
 import ch.grignola.utils.DistinctByKey;
-import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
 import org.jboss.logging.Logger;
@@ -14,6 +13,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static ch.grignola.model.Allocation.LIQUID;
+import static io.github.bucket4j.Bandwidth.classic;
+import static io.github.bucket4j.Refill.intervally;
 import static java.lang.Integer.parseInt;
 import static java.math.BigDecimal.ZERO;
 import static java.time.Duration.ofMillis;
@@ -27,8 +28,9 @@ public abstract class AbstractEthereumScanService implements ScanService {
     private final BlockingBucket bucket;
 
     protected AbstractEthereumScanService() {
-        Bandwidth limit = Bandwidth.simple(5, ofMillis(4750));
-        bucket = Bucket.builder().addLimit(limit).build().asBlocking();
+        bucket = Bucket.builder()
+                .addLimit(classic(5, intervally(5, ofMillis(4800))))
+                .build().asBlocking();
     }
 
     @Override
