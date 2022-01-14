@@ -12,11 +12,13 @@
             <th scope="col"></th>
             <th scope="col">USD value</th>
             <th scope="col">Allocation</th>
+            <th scope="col" class="action-column"></th>
+            <th scope="col" class="action-column"></th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td colspan="5" *ngIf="!addressBalance">
+            <td colspan="7" *ngIf="!addressBalance">
               <fa-icon icon="spinner" [spin]="true"></fa-icon>
             </td>
           </tr>
@@ -32,6 +34,8 @@
               <td>{{(getToken(tokenBalance.tokenId) | async)?.symbol}}</td>
               <td class="text-end">${{tokenBalance.usdValue | number:'1.2-2' }}</td>
               <td>{{tokenBalance.allocation}}</td>
+              <td>{{(getToken(tokenBalance.tokenId) | async)?.priceChange24h | number:'1.1-1'}}&percnt;</td>
+              <td>{{(getToken(tokenBalance.tokenId) | async)?.priceChange7d | number:'1.1-1'}}&percnt;</td>
             </tr>
           </ng-container>
           </tbody>
