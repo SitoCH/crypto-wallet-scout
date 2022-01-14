@@ -1,9 +1,13 @@
 package ch.grignola.service.token;
 
+import ch.grignola.service.token.model.TokenDetail;
+
+import java.util.Optional;
+
 public interface TokenProvider {
 
-    String getImageSmall(String symbol);
+    Optional<TokenDetail> getBySymbol(String symbol);
 
-    double getUsdValue(String symbol);
+    Optional<TokenDetail> getById(String tokenId);
 
 }

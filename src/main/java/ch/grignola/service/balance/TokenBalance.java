@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner;
+package ch.grignola.service.balance;
 
 import ch.grignola.model.Allocation;
 import ch.grignola.model.Network;
@@ -15,33 +15,18 @@ public final class TokenBalance {
     private final BigDecimal nativeValue;
     @JsonProperty("usdValue")
     private final BigDecimal usdValue;
-    @JsonProperty("symbol")
-    private final String symbol;
-    @JsonProperty("name")
-    private final String name;
-    @JsonProperty("image")
-    private final String image;
+    @JsonProperty("tokenId")
+    private final String tokenId;
 
-    public TokenBalance(Network network, Allocation allocation, BigDecimal nativeValue,
-                        BigDecimal usdValue, String symbol, String name, String image) {
+    public TokenBalance(Network network, Allocation allocation, BigDecimal nativeValue, BigDecimal usdValue, String tokenId) {
         this.network = network;
         this.allocation = allocation;
         this.nativeValue = nativeValue;
         this.usdValue = usdValue;
-        this.symbol = symbol;
-        this.name = name;
-        this.image = image;
+        this.tokenId = tokenId;
     }
 
     public BigDecimal getUsdValue() {
         return usdValue;
-    }
-
-    public BigDecimal getNativeValue() {
-        return nativeValue;
-    }
-
-    public String getSymbol() {
-        return symbol;
     }
 }

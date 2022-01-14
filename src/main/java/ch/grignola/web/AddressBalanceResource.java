@@ -1,7 +1,7 @@
 package ch.grignola.web;
 
-import ch.grignola.service.scanner.AddressBalance;
-import ch.grignola.service.scanner.AddressBalanceChecker;
+import ch.grignola.service.balance.AddressBalance;
+import ch.grignola.service.balance.AddressBalanceChecker;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;

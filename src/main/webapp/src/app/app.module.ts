@@ -35,6 +35,8 @@ import {
   UserCollectionAddressDetailComponent
 } from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
 import { TokenLogoComponent } from './components/common/token-logo/token-logo.component';
+import { NetworkImagePipe } from './components/common/token-logo/network-image.pipe';
+import { TokenState } from "./state/token.state";
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { TokenLogoComponent } from './components/common/token-logo/token-logo.co
     AddressBalanceTableComponent,
     AddressBalanceOverviewComponent,
     UserCollectionAddressDetailComponent,
-    TokenLogoComponent
+    TokenLogoComponent,
+    NetworkImagePipe
   ],
   imports: [
     BrowserModule,
@@ -64,7 +67,8 @@ import { TokenLogoComponent } from './components/common/token-logo/token-logo.co
     NgxsModule.forRoot([
         UserCollectionsState,
         ApplicationState,
-        AuthenticationState],
+        AuthenticationState,
+        TokenState],
       {
         developmentMode: !environment.production
       }),

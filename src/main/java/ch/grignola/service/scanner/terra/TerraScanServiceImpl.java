@@ -2,9 +2,8 @@ package ch.grignola.service.scanner.terra;
 
 import ch.grignola.model.Allocation;
 import ch.grignola.model.Network;
-import ch.grignola.service.scanner.TokenBalance;
+import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.terra.model.TerraBalanceResult;
-import ch.grignola.service.token.TokenProvider;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
@@ -25,9 +24,6 @@ public class TerraScanServiceImpl implements TerraScanService {
     private static final String SYMBOL = "LUNA";
 
     @Inject
-    protected TokenProvider tokenProvider;
-
-    @Inject
     @RestClient
     TerraRestClient terraRestClient;
 
@@ -37,40 +33,38 @@ public class TerraScanServiceImpl implements TerraScanService {
     }
 
     @Override
-    public List<TokenBalance> getAddressBalance(String address) {
-        String image = tokenProvider.getImageSmall(SYMBOL);
+    public List<ScannerTokenBalance> getAddressBalance(String address) {
 
         TerraBalanceResult result = terraRestClient.getBalance(address);
 
-        List<TokenBalance> balances = new ArrayList<>();
+        List<ScannerTokenBalance> balances = new ArrayList<>();
 
         BigDecimal liquidValue = new BigDecimal(result.availableLuna);
         if (liquidValue.compareTo(ZERO) != 0) {
-            balances.add(toTokenBalance(address, image, LIQUID, liquidValue));
+            balances.add(toTokenBalance(address, LIQUID, liquidValue));
         }
 
         if (result.myDelegations != null) {
             BigDecimal allocatedValue = result.myDelegations.stream().map(x -> new BigDecimal(x.amountDelegated)).reduce(BigDecimal.ZERO, BigDecimal::add);
             if (allocatedValue.compareTo(ZERO) != 0) {
-                balances.add(toTokenBalance(address, image, STACKED, allocatedValue));
+                balances.add(toTokenBalance(address, STACKED, allocatedValue));
             }
         }
 
         if (result.rewards != null) {
             BigDecimal unclaimedRewardsValue = new BigDecimal(result.rewards.total);
             if (unclaimedRewardsValue.compareTo(ZERO) != 0) {
-                balances.add(toTokenBalance(address, image, UNCLAIMED_REWARDS, unclaimedRewardsValue));
+                balances.add(toTokenBalance(address, UNCLAIMED_REWARDS, unclaimedRewardsValue));
             }
         }
 
         return balances;
     }
 
-    private TokenBalance toTokenBalance(String address, String image, Allocation allocation, BigDecimal value) {
+    private ScannerTokenBalance toTokenBalance(String address, Allocation allocation, BigDecimal value) {
         BigDecimal tokenDigits = new BigDecimal("1000000");
         BigDecimal nativeValue = value.divide(tokenDigits, MathContext.DECIMAL64);
-        BigDecimal usdValue = nativeValue.equals(ZERO) ? ZERO : nativeValue.multiply(BigDecimal.valueOf(tokenProvider.getUsdValue(SYMBOL)));
-        LOG.infof("Token balance for address %s on Terra: %s (%s USD)", address, nativeValue, usdValue);
-        return new TokenBalance(Network.TERRA, allocation, nativeValue, usdValue, SYMBOL, "Terra", image);
+        LOG.infof("Token balance for address %s on Terra: %s", address, nativeValue);
+        return new ScannerTokenBalance(Network.TERRA, allocation, nativeValue, SYMBOL);
     }
 }

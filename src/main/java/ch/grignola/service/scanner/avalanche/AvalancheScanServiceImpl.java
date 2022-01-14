@@ -39,6 +39,6 @@ public class AvalancheScanServiceImpl extends AbstractEthereumScanService implem
     @Override
     protected NetworkTokenBalance getNetworkTokenBalance(String address) {
         EthereumTokenBalanceResult balance = avalancheScanRestClient.getBalance(apiKey, "balance", address);
-        return new NetworkTokenBalance(balance.result, "AVAX", "Avalanche", 18);
+        return new NetworkTokenBalance(balance.result, "AVAX", 18);
     }
 }

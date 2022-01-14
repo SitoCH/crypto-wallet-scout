@@ -1,6 +1,8 @@
-<div class="token-circle token-circle-small">
-  <img [src]="networkImage" alt="network logo" class="token-image-small">
-</div>
-<div class="token-circle token-circle-large">
-  <img [src]="tokenImage" [alt]="tokenImage" class="token-image-large">
+<div *ngIf="tokenImage">
+  <div class="token-circle token-circle-small">
+    <img [src]="network | networkImage" alt="network logo" class="token-image-small">
+  </div>
+  <div class="token-circle token-circle-large">
+    <img [src]="tokenImage" [alt]="tokenImage" class="token-image-large">
+  </div>
 </div>

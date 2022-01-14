@@ -3,8 +3,8 @@ package ch.grignola.service.token;
 import ch.grignola.model.Token;
 import ch.grignola.repository.TokenRepository;
 import ch.grignola.service.token.model.CoingeckoCoinDetail;
+import ch.grignola.service.token.model.TokenDetail;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,8 +15,6 @@ import static org.apache.commons.lang3.ObjectUtils.firstNonNull;
 @ApplicationScoped
 public class TokenProviderImpl implements TokenProvider {
 
-    private static final Logger LOG = Logger.getLogger(TokenProviderImpl.class);
-
     @Inject
     TokenRepository tokenRepository;
 
@@ -24,38 +22,13 @@ public class TokenProviderImpl implements TokenProvider {
     @RestClient
     CoingeckoRestClient coingeckoRestClient;
 
-    public String getImageSmall(String symbol) {
-        return getTokenWithUsdValue(symbol)
-                .map(x -> x.token.getImageSmall())
-                .orElseGet(() -> {
-                    LOG.warnf("Missing coin detail for %s", symbol);
-                    return null;
-                });
-    }
-
-    public double getUsdValue(String symbol) {
-        return getTokenWithUsdValue(symbol)
-                .map(x -> x.usdValue)
-                .orElseGet(() -> {
-                    LOG.warnf("Missing coin detail for %s", symbol);
-                    return 0f;
-                });
-    }
-
-    private Optional<TokenWithUsdValue> getTokenWithUsdValue(String symbol) {
-        return tokenRepository.findBySymbol(symbol)
-                .map(this::refreshTokenInfo)
-                .orElse(createNewToken(symbol));
-    }
-
-    private Optional<TokenWithUsdValue> createNewToken(String symbol) {
+    private Optional<TokenDetail> createNewToken() {
         Token newToken = new Token();
-        newToken.setSymbol(symbol);
         tokenRepository.persist(newToken);
         return refreshTokenInfo(newToken);
     }
 
-    private TokenWithUsdValue applyCoingeckoFieldsToToken(CoingeckoCoinDetail coin, Token token) {
+    private TokenDetail applyCoingeckoFieldsToToken(CoingeckoCoinDetail coin, Token token) {
         if (!coin.name.equals(token.getName())) {
             token.setName(coin.name);
         }
@@ -68,10 +41,11 @@ public class TokenProviderImpl implements TokenProvider {
             token.setImageSmall(coin.image.small);
         }
 
-        return new TokenWithUsdValue(token, coin.marketData.currentPrice.usd);
+        return new TokenDetail(token.getId().toString(), token.getName(), token.getImageSmall(), token.getSymbol(),
+                coin.marketData.currentPrice.usd, coin.marketData.priceChange24h, coin.marketData.priceChangePercentage7d);
     }
 
-    private Optional<TokenWithUsdValue> refreshTokenInfo(Token token) {
+    private Optional<TokenDetail> refreshTokenInfo(Token token) {
         String symbolToUse = firstNonNull(token.getCoinGeckoSymbol(), token.getSymbol());
         return coingeckoRestClient.getCoins().stream()
                 .filter(x -> x.symbol.equalsIgnoreCase(symbolToUse))
@@ -79,14 +53,15 @@ public class TokenProviderImpl implements TokenProvider {
                 .map(x -> applyCoingeckoFieldsToToken(coingeckoRestClient.get(x.id), token));
     }
 
-    private static class TokenWithUsdValue {
-        private final Token token;
-        private final Float usdValue;
+    @Override
+    public Optional<TokenDetail> getBySymbol(String symbol) {
+        return tokenRepository.findBySymbol(symbol)
+                .map(this::refreshTokenInfo)
+                .orElse(createNewToken());
+    }
 
-        TokenWithUsdValue(Token token, Float usdValue) {
-
-            this.token = token;
-            this.usdValue = usdValue;
-        }
+    @Override
+    public Optional<TokenDetail> getById(String tokenId) {
+        return tokenRepository.findByIdOptional(Long.parseLong(tokenId)).flatMap(this::refreshTokenInfo);
     }
 }

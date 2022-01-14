@@ -24,13 +24,13 @@
             <tr *ngFor="let tokenBalance of addressBalance.tokenBalances">
               <td>
                 <app-token-logo [network]="tokenBalance.network"
-                                [tokenImage]="tokenBalance.image"
-                                [tokenName]="tokenBalance.name"
+                                [tokenImage]="(getToken(tokenBalance.tokenId) | async)?.image"
+                                [tokenName]="(getToken(tokenBalance.tokenId) | async)?.name"
                 ></app-token-logo>
               </td>
               <td class="text-end">{{tokenBalance.nativeValue | number:'1.2-4' }}</td>
-              <td>{{tokenBalance.symbol}}</td>
-              <td class="text-end">{{tokenBalance.usdValue | number:'1.2-2' }} $</td>
+              <td>{{(getToken(tokenBalance.tokenId) | async)?.symbol}}</td>
+              <td class="text-end">${{tokenBalance.usdValue | number:'1.2-2' }}</td>
               <td>{{tokenBalance.allocation}}</td>
             </tr>
           </ng-container>

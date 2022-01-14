@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner;
+package ch.grignola.service.balance;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.runtime.annotations.RegisterForReflection;

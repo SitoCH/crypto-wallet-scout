@@ -39,6 +39,6 @@ public class PolygonScanServiceImpl extends AbstractEthereumScanService implemen
     @Override
     protected NetworkTokenBalance getNetworkTokenBalance(String address) {
         EthereumTokenBalanceResult balance = polygonScanRestClient.getBalance(apiKey, "balance", address);
-        return new NetworkTokenBalance(balance.result, "MATIC", "Polygon", 18);
+        return new NetworkTokenBalance(balance.result, "MATIC", 18);
     }
 }
