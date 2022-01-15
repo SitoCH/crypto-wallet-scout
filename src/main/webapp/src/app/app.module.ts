@@ -37,6 +37,7 @@ import {
 import { TokenLogoComponent } from './components/common/token-logo/token-logo.component';
 import { NetworkImagePipe } from './components/common/token-logo/network-image.pipe';
 import { TokenState } from "./state/token.state";
+import { UserCollectionDetailComponent } from './components/main/user-collections/user-collection-detail/user-collection-detail.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { TokenState } from "./state/token.state";
     AddressBalanceOverviewComponent,
     UserCollectionAddressDetailComponent,
     TokenLogoComponent,
-    NetworkImagePipe
+    NetworkImagePipe,
+    UserCollectionDetailComponent
   ],
   imports: [
     BrowserModule,

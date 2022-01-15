@@ -8,6 +8,9 @@ import {
   UserCollectionAddressDetailComponent
 } from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
 import { AutoLoginPartialRoutesGuard } from "angular-auth-oidc-client";
+import {
+  UserCollectionDetailComponent
+} from "./components/main/user-collections/user-collection-detail/user-collection-detail.component";
 
 
 const routes: Routes = [
@@ -18,6 +21,11 @@ const routes: Routes = [
   {
     path: 'collection/:id/address/:address',
     component: UserCollectionAddressDetailComponent,
+    canActivate: [AutoLoginPartialRoutesGuard]
+  },
+  {
+    path: 'collection/:id/detail',
+    component: UserCollectionDetailComponent,
     canActivate: [AutoLoginPartialRoutesGuard]
   }
 ];

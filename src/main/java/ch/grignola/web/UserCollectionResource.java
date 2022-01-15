@@ -5,6 +5,8 @@ import ch.grignola.model.UserCollection;
 import ch.grignola.model.UserCollectionAddress;
 import ch.grignola.repository.UserCollectionRepository;
 import ch.grignola.service.UserService;
+import ch.grignola.service.balance.AddressBalance;
+import ch.grignola.service.balance.AddressBalanceChecker;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jboss.logging.Logger;
 
@@ -24,7 +26,23 @@ public class UserCollectionResource {
     UserCollectionRepository userCollectionRepository;
 
     @Inject
+    AddressBalanceChecker addressBalanceChecker;
+
+    @Inject
     UserService userService;
+
+    @GET
+    @Path("/{id}")
+    @Transactional
+    public List<AddressBalance> getAddressBalance(@PathParam("id") long id) {
+
+        UserCollection userCollection = userCollectionRepository.findById(id);
+        if (!userCollection.getUser().getId().equals(userService.getLoggedInUser().getId())) {
+            throw new BadRequestException();
+        }
+
+        return userCollection.getUserCollectionAddresses().stream().map(x -> addressBalanceChecker.getAddressBalance(x.getAddress())).toList();
+    }
 
     @GET
     @Transactional

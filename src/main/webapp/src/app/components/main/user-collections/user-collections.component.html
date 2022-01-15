@@ -39,7 +39,18 @@
   <div class="col-md-12 my-4">
     <div class="card shadow">
       <div class="card-body">
-        <h5 class="card-title">{{ userCollection.name}}</h5>
+        <div class="toolbar">
+          <div class="row">
+            <div class="col-auto mr-auto">
+              <h5 class="card-title">{{ userCollection.name}}</h5>
+            </div>
+            <div class="col-auto">
+              <a [routerLink]="['/collection/', userCollection.id, 'detail' ]">
+                <fa-icon icon="search"></fa-icon>
+              </a>
+            </div>
+          </div>
+        </div>
         <p class="card-text"></p>
         <table class="table table-ellipsis mb-0"
                *ngIf="userCollection.addresses.length > 0">
