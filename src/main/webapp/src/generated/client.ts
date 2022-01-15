@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-01-15 23:06:07.
+// Generated using typescript-generator version 2.34.976 on 2022-01-15 22:18:12.
 
 export interface AddressBalance {
     tokenBalances: TokenBalance[];
@@ -42,17 +42,17 @@ export interface HttpClient {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
 }
 
-export class ConfigurationResourceClient {
+export class TokenResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /public/api/configuration
-     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
+     * HTTP GET /api/token/{id}
+     * Java method: ch.grignola.web.TokenResource.getToken
      */
-    getConfiguration(): RestResponse<Configuration> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
+    getToken(id: string): RestResponse<TokenResult> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
     }
 }
 
@@ -70,17 +70,17 @@ export class AddressBalanceResourceClient {
     }
 }
 
-export class TokenResourceClient {
+export class ConfigurationResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /api/token/{id}
-     * Java method: ch.grignola.web.TokenResource.getToken
+     * HTTP GET /public/api/configuration
+     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
      */
-    getToken(id: string): RestResponse<TokenResult> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
+    getConfiguration(): RestResponse<Configuration> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
     }
 }
 
