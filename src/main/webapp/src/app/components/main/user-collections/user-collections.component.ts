@@ -3,6 +3,7 @@ import { Observable } from "rxjs";
 import { Select, Store } from "@ngxs/store";
 import { UserCollectionSummary } from "../../../../generated/client";
 import { AddUserCollection, UserCollectionsState } from "../../../state/user-collections.state";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-user-collections',
@@ -15,10 +16,14 @@ export class UserCollectionsComponent {
   @Select(UserCollectionsState.getUserCollections)
   userCollections$!: Observable<UserCollectionSummary[]>;
 
-  constructor(private store: Store) {
+  constructor(private store: Store,
+              private modalService: NgbModal) {
   }
 
-  addNewCollection(newCollectionName: string) {
-    this.store.dispatch(new AddUserCollection(newCollectionName));
+  addNewCollection(content: any) {
+    this.modalService.open(content).result.then(_ => {
+      this.store.dispatch(new AddUserCollection(this.newCollectionName));
+      this.newCollectionName = '';
+    });
   }
 }

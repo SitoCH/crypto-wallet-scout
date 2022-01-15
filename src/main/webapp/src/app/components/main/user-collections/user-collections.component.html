@@ -1,19 +1,37 @@
-<h2 class="page-title">Collections</h2>
-<div class="row">
-  <div class="col-md-12 my-4">
-    <div class="card shadow">
-      <div class="card-body">
-        <h5 class="card-title">Add new collection</h5>
-        <p class="card-text"></p>
-        <div class="input-group">
-          <input class="form-control" type="text" [(ngModel)]="newCollectionName"/>
-          <button class="btn btn-primary" type="button"
-                  (click)="addNewCollection(newCollectionName)">
-            <fa-icon icon="plus"></fa-icon>
-          </button>
-        </div>
+<div class="row align-items-center my-4">
+  <div class="col">
+    <h2 class="h3 mb-0 page-title">Collections</h2>
+  </div>
+  <div class="col-auto">
+    <ng-template #addCollectionContent let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title" id="varyModalLabel">New collection</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss()">
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
-    </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="name" class="col-form-label">Name:</label>
+            <input type="text" class="form-control" id="name"
+                   [(ngModel)]="newCollectionName" [ngModelOptions]="{standalone: true}">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">Close
+        </button>
+        <button type="button" class="btn mb-2 btn-primary" (click)="modal.close()" [disabled]="!newCollectionName">
+          Save
+        </button>
+      </div>
+    </ng-template>
+
+    <button type="button" class="btn btn-primary" (click)="addNewCollection(addCollectionContent)">
+      <fa-icon icon="plus"></fa-icon>
+      Create
+    </button>
   </div>
 </div>
 
@@ -23,9 +41,9 @@
       <div class="card-body">
         <h5 class="card-title">{{ userCollection.name}}</h5>
         <p class="card-text"></p>
-        <table class="table table-bordered table-ellipsis mb-0"
+        <table class="table table-ellipsis mb-0"
                *ngIf="userCollection.addresses.length > 0">
-          <thead>
+          <thead class="thead-dark">
           <tr>
             <th scope="col" class="w-100">Address</th>
             <th scope="col" class="action-column"></th>
