@@ -29,7 +29,7 @@ public abstract class AbstractEthereumScanService implements ScanService {
 
     protected AbstractEthereumScanService() {
         bucket = Bucket.builder()
-                .addLimit(classic(5, intervally(5, ofMillis(4800))))
+                .addLimit(classic(5, intervally(5, ofMillis(1000))))
                 .build().asBlocking();
     }
 
