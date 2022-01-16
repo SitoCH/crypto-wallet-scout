@@ -45,8 +45,12 @@
               <h5 class="card-title">{{ userCollection.name}}</h5>
             </div>
             <div class="col-auto">
-              <a [routerLink]="['/collection/', userCollection.id, 'detail' ]">
-                <fa-icon icon="search"></fa-icon>
+              <a [routerLink]="['/collection/', userCollection.id, 'detail' ]"
+                 *ngIf="userCollection.addresses.length > 0">
+                <button type="button" class="btn btn-secondary">
+                  <fa-icon icon="wallet"></fa-icon>
+                  Balance
+                </button>
               </a>
             </div>
           </div>
