@@ -1,4 +1,8 @@
-<h2 class="page-title">{{address}}</h2>
+<div class="row align-items-center my-4">
+  <div class="col">
+    <h2 class="h3 mb-0 page-title address-with-address"><a routerLink="/collections">Collections</a> &sol; {{address}}</h2>
+  </div>
+</div>
 
 <app-address-balance-overview [addressBalance]="addressBalance!"></app-address-balance-overview>
 
