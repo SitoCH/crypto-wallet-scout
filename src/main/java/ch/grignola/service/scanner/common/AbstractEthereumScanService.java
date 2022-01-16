@@ -29,7 +29,7 @@ public abstract class AbstractEthereumScanService implements ScanService {
 
     protected AbstractEthereumScanService() {
         bucket = Bucket.builder()
-                .addLimit(classic(5, intervally(5, ofMillis(1250))))
+                .addLimit(classic(4, intervally(4, ofMillis(1250))))
                 .build().asBlocking();
     }
 
@@ -40,7 +40,6 @@ public abstract class AbstractEthereumScanService implements ScanService {
 
     @Override
     public List<ScannerTokenBalance> getAddressBalance(String address) {
-        LOG.infof("Loading %s address balance %s", getNetwork(), address);
         try {
             Stream<ScannerTokenBalance> networkTokenBalance = Stream.of(getNetworkTokenBalanceAsTokenBalance(address));
             bucket.consume(1);
@@ -67,7 +66,7 @@ public abstract class AbstractEthereumScanService implements ScanService {
     }
 
     private ScannerTokenBalance toAddressBalance(String address, EthereumTokenEventResult tokenEvent, EthereumTokenBalanceResult tokenBalance) {
-        LOG.infof("Token balance for address %s on %s based on event %s: %s", address, getNetwork(), tokenEvent, tokenBalance.result);
+        LOG.infof("Token balance for address %s on %s based on event for symbol %s (%s): %s", address, getNetwork(), tokenEvent.tokenSymbol, tokenEvent.contractAddress, tokenBalance.result);
         BigDecimal nativeValue = new BigDecimal(tokenBalance.result).divide((new BigDecimal(rightPad("1", parseInt(tokenEvent.tokenDecimal) + 1, '0'))), MathContext.DECIMAL64);
         return new ScannerTokenBalance(getNetwork(), LIQUID, nativeValue, tokenEvent.tokenSymbol);
     }

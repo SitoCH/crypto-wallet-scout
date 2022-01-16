@@ -37,12 +37,16 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
         return List.of(polygonScanService, avalancheScanService, terraScanService, croScanService, solanaScanService);
     }
 
-    @Override
-    public AddressBalance getAddressBalance(String address) {
-        return new AddressBalance(getScanServices().parallelStream()
+    private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
+        return getScanServices().parallelStream()
                 .filter(x -> x.accept(address))
                 .flatMap(x -> x.getAddressBalance(address).stream())
-                .toList().stream()
+                .toList();
+    }
+
+    @Override
+    public AddressBalance getAddressBalance(String address) {
+        return new AddressBalance(getBalancesFromScanServices(address).stream()
                 .map(this::toAddressBalance)
                 .filter(x -> x != null && x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
                 .toList());
