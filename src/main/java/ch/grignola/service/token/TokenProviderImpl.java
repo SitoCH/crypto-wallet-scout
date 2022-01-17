@@ -22,10 +22,11 @@ public class TokenProviderImpl implements TokenProvider {
     @RestClient
     CoingeckoRestClient coingeckoRestClient;
 
-    private Optional<TokenDetail> createNewToken() {
+    private Token createNewToken(String symbol) {
         Token newToken = new Token();
+        newToken.setSymbol(symbol);
         tokenRepository.persist(newToken);
-        return refreshTokenInfo(newToken);
+        return newToken;
     }
 
     private TokenDetail applyCoingeckoFieldsToToken(CoingeckoCoinDetail coin, Token token) {
@@ -33,19 +34,11 @@ public class TokenProviderImpl implements TokenProvider {
             token.setName(coin.name);
         }
 
-        if (!coin.id.equals(token.getCoinGeckoId())) {
-            token.setCoinGeckoId(coin.id);
-        }
-
-        if (!coin.image.small.equals(token.getImageSmall())) {
-            token.setImageSmall(coin.image.small);
-        }
-
-        return new TokenDetail(token.getId().toString(), token.getName(), token.getImageSmall(), token.getSymbol(),
+        return new TokenDetail(token.getId().toString(), token.getName(), coin.image.small, token.getSymbol(),
                 coin.marketData.currentPrice.usd, coin.marketData.priceChange24h, coin.marketData.priceChangePercentage7d);
     }
 
-    private Optional<TokenDetail> refreshTokenInfo(Token token) {
+    private Optional<TokenDetail> getInfoFromCoingecko(Token token) {
         String symbolToUse = firstNonNull(token.getCoinGeckoSymbol(), token.getSymbol());
         return coingeckoRestClient.getCoins().stream()
                 .filter(x -> x.symbol.equalsIgnoreCase(symbolToUse))
@@ -55,13 +48,11 @@ public class TokenProviderImpl implements TokenProvider {
 
     @Override
     public Optional<TokenDetail> getBySymbol(String symbol) {
-        return tokenRepository.findBySymbol(symbol)
-                .map(this::refreshTokenInfo)
-                .orElse(createNewToken());
+        return getInfoFromCoingecko(tokenRepository.findBySymbol(symbol).orElseGet(() -> createNewToken(symbol)));
     }
 
     @Override
     public Optional<TokenDetail> getById(String tokenId) {
-        return tokenRepository.findByIdOptional(Long.parseLong(tokenId)).flatMap(this::refreshTokenInfo);
+        return tokenRepository.findByIdOptional(Long.parseLong(tokenId)).flatMap(this::getInfoFromCoingecko);
     }
 }

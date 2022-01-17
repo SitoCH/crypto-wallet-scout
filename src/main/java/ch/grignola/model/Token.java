@@ -3,6 +3,7 @@ package ch.grignola.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Token {
@@ -10,8 +11,6 @@ public class Token {
     private String name;
     private String symbol;
     private String coinGeckoSymbol;
-    private String coinGeckoId;
-    private String imageSmall;
 
     @Id
     @GeneratedValue
@@ -47,19 +46,30 @@ public class Token {
         this.coinGeckoSymbol = coinGeckoSymbol;
     }
 
-    public String getImageSmall() {
-        return imageSmall;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Token token = (Token) o;
+        return Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoSymbol, token.coinGeckoSymbol);
     }
 
-    public void setImageSmall(String imageSmall) {
-        this.imageSmall = imageSmall;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, symbol, coinGeckoSymbol);
     }
 
-    public String getCoinGeckoId() {
-        return coinGeckoId;
-    }
-
-    public void setCoinGeckoId(String coinGeckoId) {
-        this.coinGeckoId = coinGeckoId;
+    @Override
+    public String toString() {
+        return "Token{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", symbol='" + symbol + '\'' +
+                ", coinGeckoSymbol='" + coinGeckoSymbol + '\'' +
+                '}';
     }
 }

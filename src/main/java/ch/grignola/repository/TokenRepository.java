@@ -10,6 +10,6 @@ import java.util.Optional;
 public class TokenRepository implements PanacheRepository<Token> {
 
     public Optional<Token> findBySymbol(String symbol) {
-        return find("symbol", symbol).stream().findFirst();
+        return find("symbol", symbol).singleResultOptional();
     }
 }
