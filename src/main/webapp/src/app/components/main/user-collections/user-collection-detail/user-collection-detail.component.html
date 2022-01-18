@@ -1,1 +1,7 @@
-<p>${{collectionUsdValue | number:'1.2-2'}}</p>
+<p *ngIf="collectionUsdValue">${{collectionUsdValue | number:'1.2-2'}}</p>
+
+<ul *ngIf="aggregatedTokenBalances">
+  <li *ngFor="let tokenBalance of aggregatedTokenBalances">
+    {{tokenBalance.tokenId}} ${{tokenBalance.usdValue}}
+  </li>
+</ul>
