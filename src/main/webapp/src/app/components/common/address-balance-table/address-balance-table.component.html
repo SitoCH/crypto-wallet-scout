@@ -34,8 +34,12 @@
               <td>{{(getToken(tokenBalance.tokenId) | async)?.symbol}}</td>
               <td class="text-end">${{tokenBalance.usdValue | number:'1.2-2' }}</td>
               <td>{{tokenBalance.allocation}}</td>
-              <td>{{(getToken(tokenBalance.tokenId) | async)?.priceChange24h | number:'1.1-1'}}&percnt;</td>
-              <td>{{(getToken(tokenBalance.tokenId) | async)?.priceChange7d | number:'1.1-1'}}&percnt;</td>
+              <td>
+                {{(getToken(tokenBalance.tokenId) | async)?.priceChange24h | number:'1.1-1'}}&percnt;
+              </td>
+              <td>
+                {{(getToken(tokenBalance.tokenId) | async)?.priceChange7d | number:'1.1-1'}}&percnt;
+              </td>
             </tr>
           </ng-container>
           </tbody>

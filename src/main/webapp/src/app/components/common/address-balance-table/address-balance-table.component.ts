@@ -38,7 +38,7 @@ export class AddressBalanceTableComponent {
     });
   }
 
-  getToken(tokenId: string): Observable<TokenResult | undefined> {
+  getToken(tokenId: string): Observable<TokenResult> {
     return this.store
       .dispatch(new GetTokenById(tokenId))
       .pipe(mergeMap(() => this.store.select(TokenState.getTokenById(tokenId))))

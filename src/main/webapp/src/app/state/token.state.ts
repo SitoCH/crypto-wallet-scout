@@ -24,7 +24,9 @@ export class GetTokenById {
 export class TokenState {
 
   static getTokenById(id: string) {
-    return createSelector([TokenState], (state: TokenStateModel) => state.tokens.get(id));
+    return createSelector([TokenState], (state: TokenStateModel) => {
+      return state.tokens.get(id) || {name: '', image: '', symbol: '', priceChange24h: 0, priceChange7d: 0};
+    });
   }
 
   constructor(private tokenService: TokenService) {

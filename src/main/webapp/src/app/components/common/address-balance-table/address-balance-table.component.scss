@@ -1,3 +1,10 @@
-.token-logo {
-  width: 30px;
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+.positive-change {
+  color: $success;
+}
+
+.negative-change {
+  color: $danger;
 }
