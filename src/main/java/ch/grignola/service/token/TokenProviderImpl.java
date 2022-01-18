@@ -35,7 +35,7 @@ public class TokenProviderImpl implements TokenProvider {
         }
 
         return new TokenDetail(token.getId().toString(), token.getName(), coin.image.small, token.getSymbol(),
-                coin.marketData.currentPrice.usd, coin.marketData.priceChange24h, coin.marketData.priceChangePercentage7d);
+                coin.marketData.currentPrice.usd, coin.marketData.priceChangePercentage24h, coin.marketData.priceChangePercentage7d);
     }
 
     private Optional<TokenDetail> getInfoFromCoingecko(Token token) {

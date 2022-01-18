@@ -41,7 +41,7 @@ public class TokenResource {
             this.name = tokenDetail.getName();
             this.image = tokenDetail.getImage();
             this.symbol = tokenDetail.getSymbol();
-            this.priceChange24h = tokenDetail.getPriceChange24h();
+            this.priceChange24h = tokenDetail.getPriceChangePercentage24h();
             this.priceChange7d = tokenDetail.getPriceChangePercentage7d();
         }
     }

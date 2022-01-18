@@ -6,16 +6,16 @@ public class TokenDetail {
     private final String name;
     private final String symbol;
     private final Float usdValue;
-    private final float priceChange24h;
+    private final float priceChangePercentage24h;
     private final float priceChangePercentage7d;
 
-    public TokenDetail(String id, String name, String image, String symbol, float usdValue, float priceChange24h, float priceChangePercentage7d) {
+    public TokenDetail(String id, String name, String image, String symbol, float usdValue, float priceChangePercentage24h, float priceChangePercentage7d) {
         this.id = id;
         this.usdValue = usdValue;
         this.image = image;
         this.name = name;
         this.symbol = symbol;
-        this.priceChange24h = priceChange24h;
+        this.priceChangePercentage24h = priceChangePercentage24h;
         this.priceChangePercentage7d = priceChangePercentage7d;
     }
 
@@ -39,8 +39,8 @@ public class TokenDetail {
         return symbol;
     }
 
-    public float getPriceChange24h() {
-        return priceChange24h;
+    public float getPriceChangePercentage24h() {
+        return priceChangePercentage24h;
     }
 
     public float getPriceChangePercentage7d() {
