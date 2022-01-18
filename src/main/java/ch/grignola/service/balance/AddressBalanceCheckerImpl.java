@@ -1,5 +1,6 @@
 package ch.grignola.service.balance;
 
+import ch.grignola.model.Allocation;
 import ch.grignola.service.scanner.avalanche.AvalancheScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
@@ -55,8 +56,9 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     private TokenBalance toAddressBalance(ScannerTokenBalance balance) {
         return tokenProvider.getBySymbol(balance.getTokenSymbol())
                 .map(tokenDetail -> {
+                    Allocation allocation = tokenDetail.getAllocation() != null ? tokenDetail.getAllocation() : balance.getAllocation();
                     BigDecimal usdValue = balance.getNativeValue().equals(ZERO) ? ZERO : balance.getNativeValue().multiply(BigDecimal.valueOf(tokenDetail.getUsdValue()));
-                    return new TokenBalance(balance.getNetwork(), balance.getAllocation(), balance.getNativeValue(), usdValue, tokenDetail.getId());
+                    return new TokenBalance(balance.getNetwork(), allocation, balance.getNativeValue(), usdValue, tokenDetail.getId());
                 })
                 .orElse(null);
     }

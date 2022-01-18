@@ -1,5 +1,6 @@
 package ch.grignola.service.scanner.polygon;
 
+import ch.grignola.model.Allocation;
 import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventResult;
 import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
@@ -95,7 +96,7 @@ class PolygonScanServiceImplTest {
         when(polygonScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT)))
                 .thenReturn(balanceResult);
 
-        when(tokenProvider.getBySymbol(TST_SYMBOL)).thenReturn(Optional.of(new TokenDetail(null, null, null, null, 0.1f, 0f, 0f)));
+        when(tokenProvider.getBySymbol(TST_SYMBOL)).thenReturn(Optional.of(new TokenDetail(null, null, null, null, 0.1f, Allocation.LIQUID, 0f, 0f)));
 
         List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
 

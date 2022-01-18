@@ -1,5 +1,6 @@
 package ch.grignola.service.token;
 
+import ch.grignola.model.Allocation;
 import ch.grignola.model.Token;
 import ch.grignola.repository.TokenRepository;
 import ch.grignola.service.token.model.CoingeckoCoinDetail;
@@ -34,8 +35,13 @@ public class TokenProviderImpl implements TokenProvider {
             token.setName(coin.name);
         }
 
+        Allocation defaultAllocation = null;
+        if (coin.categories.contains("Aave Tokens")) {
+            defaultAllocation = Allocation.STACKED;
+        }
+
         return new TokenDetail(token.getId().toString(), token.getName(), coin.image.small, token.getSymbol(),
-                coin.marketData.currentPrice.usd, coin.marketData.priceChangePercentage24h, coin.marketData.priceChangePercentage7d);
+                coin.marketData.currentPrice.usd, defaultAllocation, coin.marketData.priceChangePercentage24h, coin.marketData.priceChangePercentage7d);
     }
 
     private Optional<TokenDetail> getInfoFromCoingecko(Token token) {
