@@ -960,6 +960,45 @@ public class CoingeckoCoinDetail {
     @JsonProperty("tickers")
     public List<Ticker> tickers = null;
 
+
+    @Override
+    public String toString() {
+        return "CoingeckoCoinDetail{" +
+                "id='" + id + '\'' +
+                ", symbol='" + symbol + '\'' +
+                ", name='" + name + '\'' +
+                ", assetPlatformId='" + assetPlatformId + '\'' +
+                ", platforms=" + platforms +
+                ", blockTimeInMinutes=" + blockTimeInMinutes +
+                ", hashingAlgorithm=" + hashingAlgorithm +
+                ", categories=" + categories +
+                ", publicNotice=" + publicNotice +
+                ", additionalNotices=" + additionalNotices +
+                ", localization=" + localization +
+                ", description=" + description +
+                ", links=" + links +
+                ", image=" + image +
+                ", countryOrigin='" + countryOrigin + '\'' +
+                ", genesisDate=" + genesisDate +
+                ", contractAddress='" + contractAddress + '\'' +
+                ", sentimentVotesUpPercentage=" + sentimentVotesUpPercentage +
+                ", sentimentVotesDownPercentage=" + sentimentVotesDownPercentage +
+                ", marketCapRank=" + marketCapRank +
+                ", coingeckoRank=" + coingeckoRank +
+                ", coingeckoScore=" + coingeckoScore +
+                ", developerScore=" + developerScore +
+                ", communityScore=" + communityScore +
+                ", liquidityScore=" + liquidityScore +
+                ", publicInterestScore=" + publicInterestScore +
+                ", marketData=" + marketData +
+                ", communityData=" + communityData +
+                ", developerData=" + developerData +
+                ", publicInterestStats=" + publicInterestStats +
+                ", statusUpdates=" + statusUpdates +
+                ", lastUpdated='" + lastUpdated + '\'' +
+                ", tickers=" + tickers +
+                '}';
+    }
 }
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

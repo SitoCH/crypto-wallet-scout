@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner.common;
+package ch.grignola.service.scanner.ethereum;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

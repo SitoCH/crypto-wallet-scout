@@ -1,9 +1,9 @@
 package ch.grignola.service.scanner.polygon;
 
 import ch.grignola.model.Allocation;
-import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
-import ch.grignola.service.scanner.common.EthereumTokenEventResult;
-import ch.grignola.service.scanner.common.EthereumTokenEventsResult;
+import ch.grignola.service.scanner.ethereum.EthereumTokenBalanceResult;
+import ch.grignola.service.scanner.ethereum.EthereumTokenEventResult;
+import ch.grignola.service.scanner.ethereum.EthereumTokenEventsResult;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.token.TokenProvider;
 import ch.grignola.service.token.model.TokenDetail;

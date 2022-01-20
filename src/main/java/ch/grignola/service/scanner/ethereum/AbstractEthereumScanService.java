@@ -1,6 +1,8 @@
-package ch.grignola.service.scanner.common;
+package ch.grignola.service.scanner.ethereum;
 
 import ch.grignola.model.Network;
+import ch.grignola.service.scanner.common.ScanService;
+import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.utils.DistinctByKey;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
