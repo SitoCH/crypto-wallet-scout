@@ -1,44 +1,41 @@
 package ch.grignola.service.scanner.polygon;
 
-import ch.grignola.model.Network;
-import ch.grignola.service.scanner.common.AbstractEthereumScanService;
-import ch.grignola.service.scanner.common.EthereumTokenBalanceResult;
-import ch.grignola.service.scanner.common.EthereumTokenEventResult;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
+import ch.grignola.service.scanner.bitquery.BitqueryClient;
+import ch.grignola.service.scanner.bitquery.model.Balance;
+import ch.grignola.service.scanner.common.ScannerTokenBalance;
+import org.jboss.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.math.BigDecimal;
 import java.util.List;
 
+import static ch.grignola.model.Allocation.LIQUID;
+import static ch.grignola.model.Network.POLYGON;
+
 @Singleton
-public class PolygonScanServiceImpl extends AbstractEthereumScanService implements PolygonScanService {
+public class PolygonScanServiceImpl implements PolygonScanService {
+
+    private static final Logger LOG = Logger.getLogger(PolygonScanServiceImpl.class);
 
     @Inject
-    @RestClient
-    PolygonScanRestClient polygonScanRestClient;
-
-    @ConfigProperty(name = "polygonscan.api.key")
-    String apiKey;
+    BitqueryClient bitqueryClient;
 
     @Override
-    protected Network getNetwork() {
-        return Network.POLYGON;
+    public boolean accept(String address) {
+        return address.startsWith("0x") && address.length() == 42;
     }
 
     @Override
-    protected EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress) {
-        return polygonScanRestClient.getTokenBalance(apiKey, "tokenbalance", address, contractAddress);
+    public List<ScannerTokenBalance> getAddressBalance(String address) {
+        return bitqueryClient.getRawBalance("matic", address).stream()
+                .map(x -> toAddressBalance(address, x))
+                .toList();
     }
 
-    @Override
-    protected List<EthereumTokenEventResult> getTokenEvents(String address) {
-        return polygonScanRestClient.getTokenEvents(apiKey, "tokentx", address).result;
-    }
-
-    @Override
-    protected NetworkTokenBalance getNetworkTokenBalance(String address) {
-        EthereumTokenBalanceResult balance = polygonScanRestClient.getBalance(apiKey, "balance", address);
-        return new NetworkTokenBalance(balance.result, "MATIC", 18);
+    private ScannerTokenBalance toAddressBalance(String address, Balance balance) {
+        LOG.infof("Token balance for address %s on %s based on event for symbol %s (%s): %s", address, POLYGON, balance.currency.symbol, balance.currency.address, balance.value);
+        BigDecimal nativeValue = BigDecimal.valueOf(balance.value);
+        return new ScannerTokenBalance(POLYGON, LIQUID, nativeValue, balance.currency.symbol);
     }
 }
