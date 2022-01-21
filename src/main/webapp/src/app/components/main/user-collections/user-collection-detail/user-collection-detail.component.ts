@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserCollectionService } from "../../../../services/user-collection.service";
-import { AddressBalance, TokenBalance } from "../../../../../generated/client";
+import { AddressBalance, TokenBalance, TokenResult } from "../../../../../generated/client";
+import { mergeMap, Observable } from "rxjs";
+import { GetTokenById, TokenState } from "../../../../state/token.state";
+import { Store } from "@ngxs/store";
 
 @Component({
   selector: 'app-user-collection-detail',
@@ -16,7 +19,8 @@ export class UserCollectionDetailComponent implements OnInit {
   collectionUsdValue: number | null = null;
 
   constructor(private userCollectionService: UserCollectionService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private store: Store) {
   }
 
   ngOnInit(): void {
@@ -43,10 +47,8 @@ export class UserCollectionDetailComponent implements OnInit {
             if (!tokens.has(tokenBalance.tokenId)) {
               tokens.set(tokenBalance.tokenId, tokenBalance);
             } else {
-              // @ts-ignore
-              tokens[tokenBalance.tokenId].nativeValue += tokenBalance.nativeValue;
-              // @ts-ignore
-              tokens[tokenBalance.tokenId].usdValue += tokenBalance.usdValue;
+              tokens.get(tokenBalance.tokenId)!.nativeValue += tokenBalance.nativeValue;
+              tokens.get(tokenBalance.tokenId)!.usdValue += tokenBalance.usdValue;
             }
           });
         });
@@ -55,4 +57,9 @@ export class UserCollectionDetailComponent implements OnInit {
       })
   }
 
+  getToken(tokenId: string): Observable<TokenResult | undefined> {
+    return this.store
+      .dispatch(new GetTokenById(tokenId))
+      .pipe(mergeMap(() => this.store.select(TokenState.getTokenById(tokenId))))
+  }
 }

@@ -5,15 +5,15 @@ import ch.grignola.service.scanner.bitquery.model.Balance;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import org.jboss.logging.Logger;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.util.List;
 
 import static ch.grignola.model.Allocation.LIQUID;
 import static ch.grignola.model.Network.POLYGON;
 
-@Singleton
+@ApplicationScoped
 public class PolygonScanServiceImpl implements PolygonScanService {
 
     private static final Logger LOG = Logger.getLogger(PolygonScanServiceImpl.class);
