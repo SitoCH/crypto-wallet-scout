@@ -29,15 +29,15 @@
                                 [tokenImage]="token.image"
                                 [tokenName]="token.name"></app-token-logo>
               </td>
-              <td class="text-end">{{tokenBalance.nativeValue | number:'1.2-4' }}</td>
+              <td class="text-right">{{tokenBalance.nativeValue | number:'1.2-4' }}</td>
               <td>{{token.symbol}}</td>
-              <td class="text-end">${{tokenBalance.usdValue | number:'1.2-2' }}</td>
+              <td class="text-right">${{tokenBalance.usdValue | number:'1.2-2' }}</td>
               <td>{{tokenBalance.allocation}}</td>
-              <td [class.positive-change]="token.priceChange24h > 0"
+              <td class="text-right" [class.positive-change]="token.priceChange24h > 0"
                   [class.negative-change]="token.priceChange24h < 0">
                 {{token.priceChange24h | number:'1.1-1'}}&percnt;
               </td>
-              <td [class.positive-change]="token.priceChange7d > 0"
+              <td class="text-right" [class.positive-change]="token.priceChange7d > 0"
                   [class.negative-change]="token.priceChange7d < 0">
                 {{token.priceChange7d | number:'1.1-1'}}&percnt;
               </td>
