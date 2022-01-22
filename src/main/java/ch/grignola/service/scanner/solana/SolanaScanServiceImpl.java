@@ -53,7 +53,7 @@ public class SolanaScanServiceImpl implements SolanaScanService {
 
     private ScannerTokenBalance toTokenBalance(String address, String symbol, BigDecimal value, int tokenDecimals) {
         BigDecimal nativeValue = value.divide(new BigDecimal(rightPad("1", tokenDecimals + 1, '0')), MathContext.DECIMAL64);
-        LOG.infof("Token balance for address %s on Solana: %s", address, nativeValue);
+        LOG.infof("Token balance for address %s on Solana: %s %s", address, nativeValue, symbol);
         return new ScannerTokenBalance(SOLANA, LIQUID, nativeValue, symbol);
     }
 }

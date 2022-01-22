@@ -7,8 +7,10 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.cro.CroScanService;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
+import ch.grignola.service.scanner.solana.SolanaScanServiceImpl;
 import ch.grignola.service.scanner.terra.TerraScanService;
 import ch.grignola.service.token.TokenProvider;
+import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -20,6 +22,8 @@ import static java.math.BigDecimal.ZERO;
 
 @ApplicationScoped
 public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
+
+    private static final Logger LOG = Logger.getLogger(SolanaScanServiceImpl.class);
 
     @Inject
     TokenProvider tokenProvider;
@@ -56,6 +60,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     private TokenBalance toAddressBalance(ScannerTokenBalance balance) {
         return tokenProvider.getBySymbol(balance.getTokenSymbol())
                 .map(tokenDetail -> {
+                    LOG.infof("Token %s: 1 USD - %f %s", tokenDetail.getName(), tokenDetail.getUsdValue(), tokenDetail.getSymbol());
                     Allocation allocation = tokenDetail.getAllocation() != null ? tokenDetail.getAllocation() : balance.getAllocation();
                     BigDecimal usdValue = balance.getNativeValue().equals(ZERO) ? ZERO : balance.getNativeValue().multiply(BigDecimal.valueOf(tokenDetail.getUsdValue()));
                     return new TokenBalance(balance.getNetwork(), allocation, balance.getNativeValue(), usdValue, tokenDetail.getId());
