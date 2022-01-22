@@ -1,9 +1,9 @@
-<p *ngIf="collectionUsdValue">${{collectionUsdValue | number:'1.2-2'}}</p>
+<div class="row align-items-center my-4">
+  <div class="col">
+    <h2 class="h3 mb-0 page-title address-with-address"><a routerLink="/collections">Collections</a> &sol; Detail</h2>
+  </div>
+</div>
 
-<ul *ngIf="aggregatedTokenBalances">
-  <ng-container *ngFor="let tokenBalance of aggregatedTokenBalances">
-    <li *ngIf="getToken(tokenBalance.tokenId) | async as token">
-      {{token.name}}: ${{tokenBalance.usdValue | number:'1.2-2'}}
-    </li>
-  </ng-container>
-</ul>
+<app-address-balance-overview [addressBalance]="aggregatedTokenBalances!"></app-address-balance-overview>
+
+<app-address-balance-table [addressBalance]="aggregatedTokenBalances!"></app-address-balance-table>

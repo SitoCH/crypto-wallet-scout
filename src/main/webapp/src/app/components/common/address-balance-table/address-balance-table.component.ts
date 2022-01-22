@@ -4,6 +4,7 @@ import { Store } from "@ngxs/store";
 import { mergeMap, Observable } from "rxjs";
 import { AddressBalanceService } from "../../../services/address-balance.service";
 import { GetTokenById, TokenState } from "../../../state/token.state";
+import { TokenList } from "../../../utils/balance";
 
 @Component({
   selector: 'app-address-balance-table',
@@ -13,10 +14,7 @@ import { GetTokenById, TokenState } from "../../../state/token.state";
 export class AddressBalanceTableComponent {
 
   @Input()
-  address!: string;
-
-  @Input()
-  addressBalance!: AddressBalance;
+  addressBalance!: TokenList;
 
   constructor(private addressService: AddressBalanceService,
               private store: Store) {

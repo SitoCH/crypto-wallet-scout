@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AddressBalance, Allocation } from "../../../../generated/client";
+import { TokenList } from "../../../utils/balance";
 
 @Component({
   selector: 'app-address-balance-overview',
@@ -9,7 +10,7 @@ import { AddressBalance, Allocation } from "../../../../generated/client";
 export class AddressBalanceOverviewComponent implements OnChanges {
 
   @Input()
-  addressBalance!: AddressBalance;
+  addressBalance!: TokenList;
 
   totalBalance: number | null = null;
   liquidBalance: number | null = null;

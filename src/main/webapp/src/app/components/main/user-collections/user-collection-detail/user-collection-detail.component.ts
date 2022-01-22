@@ -5,6 +5,7 @@ import { AddressBalance, TokenBalance, TokenResult } from "../../../../../genera
 import { mergeMap, Observable } from "rxjs";
 import { GetTokenById, TokenState } from "../../../../state/token.state";
 import { Store } from "@ngxs/store";
+import { TokenList } from "../../../../utils/balance";
 
 @Component({
   selector: 'app-user-collection-detail',
@@ -15,8 +16,7 @@ export class UserCollectionDetailComponent implements OnInit {
 
   id!: number;
   addressBalances: AddressBalance[] | null = null;
-  aggregatedTokenBalances: TokenBalance[] | null = null;
-  collectionUsdValue: number | null = null;
+  aggregatedTokenBalances: TokenList | null = null;
 
   constructor(private userCollectionService: UserCollectionService,
               private route: ActivatedRoute,
@@ -34,7 +34,6 @@ export class UserCollectionDetailComponent implements OnInit {
 
   private loadBalance() {
     this.addressBalances = null;
-    this.collectionUsdValue = null;
     this.aggregatedTokenBalances = null;
     this.userCollectionService.getAddressBalance(this.id)
       .then(data => {
@@ -52,8 +51,10 @@ export class UserCollectionDetailComponent implements OnInit {
             }
           });
         });
-        this.aggregatedTokenBalances = Array.from(tokens, ([name, value]) => (value));
-        this.collectionUsdValue = collectionUsdValue;
+
+        this.aggregatedTokenBalances = {
+          tokenBalances: Array.from(tokens, ([name, value]) => (value))
+        };
       })
   }
 
