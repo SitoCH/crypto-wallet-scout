@@ -7,7 +7,6 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.cro.CroScanService;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
-import ch.grignola.service.scanner.solana.SolanaScanServiceImpl;
 import ch.grignola.service.scanner.terra.TerraScanService;
 import ch.grignola.service.token.TokenProvider;
 import org.jboss.logging.Logger;
@@ -23,7 +22,7 @@ import static java.math.BigDecimal.ZERO;
 @ApplicationScoped
 public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
 
-    private static final Logger LOG = Logger.getLogger(SolanaScanServiceImpl.class);
+    private static final Logger LOG = Logger.getLogger(AddressBalanceCheckerImpl.class);
 
     @Inject
     TokenProvider tokenProvider;
