@@ -52,6 +52,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     @Override
     public AddressBalance getAddressBalance(String address) {
         return new AddressBalance(getBalancesFromScanServices(address).stream()
+                .sorted((a, b) -> a.getTokenSymbol().compareToIgnoreCase(b.getTokenSymbol()))
                 .map(this::toAddressBalance)
                 .filter(x -> x != null && x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
                 .toList());
