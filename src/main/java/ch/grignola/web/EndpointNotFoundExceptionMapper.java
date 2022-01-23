@@ -1,11 +1,11 @@
 package ch.grignola.web;
 
 import io.quarkus.arc.Priority;
-import org.jboss.resteasy.annotations.cache.Cache;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -18,11 +18,19 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 @Priority(Priorities.USER)
 public class EndpointNotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 
+    private final CacheControl cacheControl;
+
+    public EndpointNotFoundExceptionMapper() {
+        cacheControl = new CacheControl();
+        cacheControl.setNoCache(true);
+        cacheControl.setNoStore(true);
+        cacheControl.setMustRevalidate(true);
+    }
+
     @Override
     @Produces(MediaType.TEXT_HTML)
-    @Cache(noCache = true, noStore = true, mustRevalidate = true)
     public Response toResponse(NotFoundException exception) {
         InputStream resource = ClassLoader.getSystemResourceAsStream("META-INF/resources/index.html");
-        return null == resource ? Response.status(NOT_FOUND).build() : Response.ok().entity(resource).build();
+        return null == resource ? Response.status(NOT_FOUND).build() : Response.ok().cacheControl(cacheControl).entity(resource).build();
     }
 }
