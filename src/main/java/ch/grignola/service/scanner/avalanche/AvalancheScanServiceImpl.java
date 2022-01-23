@@ -27,17 +27,20 @@ public class AvalancheScanServiceImpl extends AbstractEthereumScanService implem
     }
 
     @Override
-    protected EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress) {
+    protected EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress) throws InterruptedException {
+        bucket.consume(1);
         return avalancheScanRestClient.getTokenBalance(apiKey, "tokenbalance", address, contractAddress);
     }
 
     @Override
-    protected List<EthereumTokenEventResult> getTokenEvents(String address) {
+    protected List<EthereumTokenEventResult> getTokenEvents(String address) throws InterruptedException {
+        bucket.consume(1);
         return avalancheScanRestClient.getTokenEvents(apiKey, "tokentx", address).result;
     }
 
     @Override
-    protected NetworkTokenBalance getNetworkTokenBalance(String address) {
+    protected NetworkTokenBalance getNetworkTokenBalance(String address) throws InterruptedException {
+        bucket.consume(1);
         EthereumTokenBalanceResult balance = avalancheScanRestClient.getBalance(apiKey, "balance", address);
         return new NetworkTokenBalance(balance.result, "AVAX", 18);
     }

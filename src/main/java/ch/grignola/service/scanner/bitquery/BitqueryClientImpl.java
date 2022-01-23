@@ -3,6 +3,8 @@ package ch.grignola.service.scanner.bitquery;
 import ch.grignola.service.scanner.bitquery.model.Balance;
 import ch.grignola.service.scanner.bitquery.model.BitqueryResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.bucket4j.BlockingBucket;
+import io.github.bucket4j.Bucket;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
@@ -14,6 +16,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
+import static io.github.bucket4j.Bandwidth.classic;
+import static io.github.bucket4j.Refill.intervally;
+import static java.time.Duration.ofMinutes;
 import static java.util.Collections.emptyList;
 
 @ApplicationScoped
@@ -26,8 +31,13 @@ public class BitqueryClientImpl implements BitqueryClient {
 
     private final HttpClient httpClient;
 
+    private final BlockingBucket bucket;
+
     public BitqueryClientImpl() {
-        this.httpClient = HttpClient.newBuilder().build();
+        httpClient = HttpClient.newBuilder().build();
+        bucket = Bucket.builder()
+                .addLimit(classic(10, intervally(10, ofMinutes(1))).withInitialTokens(0))
+                .build().asBlocking();
     }
 
     public List<Balance> getRawBalance(String network, String address) {
@@ -44,6 +54,7 @@ public class BitqueryClientImpl implements BitqueryClient {
                 .build();
 
         try {
+            bucket.consume(1);
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return new ObjectMapper().readValue(response.body(), BitqueryResponse.class).data.ethereum.address.stream()
                     .flatMap(x -> x.balances.stream()).toList();
