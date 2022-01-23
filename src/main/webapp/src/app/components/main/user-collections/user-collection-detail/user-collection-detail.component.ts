@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserCollectionService } from "../../../../services/user-collection.service";
-import { AddressBalance, TokenBalance, TokenResult } from "../../../../../generated/client";
+import { TokenBalance, TokenResult } from "../../../../../generated/client";
 import { mergeMap, Observable } from "rxjs";
 import { GetTokenById, TokenState } from "../../../../state/token.state";
 import { Store } from "@ngxs/store";
@@ -31,6 +31,10 @@ export class UserCollectionDetailComponent implements OnInit {
       );
   }
 
+  private makeKey(tokenBalance: TokenBalance) {
+    return tokenBalance.tokenId + '-' + tokenBalance.allocation + '-' + tokenBalance.network;
+  }
+
   private loadBalance() {
     this.aggregatedTokenBalances = null;
     this.userCollectionService.getAddressBalance(this.id)
@@ -39,12 +43,13 @@ export class UserCollectionDetailComponent implements OnInit {
         let tokens = new Map<string, TokenBalance>();
         data.forEach(addressBalance => {
           addressBalance.tokenBalances.forEach(tokenBalance => {
+            let key = this.makeKey(tokenBalance);
             collectionUsdValue += tokenBalance.usdValue;
-            if (!tokens.has(tokenBalance.tokenId)) {
-              tokens.set(tokenBalance.tokenId, tokenBalance);
+            if (!tokens.has(key)) {
+              tokens.set(key, tokenBalance);
             } else {
-              tokens.get(tokenBalance.tokenId)!.nativeValue += tokenBalance.nativeValue;
-              tokens.get(tokenBalance.tokenId)!.usdValue += tokenBalance.usdValue;
+              tokens.get(key)!.nativeValue += tokenBalance.nativeValue;
+              tokens.get(key)!.usdValue += tokenBalance.usdValue;
             }
           });
         });
