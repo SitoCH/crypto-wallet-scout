@@ -11,9 +11,6 @@ import { fas } from "@fortawesome/free-solid-svg-icons";
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { InjectableRestApplicationClient } from "./services/utils/injectable-rest-application-client.service";
 import { AddressBalanceService } from "./services/address-balance.service";
-import { environment } from "../environments/environment";
-import { NgxsModule } from "@ngxs/store";
-import { UserCollectionsState } from "./state/user-collections.state";
 import { HeaderComponent } from "./layout/header/header.component";
 import { SidenavComponent } from "./layout/sidenav/sidenav.component";
 import { UserCollectionsComponent } from "./components/main/user-collections/user-collections.component";
@@ -21,9 +18,6 @@ import { HomeComponent } from "./components/main/home/home.component";
 import { DashboardComponent } from "./components/main/dashboard/dashboard.component";
 import { OAuthInterceptor } from "./auth/oauth-interceptor.service";
 import { AuthConfigModule } from "./auth/auth-config.module";
-import { ApplicationState } from "./state/application.state";
-import { NgxsStoragePluginModule } from "@ngxs/storage-plugin";
-import { AuthenticationState } from "./state/authentication.state";
 import { SearchAddressComponent } from './components/main/search-address/search-address.component';
 import {
   AddressBalanceTableComponent
@@ -36,10 +30,10 @@ import {
 } from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
 import { TokenLogoComponent } from './components/common/token-logo/token-logo.component';
 import { NetworkImagePipe } from './components/common/token-logo/network-image.pipe';
-import { TokenState } from "./state/token.state";
 import {
   UserCollectionDetailComponent
 } from './components/main/user-collections/user-collection-detail/user-collection-detail.component';
+import { NgxsConfigModule } from "./state/ngxs.module";
 
 @NgModule({
   declarations: [
@@ -65,17 +59,7 @@ import {
     NgbModule,
     FontAwesomeModule,
     AuthConfigModule,
-    NgxsStoragePluginModule.forRoot({
-      key: [ApplicationState]
-    }),
-    NgxsModule.forRoot([
-        UserCollectionsState,
-        ApplicationState,
-        AuthenticationState,
-        TokenState],
-      {
-        developmentMode: !environment.production
-      }),
+    NgxsConfigModule
   ],
   providers: [
     InjectableRestApplicationClient,

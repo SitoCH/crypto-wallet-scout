@@ -4,8 +4,13 @@ import { TokenService } from "../services/token.service";
 import { TokenResult } from "../../generated/client";
 import { from, tap } from "rxjs";
 
+export interface TokenWithLastModified {
+  token: TokenResult;
+  creation: number;
+}
+
 export interface TokenStateModel {
-  tokens: Map<string, TokenResult>;
+  tokens: Map<string, TokenWithLastModified>;
   loading: Set<string>;
 }
 
@@ -26,7 +31,7 @@ export class LoadTokenFromService {
 @State<TokenStateModel>({
   name: 'tokenState',
   defaults: {
-    tokens: new Map<string, TokenResult>(),
+    tokens: new Map<string, TokenWithLastModified>(),
     loading: new Set<string>()
   }
 })
@@ -35,7 +40,7 @@ export class TokenState {
 
   static getTokenById(id: string) {
     return createSelector([TokenState], (state: TokenStateModel) => {
-      return state.tokens.get(id);
+      return state.tokens.get(id)?.token;
     });
   }
 
@@ -49,16 +54,27 @@ export class TokenState {
       tap(token => {
         const state = ctx.getState();
         state.loading.delete(id);
-        state.tokens.set(id, token);
+        state.tokens.set(id, {token: token, creation: Date.now()});
         ctx.setState(state);
       }));
+  }
+
+  isYoungerThan(date: Date | undefined, minutes: number) {
+    if (!date) {
+      return false;
+    }
+    return Math.ceil((Date.now() - date.getTime()) / (1000 * 60 * 60)) < minutes;
   }
 
   @Action(GetTokenById)
   getTokenById(ctx: StateContext<TokenStateModel>, action: GetTokenById) {
     const id = action.id;
 
-    if (ctx.getState().tokens.has(id) || ctx.getState().loading.has(id)) {
+    if (ctx.getState().loading.has(id)) {
+      return;
+    }
+
+    if (ctx.getState().tokens.has(id) && this.isYoungerThan(new Date(ctx.getState().tokens.get(id)!.creation), 5)) {
       return;
     }
 
