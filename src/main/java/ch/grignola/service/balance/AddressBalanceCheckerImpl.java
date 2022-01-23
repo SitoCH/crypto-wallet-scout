@@ -42,7 +42,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
-        return getScanServices().parallelStream()
+        return getScanServices().stream()
                 .filter(x -> x.accept(address))
                 .flatMap(x -> x.getAddressBalance(address).stream())
                 .toList();
