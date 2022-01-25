@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AddressBalance, TokenResult } from "../../../../generated/client";
+import { TokenResult } from "../../../../generated/client";
 import { Store } from "@ngxs/store";
 import { mergeMap, Observable } from "rxjs";
 import { AddressBalanceService } from "../../../services/address-balance.service";
@@ -20,7 +20,7 @@ export class AddressBalanceTableComponent {
               private store: Store) {
   }
 
-  getToken(tokenId: string): Observable<TokenResult | undefined>  {
+  getToken(tokenId: string): Observable<TokenResult | undefined> {
     return this.store
       .dispatch(new GetTokenById(tokenId))
       .pipe(mergeMap(() => this.store.select(TokenState.getTokenById(tokenId))))

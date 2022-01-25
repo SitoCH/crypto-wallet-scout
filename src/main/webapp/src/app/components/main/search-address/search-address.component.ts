@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-import { AddressBalance } from "../../../../generated/client";
+import { AddressBalance, UserCollectionSummary } from "../../../../generated/client";
 import { AddressBalanceService } from "../../../services/address-balance.service";
+import { Select, Store } from "@ngxs/store";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { AddAddressToCollection, UserCollectionsState } from "../../../state/user-collections.state";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-search-address',
@@ -9,23 +13,39 @@ import { AddressBalanceService } from "../../../services/address-balance.service
 })
 export class SearchAddressComponent {
 
-  accountToSearch = '';
+  addressToSearch = '';
+  activeAddress = '';
   firstSearchDone = false;
   searchRunning = false;
   addressBalance: AddressBalance | null = null;
 
-  constructor(private addressService: AddressBalanceService) {
+  @Select(UserCollectionsState.getUserCollections)
+  userCollections$!: Observable<UserCollectionSummary[]>;
+
+  selectedUserCollectionId: number | undefined;
+
+  constructor(private addressService: AddressBalanceService,
+              private store: Store,
+              private modalService: NgbModal) {
   }
 
-  getAccountBalance(account: string) {
+  getAccountBalance(activeAddress: string) {
     this.firstSearchDone = true;
     this.addressBalance = null;
     this.searchRunning = true;
-    this.addressService.getAddressBalance(account)
+    this.addressService.getAddressBalance(activeAddress)
       .then(data => {
+        this.activeAddress = activeAddress;
         this.searchRunning = false;
         this.addressBalance = data;
       })
   }
 
+  addToCollection(content: any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then(_ => {
+      if (this.selectedUserCollectionId) {
+        this.store.dispatch(new AddAddressToCollection(this.selectedUserCollectionId, this.activeAddress));
+      }
+    });
+  }
 }

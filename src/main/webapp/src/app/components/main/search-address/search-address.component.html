@@ -1,14 +1,19 @@
-<h2 class="page-title">Search</h2>
+<div class="row align-items-center my-4">
+  <div class="col">
+    <h2 class="h3 mb-0 page-title">Search</h2>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-12 my-4">
     <div class="card shadow">
       <div class="card-body">
-        <h5 class="card-title">Search</h5>
+        <h5 class="card-title"></h5>
         <p class="card-text"></p>
         <div class="input-group">
-          <input class="form-control" type="text" [(ngModel)]="accountToSearch"/>
+          <input class="form-control" type="text" [(ngModel)]="addressToSearch"/>
           <button class="btn btn-primary" type="button"
-                  (click)="getAccountBalance(accountToSearch)">
+                  (click)="getAccountBalance(addressToSearch)">
             <fa-icon icon="search" *ngIf="!searchRunning"></fa-icon>
             <fa-icon icon="spinner" *ngIf="searchRunning" [spin]="true"></fa-icon>
           </button>
@@ -19,6 +24,63 @@
 </div>
 
 <div *ngIf="firstSearchDone">
+
+  <div class="row">
+    <div class="col-md-12 my-4">
+      <div class="card shadow">
+        <div class="card-body">
+          <div class="toolbar">
+            <div class="row">
+              <div class="col-auto mr-auto">
+                <h5 class="card-title">{{activeAddress}}</h5>
+              </div>
+              <div class="col-auto">
+                <ng-template #addCollectionContent let-modal>
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="varyModalLabel">New collection</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            (click)="modal.dismiss()">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="form-group">
+                        <label class="col-form-label">Collection:</label>
+                        <select name="selectedUserCollection" [(ngModel)]="selectedUserCollectionId">
+                          <option *ngFor="let userCollections of userCollections$ | async"
+                                  [ngValue]="userCollections.id">
+                            {{ userCollections.name }}
+                          </option>
+                        </select>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn mb-2 btn-secondary" data-dismiss="modal" (click)="modal.dismiss()">
+                      Close
+                    </button>
+                    <button type="button" class="btn mb-2 btn-primary" (click)="modal.close()"
+                            [disabled]="!selectedUserCollectionId">
+                      Save
+                    </button>
+                  </div>
+                </ng-template>
+
+                <button type="button" class="btn btn-secondary" (click)="addToCollection(addCollectionContent)">
+                  <fa-icon icon="star"></fa-icon>
+                  Add to collection
+                </button>
+              </div>
+            </div>
+          </div>
+          <p class="card-text"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <app-address-balance-overview [addressBalance]="addressBalance!"></app-address-balance-overview>
 
   <app-address-balance-table [addressBalance]="addressBalance!"></app-address-balance-table>
