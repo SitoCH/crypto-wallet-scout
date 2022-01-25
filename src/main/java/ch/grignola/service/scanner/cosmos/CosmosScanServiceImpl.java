@@ -58,6 +58,6 @@ public class CosmosScanServiceImpl implements CosmosScanService {
         BigDecimal tokenDigits = new BigDecimal("1000000");
         BigDecimal nativeValue = value.divide(tokenDigits, MathContext.DECIMAL64);
         LOG.infof("Token balance for address %s on ATOM: %s", address, nativeValue);
-        return new ScannerTokenBalance(Network.TERRA, allocation, nativeValue, SYMBOL);
+        return new ScannerTokenBalance(Network.COSMOS, allocation, nativeValue, SYMBOL);
     }
 }
