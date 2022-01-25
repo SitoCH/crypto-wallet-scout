@@ -4,6 +4,7 @@ import ch.grignola.model.Allocation;
 import ch.grignola.service.scanner.avalanche.AvalancheScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
+import ch.grignola.service.scanner.cosmos.CosmosScanService;
 import ch.grignola.service.scanner.cro.CroScanService;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
@@ -36,9 +37,11 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     SolanaScanService solanaScanService;
     @Inject
     CroScanService croScanService;
+    @Inject
+    CosmosScanService cosmosScanService;
 
     private List<ScanService> getScanServices() {
-        return List.of(polygonScanService, avalancheScanService, terraScanService, croScanService, solanaScanService);
+        return List.of(polygonScanService, avalancheScanService, terraScanService, croScanService, solanaScanService, cosmosScanService);
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
