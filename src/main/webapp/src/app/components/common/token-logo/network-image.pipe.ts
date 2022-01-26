@@ -14,7 +14,7 @@ export class NetworkImagePipe implements PipeTransform {
         return 'assets/images/network/Avalanche.png';
       case Network.TERRA:
         return 'assets/images/network/Luna.png';
-      case Network.CRO:
+      case Network.CRONOS:
         return 'assets/images/network/Crypto-com.png';
       case Network.SOLANA:
         return 'assets/images/network/Solana.png';

@@ -36,7 +36,7 @@ public class BitqueryClientImpl implements BitqueryClient {
     public BitqueryClientImpl() {
         httpClient = HttpClient.newBuilder().build();
         bucket = Bucket.builder()
-                .addLimit(classic(10, intervally(10, ofMinutes(1))).withInitialTokens(0))
+                .addLimit(classic(10, intervally(10, ofMinutes(1))))
                 .build().asBlocking();
     }
 

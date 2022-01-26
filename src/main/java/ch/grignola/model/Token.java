@@ -1,8 +1,6 @@
 package ch.grignola.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -10,10 +8,11 @@ public class Token {
     private Long id;
     private String name;
     private String symbol;
-    private String coinGeckoSymbol;
+    private String coinGeckoId;
+    private boolean excludeFromBalance;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
@@ -30,6 +29,7 @@ public class Token {
         this.name = name;
     }
 
+    @Column(unique = true, nullable = false)
     public String getSymbol() {
         return symbol;
     }
@@ -38,12 +38,20 @@ public class Token {
         this.symbol = symbol;
     }
 
-    public String getCoinGeckoSymbol() {
-        return coinGeckoSymbol;
+    public String getCoinGeckoId() {
+        return coinGeckoId;
     }
 
-    public void setCoinGeckoSymbol(String coinGeckoSymbol) {
-        this.coinGeckoSymbol = coinGeckoSymbol;
+    public void setCoinGeckoId(String coinGeckoId) {
+        this.coinGeckoId = coinGeckoId;
+    }
+
+    public boolean isExcludeFromBalance() {
+        return excludeFromBalance;
+    }
+
+    public void setExcludeFromBalance(boolean excludeFromBalance) {
+        this.excludeFromBalance = excludeFromBalance;
     }
 
     @Override
@@ -55,21 +63,11 @@ public class Token {
             return false;
         }
         Token token = (Token) o;
-        return Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoSymbol, token.coinGeckoSymbol);
+        return excludeFromBalance == token.excludeFromBalance && Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, symbol, coinGeckoSymbol);
-    }
-
-    @Override
-    public String toString() {
-        return "Token{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", symbol='" + symbol + '\'' +
-                ", coinGeckoSymbol='" + coinGeckoSymbol + '\'' +
-                '}';
+        return Objects.hash(id, name, symbol, coinGeckoId, excludeFromBalance);
     }
 }

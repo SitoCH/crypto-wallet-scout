@@ -12,7 +12,7 @@ public class UserCollection {
     private Set<UserCollectionAddress> userCollectionAddresses = new HashSet<>();
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }

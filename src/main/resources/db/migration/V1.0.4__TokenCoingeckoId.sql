@@ -1,1 +1,0 @@
-alter table Token add column coinGeckoId varchar(255);

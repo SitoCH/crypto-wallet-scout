@@ -1,9 +1,9 @@
-package ch.grignola.service.scanner.cro;
+package ch.grignola.service.scanner.cronos;
 
 import ch.grignola.model.Allocation;
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
-import ch.grignola.service.scanner.cro.model.CroBalanceResult;
+import ch.grignola.service.scanner.cronos.model.CronosBalanceResult;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
@@ -18,14 +18,14 @@ import static ch.grignola.model.Allocation.*;
 import static java.math.BigDecimal.ZERO;
 
 @ApplicationScoped
-public class CroScanServiceImpl implements CroScanService {
+public class CronosScanServiceImpl implements CronosScanService {
 
-    private static final Logger LOG = Logger.getLogger(CroScanServiceImpl.class);
+    private static final Logger LOG = Logger.getLogger(CronosScanServiceImpl.class);
     private static final String SYMBOL = "CRO";
 
     @Inject
     @RestClient
-    CroRestClient croRestClient;
+    CronosRestClient cronosRestClient;
 
     @Override
     public boolean accept(String address) {
@@ -35,7 +35,7 @@ public class CroScanServiceImpl implements CroScanService {
     @Override
     public List<ScannerTokenBalance> getAddressBalance(String address) {
         List<ScannerTokenBalance> balances = new ArrayList<>();
-        CroBalanceResult result = croRestClient.getBalance(address);
+        CronosBalanceResult result = cronosRestClient.getBalance(address);
 
         BigDecimal liquidValue = result.result.balance.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
         if (liquidValue.compareTo(ZERO) != 0) {
@@ -59,6 +59,6 @@ public class CroScanServiceImpl implements CroScanService {
         BigDecimal tokenDigits = new BigDecimal("100000000");
         BigDecimal nativeValue = value.divide(tokenDigits, MathContext.DECIMAL64);
         LOG.infof("Token balance for address %s on CRO: %s", address, nativeValue);
-        return new ScannerTokenBalance(Network.CRO, allocation, nativeValue, SYMBOL);
+        return new ScannerTokenBalance(Network.CRONOS, allocation, nativeValue, SYMBOL);
     }
 }
