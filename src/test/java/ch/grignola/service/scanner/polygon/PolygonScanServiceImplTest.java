@@ -1,6 +1,8 @@
 package ch.grignola.service.scanner.polygon;
 
 import ch.grignola.model.Allocation;
+import ch.grignola.model.BannedContract;
+import ch.grignola.repository.BannedContractRepository;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
 import ch.grignola.service.scanner.bitquery.model.Balance;
 import ch.grignola.service.scanner.bitquery.model.Currency;
@@ -30,16 +32,17 @@ import static org.mockito.Mockito.when;
 class PolygonScanServiceImplTest {
 
     private static final String ADDRESS = "0x1234";
-    private static final String TST_CONTRACT = "0xTEST1234";
     private static final String TST_SYMBOL = "TST";
-    private static final String TST_NAME = "Test token";
-    private static final String TST_DECIMALS = "2";
+    private static final String TST_TKN_ADDRESS = "0x1234";
 
     @InjectMock
     BitqueryClient bitqueryClient;
 
     @InjectMock
     TokenProvider tokenProvider;
+
+    @InjectMock
+    BannedContractRepository bannedContractRepository;
 
     @Inject
     PolygonScanService polygonScanService;
@@ -51,6 +54,8 @@ class PolygonScanServiceImplTest {
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
                 .thenReturn(emptyList());
 
+        when(bannedContractRepository.findByNetwork(any()))
+                .thenReturn(emptyList());
     }
 
     @Test
@@ -68,6 +73,7 @@ class PolygonScanServiceImplTest {
         Balance balance = new Balance();
         balance.currency = new Currency();
         balance.currency.symbol = TST_SYMBOL;
+        balance.currency.address = TST_TKN_ADDRESS;
         balance.value = 45.5;
 
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
@@ -82,5 +88,31 @@ class PolygonScanServiceImplTest {
         assertEquals(1, addressBalance.size());
         assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getNativeValue());
         assertEquals(TST_SYMBOL, addressBalance.get(0).getTokenSymbol());
+    }
+
+    @Test
+    void getSimpleAddressBalanceWithBannedContract() {
+
+        BannedContract bannedContract = new BannedContract();
+        bannedContract.setContractId(TST_TKN_ADDRESS);
+        when(bannedContractRepository.findByNetwork(any()))
+                .thenReturn(singletonList(bannedContract));
+
+        Balance balance = new Balance();
+        balance.currency = new Currency();
+        balance.currency.symbol = TST_SYMBOL;
+        balance.currency.address = TST_TKN_ADDRESS;
+        balance.value = 45.5;
+
+        when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
+                .thenReturn(singletonList(balance));
+
+        when(tokenProvider.getBySymbol(TST_SYMBOL)).thenReturn(Optional.of(new TokenDetail(null, null, null, null, 0.1f, Allocation.LIQUID, 0f, 0f)));
+
+        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
+
+        verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
+
+        assertTrue(addressBalance.isEmpty());
     }
 }
