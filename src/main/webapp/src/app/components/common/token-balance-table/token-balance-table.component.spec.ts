@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddressBalanceTableComponent } from './address-balance-table.component';
+import { TokenBalanceTableComponent } from './token-balance-table.component';
 
 describe('AddressBalanceTableComponent', () => {
-  let component: AddressBalanceTableComponent;
-  let fixture: ComponentFixture<AddressBalanceTableComponent>;
+  let component: TokenBalanceTableComponent;
+  let fixture: ComponentFixture<TokenBalanceTableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddressBalanceTableComponent ]
+      declarations: [ TokenBalanceTableComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddressBalanceTableComponent);
+    fixture = TestBed.createComponent(TokenBalanceTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

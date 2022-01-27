@@ -20,11 +20,11 @@ import { OAuthInterceptor } from "./auth/oauth-interceptor.service";
 import { AuthConfigModule } from "./auth/auth-config.module";
 import { SearchAddressComponent } from './components/main/search-address/search-address.component';
 import {
-  AddressBalanceTableComponent
-} from './components/common/address-balance-table/address-balance-table.component';
+  TokenBalanceTableComponent
+} from './components/common/token-balance-table/token-balance-table.component';
 import {
-  AddressBalanceOverviewComponent
-} from './components/common/address-balance-overview/address-balance-overview.component';
+  TokenBalanceOverviewComponent
+} from './components/common/token-balance-overview/token-balance-overview.component';
 import {
   UserCollectionAddressDetailComponent
 } from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
@@ -34,6 +34,7 @@ import {
   UserCollectionDetailComponent
 } from './components/main/user-collections/user-collection-detail/user-collection-detail.component';
 import { NgxsConfigModule } from "./state/ngxs.module";
+import { TokenBalanceComponent } from './components/common/token-balance/token-balance.component';
 
 @NgModule({
   declarations: [
@@ -44,12 +45,13 @@ import { NgxsConfigModule } from "./state/ngxs.module";
     SidenavComponent,
     UserCollectionsComponent,
     SearchAddressComponent,
-    AddressBalanceTableComponent,
-    AddressBalanceOverviewComponent,
+    TokenBalanceTableComponent,
+    TokenBalanceOverviewComponent,
     UserCollectionAddressDetailComponent,
     TokenLogoComponent,
     NetworkImagePipe,
-    UserCollectionDetailComponent
+    UserCollectionDetailComponent,
+    TokenBalanceComponent
   ],
   imports: [
     BrowserModule,

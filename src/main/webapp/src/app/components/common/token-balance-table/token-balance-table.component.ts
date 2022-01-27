@@ -7,14 +7,17 @@ import { GetTokenById, TokenState } from "../../../state/token.state";
 import { TokenList } from "../../../utils/balance";
 
 @Component({
-  selector: 'app-address-balance-table',
-  templateUrl: './address-balance-table.component.html',
-  styleUrls: ['./address-balance-table.component.scss']
+  selector: 'app-token-balance-table',
+  templateUrl: './token-balance-table.component.html',
+  styleUrls: ['./token-balance-table.component.scss']
 })
-export class AddressBalanceTableComponent {
+export class TokenBalanceTableComponent {
 
   @Input()
-  addressBalance!: TokenList;
+  tokens!: TokenList;
+
+  @Input()
+  title!: string;
 
   constructor(private addressService: AddressBalanceService,
               private store: Store) {
