@@ -19,7 +19,7 @@ import java.util.Optional;
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
 import static java.time.Duration.ofMillis;
-import static java.time.Duration.ofMinutes;
+import static java.time.Duration.ofSeconds;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ApplicationScoped
@@ -38,14 +38,15 @@ public class TokenProviderImpl implements TokenProvider {
 
     private TokenProviderImpl() {
         bucket = Bucket.builder()
-                .addLimit(classic(50, intervally(50, ofMinutes(1))))
+                .addLimit(classic(8, intervally(8, ofMillis(1500))))
                 .build().asBlocking();
     }
 
     private Token createNewToken(String symbol) {
         Token newToken = new Token();
         newToken.setSymbol(symbol);
-        tokenRepository.persist(newToken);
+        tokenRepository.persistAndFlush(newToken);
+        LOG.infof("Created new token %s with id %s", newToken.getSymbol(), newToken.getId());
         return newToken;
     }
 
