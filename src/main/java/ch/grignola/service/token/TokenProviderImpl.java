@@ -19,7 +19,6 @@ import java.util.Optional;
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
 import static java.time.Duration.ofMillis;
-import static java.time.Duration.ofSeconds;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ApplicationScoped
