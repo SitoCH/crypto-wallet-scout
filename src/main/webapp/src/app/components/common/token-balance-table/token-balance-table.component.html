@@ -11,14 +11,13 @@
             <th scope="col">Native value</th>
             <th scope="col"></th>
             <th scope="col">USD value</th>
-            <th scope="col">Allocation</th>
             <th scope="col" class="action-column">24h</th>
             <th scope="col" class="action-column">7d</th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td colspan="7" *ngIf="!tokens">
+            <td colspan="6" *ngIf="!tokens">
               <fa-icon icon="spinner" [spin]="true"></fa-icon>
             </td>
           </tr>
@@ -32,7 +31,6 @@
               <td class="text-right">{{tokenBalance.nativeValue | number:'1.2-4' }}</td>
               <td>{{token.symbol}}</td>
               <td class="text-right">${{tokenBalance.usdValue | number:'1.2-2' }}</td>
-              <td>{{tokenBalance.allocation}}</td>
               <td class="text-right" [class.positive-change]="token.priceChange24h > 0"
                   [class.negative-change]="token.priceChange24h < 0">
                 {{token.priceChange24h | number:'1.1-1'}}&percnt;
