@@ -1,12 +1,9 @@
 package ch.grignola.service.scanner.avalanche;
 
-import ch.grignola.model.Allocation;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.ethereum.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.ethereum.EthereumTokenEventResult;
 import ch.grignola.service.scanner.ethereum.EthereumTokenEventsResult;
-import ch.grignola.service.token.TokenProvider;
-import ch.grignola.service.token.model.TokenDetail;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -17,7 +14,6 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -39,9 +35,6 @@ class AvalancheScanServiceImplTest {
     @InjectMock
     @RestClient
     AvalancheScanRestClient avalancheScanRestClient;
-
-    @InjectMock
-    TokenProvider tokenProvider;
 
     @Inject
     AvalancheScanService avalancheScanService;
@@ -95,8 +88,6 @@ class AvalancheScanServiceImplTest {
 
         when(avalancheScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT)))
                 .thenReturn(balanceResult);
-
-        when(tokenProvider.getBySymbol(TST_SYMBOL)).thenReturn(Optional.of(new TokenDetail(null, null, null, null, 0.1f, Allocation.LIQUID, 0f, 0f)));
 
         List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS);
 
