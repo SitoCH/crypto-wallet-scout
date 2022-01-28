@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { TokenResult } from "../../../../generated/client";
 import { Store } from "@ngxs/store";
 import { mergeMap, Observable } from "rxjs";
-import { AddressBalanceService } from "../../../services/address-balance.service";
 import { GetTokenById, TokenState } from "../../../state/token.state";
 import { TokenList } from "../../../utils/balance";
 
@@ -19,8 +18,7 @@ export class TokenBalanceTableComponent {
   @Input()
   title!: string;
 
-  constructor(private addressService: AddressBalanceService,
-              private store: Store) {
+  constructor(private store: Store) {
   }
 
   getToken(tokenId: string): Observable<TokenResult | undefined> {

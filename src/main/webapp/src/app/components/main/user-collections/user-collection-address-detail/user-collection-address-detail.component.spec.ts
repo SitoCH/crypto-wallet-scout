@@ -1,16 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserCollectionAddressDetailComponent } from './user-collection-address-detail.component';
+import { ActivatedRoute } from "@angular/router";
+import { AddressBalanceService } from "../../../../services/address-balance.service";
+import { of } from 'rxjs';
 
 describe('UserCollectionAddressDetailComponent', () => {
   let component: UserCollectionAddressDetailComponent;
   let fixture: ComponentFixture<UserCollectionAddressDetailComponent>;
 
+  const mockedAddressBalanceService = jasmine.createSpyObj('AddressBalanceService', ['getAddressBalance']);
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserCollectionAddressDetailComponent ]
+      declarations: [UserCollectionAddressDetailComponent],
+      providers: [{
+        provide: AddressBalanceService,
+        useValue: mockedAddressBalanceService
+      }, {
+        provide: ActivatedRoute, useValue: {
+          params: of({id: 'test'})
+        }
+      }]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

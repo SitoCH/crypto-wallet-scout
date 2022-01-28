@@ -1,8 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { OidcSecurityService } from "angular-auth-oidc-client";
+import { Store } from "@ngxs/store";
 
 describe('AppComponent', () => {
+
+
+  const mockedOidcSecurityService = jasmine.createSpyObj('OidcSecurityService', ['checkAuth']);
+  const mockedStore = jasmine.createSpyObj('Store', ['dispatch']);
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -11,6 +18,13 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      providers: [{
+        provide: OidcSecurityService,
+        useValue: mockedOidcSecurityService
+      }, {
+        provide: Store,
+        useValue: mockedStore
+      }]
     }).compileComponents();
   });
 
@@ -18,18 +32,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'webapp'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('webapp');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('webapp app is running!');
   });
 });
