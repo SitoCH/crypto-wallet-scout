@@ -17,9 +17,9 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @ApplicationScoped
-public class AddressSnapshopJob {
+public class TakeAddressSnapshotsJob {
 
-    private static final Logger LOG = Logger.getLogger(AddressSnapshopJob.class);
+    private static final Logger LOG = Logger.getLogger(TakeAddressSnapshotsJob.class);
 
     @Inject
     AddressBalanceChecker addressBalanceChecker;
