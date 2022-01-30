@@ -23,6 +23,16 @@ export class UserCollectionHistoricalBalanceComponent implements OnChanges {
   lineChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     maintainAspectRatio: true,
+    scales: {
+      x: {},
+      'y-axis-0': {
+        ticks: {
+          callback: function (value) {
+            return '$ ' + value.toLocaleString();
+          }
+        }
+      }
+    },
     elements: {
       line: {
         tension: 0.2

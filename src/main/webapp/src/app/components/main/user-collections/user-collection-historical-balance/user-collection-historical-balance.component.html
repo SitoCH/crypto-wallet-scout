@@ -5,7 +5,7 @@
         <h5 class="card-title">History</h5>
         <p class="card-text"></p>
 
-        <canvas baseChart height="75" *ngIf="historicalBalance$"
+        <canvas baseChart height="75" *ngIf="historicalBalance$ && currentUsdValue"
                 [data]="(historicalBalance$ | async)!"
                 [options]="lineChartOptions"
                 [type]="'line'">
