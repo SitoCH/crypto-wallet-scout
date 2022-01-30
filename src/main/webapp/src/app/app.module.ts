@@ -35,6 +35,8 @@ import {
 } from './components/main/user-collections/user-collection-detail/user-collection-detail.component';
 import { NgxsConfigModule } from "./state/ngxs.module";
 import { TokenBalanceComponent } from './components/common/token-balance/token-balance.component';
+import { UserCollectionHistoricalBalanceComponent } from './components/main/user-collections/user-collection-historical-balance/user-collection-historical-balance.component';
+import { NgChartsModule } from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import { TokenBalanceComponent } from './components/common/token-balance/token-b
     TokenLogoComponent,
     NetworkImagePipe,
     UserCollectionDetailComponent,
-    TokenBalanceComponent
+    TokenBalanceComponent,
+    UserCollectionHistoricalBalanceComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +64,8 @@ import { TokenBalanceComponent } from './components/common/token-balance/token-b
     NgbModule,
     FontAwesomeModule,
     AuthConfigModule,
-    NgxsConfigModule
+    NgxsConfigModule,
+    NgChartsModule
   ],
   providers: [
     InjectableRestApplicationClient,

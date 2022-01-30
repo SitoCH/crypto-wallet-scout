@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserCollectionService } from "../../../../services/user-collection.service";
-import { TokenBalance, TokenResult } from "../../../../../generated/client";
-import { mergeMap, Observable } from "rxjs";
-import { GetTokenById, TokenState } from "../../../../state/token.state";
-import { Store } from "@ngxs/store";
+import { TokenBalance } from "../../../../../generated/client";
 import { TokenList } from "../../../../utils/balance";
 
 @Component({
@@ -16,10 +13,10 @@ export class UserCollectionDetailComponent implements OnInit {
 
   id!: number;
   aggregatedTokenBalances: TokenList | null = null;
+  collectionUsdValue?: number;
 
   constructor(private userCollectionService: UserCollectionService,
-              private route: ActivatedRoute,
-              private store: Store) {
+              private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
@@ -31,7 +28,7 @@ export class UserCollectionDetailComponent implements OnInit {
       );
   }
 
-  private makeKey(tokenBalance: TokenBalance) {
+  private static makeKey(tokenBalance: TokenBalance) {
     return tokenBalance.tokenId + '-' + tokenBalance.allocation + '-' + tokenBalance.network;
   }
 
@@ -39,12 +36,12 @@ export class UserCollectionDetailComponent implements OnInit {
     this.aggregatedTokenBalances = null;
     this.userCollectionService.getAddressBalance(this.id)
       .then(data => {
-        let collectionUsdValue = 0;
+        this.collectionUsdValue = 0;
         let tokens = new Map<string, TokenBalance>();
         data.forEach(addressBalance => {
           addressBalance.tokenBalances.forEach(tokenBalance => {
-            let key = this.makeKey(tokenBalance);
-            collectionUsdValue += tokenBalance.usdValue;
+            let key = UserCollectionDetailComponent.makeKey(tokenBalance);
+            this.collectionUsdValue! += tokenBalance.usdValue;
             if (!tokens.has(key)) {
               tokens.set(key, tokenBalance);
             } else {
@@ -58,11 +55,5 @@ export class UserCollectionDetailComponent implements OnInit {
           tokenBalances: Array.from(tokens, ([name, value]) => (value))
         };
       })
-  }
-
-  getToken(tokenId: string): Observable<TokenResult | undefined> {
-    return this.store
-      .dispatch(new GetTokenById(tokenId))
-      .pipe(mergeMap(() => this.store.select(TokenState.getTokenById(tokenId))))
   }
 }

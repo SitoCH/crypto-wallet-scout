@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-01-28 23:54:28.
+// Generated using typescript-generator version 2.34.976 on 2022-01-30 00:38:36.
 
 export interface AddressBalance {
     tokenBalances: TokenBalance[];
@@ -17,6 +17,10 @@ export interface TokenResult {
     symbol: string;
     priceChange24h: number;
     priceChange7d: number;
+}
+
+export interface HistoricalAddressBalance {
+    snapshots: { [index: string]: number };
 }
 
 export interface NewUserCollection {
@@ -42,33 +46,31 @@ export interface HttpClient {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
 }
 
-export class AsynchronousDispatcherClient {
+export class AddressBalanceResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
+     * HTTP GET /api/address/balance/{address}
+     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
      */
-    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    getAddressBalance(address: string): RestResponse<AddressBalance> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
+    }
+}
+
+export class TokenResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP POST /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
+     * HTTP GET /api/token/{id}
+     * Java method: ch.grignola.web.TokenResource.getToken
      */
-    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP DELETE /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
-     */
-    remove(jobId: string): RestResponse<void> {
-        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
+    getToken(id: string): RestResponse<TokenResult> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
     }
 }
 
@@ -102,39 +104,19 @@ export class UserCollectionResourceClient {
     }
 
     /**
-     * HTTP GET /api/collection/{id}
+     * HTTP GET /api/collection/{collectionId}/balance
      * Java method: ch.grignola.web.UserCollectionResource.getAddressBalance
      */
-    getAddressBalance(id: number): RestResponse<AddressBalance[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${id}` });
-    }
-}
-
-export class TokenResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
+    getAddressBalance(collectionId: number): RestResponse<AddressBalance[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance` });
     }
 
     /**
-     * HTTP GET /api/token/{id}
-     * Java method: ch.grignola.web.TokenResource.getToken
+     * HTTP GET /api/collection/{collectionId}/balance/history
+     * Java method: ch.grignola.web.UserCollectionResource.getHistoricalAddressBalance
      */
-    getToken(id: string): RestResponse<TokenResult> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
-    }
-}
-
-export class AddressBalanceResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/address/balance/{address}
-     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
-     */
-    getAddressBalance(address: string): RestResponse<AddressBalance> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
+    getHistoricalAddressBalance(collectionId: number): RestResponse<HistoricalAddressBalance> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance/history` });
     }
 }
 
@@ -149,6 +131,36 @@ export class ConfigurationResourceClient {
      */
     getConfiguration(): RestResponse<Configuration> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
+    }
+}
+
+export class AsynchronousDispatcherClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
+     */
+    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP POST /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
+     */
+    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP DELETE /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
+     */
+    remove(jobId: string): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
     }
 }
 

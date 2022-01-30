@@ -1,7 +1,15 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { UserCollectionSummary } from "../../generated/client";
+import { Action, createSelector, Selector, State, StateContext } from '@ngxs/store';
+import { HistoricalAddressBalance, UserCollectionSummary } from "../../generated/client";
 import { UserCollectionService } from "../services/user-collection.service";
 import { Injectable } from "@angular/core";
+import { append, patch, removeItem } from "@ngxs/store/operators";
+
+export class GetHistoricalBalance {
+  static readonly type = '[UserCollections] GetHistoricalBalance';
+
+  constructor(public collectionId: number) {
+  }
+}
 
 export class GetUserCollections {
   static readonly type = '[UserCollections] Get';
@@ -21,17 +29,47 @@ export class AddAddressToCollection {
   }
 }
 
-export class UserCollectionSummaryModel {
-  userCollections: UserCollectionSummary[] = [];
+export interface UserCollectionSummaryModel {
+  userCollections: UserCollectionSummary[];
+  historicalBalances: { collectionId: number, balance: HistoricalAddressBalance }[];
 }
 
 @State<UserCollectionSummaryModel>({
-  name: 'userCollectionSummaryModel'
+  name: 'userCollectionSummaryModel',
+  defaults: {
+    userCollections: [],
+    historicalBalances: []
+  }
 })
 @Injectable()
 export class UserCollectionsState {
 
   constructor(private userCollectionService: UserCollectionService) {
+  }
+
+  static getHistoricalAddressBalance(collectionId: number) {
+    return createSelector([UserCollectionsState], (state: UserCollectionSummaryModel) => {
+      return state.historicalBalances.find(entry => entry.collectionId === collectionId)?.balance;
+    });
+  }
+
+  @Action(GetHistoricalBalance)
+  getHistoricalBalance(ctx: StateContext<UserCollectionSummaryModel>, action: GetHistoricalBalance) {
+    return this.userCollectionService.getHistoricalAddressBalance(action.collectionId).then(result => {
+      ctx.setState(
+        patch({
+          historicalBalances: removeItem<{ collectionId: number, balance: HistoricalAddressBalance }>(entry => entry?.collectionId === action.collectionId)
+        })
+      );
+      ctx.setState(
+        patch({
+          historicalBalances: append([{
+            collectionId: action.collectionId,
+            balance: result
+          }])
+        })
+      );
+    });
   }
 
   @Selector()
@@ -40,10 +78,10 @@ export class UserCollectionsState {
   }
 
   @Action(GetUserCollections)
-  getUserCollections({getState, setState}: StateContext<UserCollectionSummaryModel>) {
+  getUserCollections(ctx: StateContext<UserCollectionSummaryModel>) {
     return this.userCollectionService.getUserCollections().then(((result) => {
-      const state = getState();
-      setState({
+      const state = ctx.getState();
+      ctx.setState({
         ...state,
         userCollections: result,
       });
@@ -63,7 +101,8 @@ export class UserCollectionsState {
   }
 
   @Action(AddAddressToCollection)
-  addAddressToCollection(ctx: StateContext<UserCollectionSummaryModel>, action: AddAddressToCollection) {
+  addAddressToCollection(ctx: StateContext<UserCollectionSummaryModel>, action: AddAddressToCollection
+  ) {
     return this.userCollectionService.addAddress(action.collectionId, action.address).then(
       () => {
         return this.userCollectionService.getUserCollections()
