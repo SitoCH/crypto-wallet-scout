@@ -1,15 +1,16 @@
-<div class="row">
+<div class="row" *ngIf="historicalBalance$ && currentUsdValue">
   <div class="col-md-12 my-4">
     <div class="card shadow">
       <div class="card-body">
         <h5 class="card-title">History</h5>
         <p class="card-text"></p>
-
-        <canvas baseChart height="75" *ngIf="historicalBalance$ && currentUsdValue"
+        <div style="height: 150px">
+        <canvas baseChart
                 [data]="(historicalBalance$ | async)!"
                 [options]="lineChartOptions"
                 [type]="'line'">
         </canvas>
+        </div>
 
       </div>
     </div>

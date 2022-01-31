@@ -22,7 +22,7 @@ export class UserCollectionHistoricalBalanceComponent implements OnChanges {
 
   lineChartOptions: ChartConfiguration['options'] = {
     responsive: true,
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
     scales: {
       x: {},
       'y-axis-0': {
@@ -92,7 +92,7 @@ export class UserCollectionHistoricalBalanceComponent implements OnChanges {
 
   private formatLabel(label: string) {
     let date = new Date(label);
-    return formatDate(date, 'MM.dd HH:mm', this.locale);
+    return formatDate(date, 'HH:mm', this.locale);
   }
 }
 
