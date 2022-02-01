@@ -37,6 +37,8 @@ import { NgxsConfigModule } from "./state/ngxs.module";
 import { TokenBalanceComponent } from './components/common/token-balance/token-balance.component';
 import { UserCollectionHistoricalBalanceComponent } from './components/main/user-collections/user-collection-historical-balance/user-collection-historical-balance.component';
 import { NgChartsModule } from "ng2-charts";
+import { HistoricalBalanceComponent } from './components/common/historical-balance/historical-balance.component';
+import { AddressHistoricalBalanceComponent } from './components/main/user-collections/address-historical-balance/address-historical-balance.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,9 @@ import { NgChartsModule } from "ng2-charts";
     NetworkImagePipe,
     UserCollectionDetailComponent,
     TokenBalanceComponent,
-    UserCollectionHistoricalBalanceComponent
+    UserCollectionHistoricalBalanceComponent,
+    HistoricalBalanceComponent,
+    AddressHistoricalBalanceComponent
   ],
   imports: [
     BrowserModule,

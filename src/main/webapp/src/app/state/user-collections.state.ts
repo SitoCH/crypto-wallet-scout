@@ -55,7 +55,7 @@ export class UserCollectionsState {
 
   @Action(GetHistoricalBalance)
   getHistoricalBalance(ctx: StateContext<UserCollectionSummaryModel>, action: GetHistoricalBalance) {
-    return this.userCollectionService.getHistoricalAddressBalance(action.collectionId).then(result => {
+    return this.userCollectionService.getHistoricalCollectionBalance(action.collectionId).then(result => {
       ctx.setState(
         patch({
           historicalBalances: removeItem<{ collectionId: number, balance: HistoricalAddressBalance }>(entry => entry?.collectionId === action.collectionId)

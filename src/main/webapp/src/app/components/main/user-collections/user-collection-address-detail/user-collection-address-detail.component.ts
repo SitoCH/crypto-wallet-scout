@@ -14,6 +14,7 @@ export class UserCollectionAddressDetailComponent {
   address!: string;
 
   addressBalance: AddressBalance | null = null;
+  currentUsdValue: number | undefined = undefined;
 
   constructor(private addressService: AddressBalanceService,
               private route: ActivatedRoute) {
@@ -33,6 +34,9 @@ export class UserCollectionAddressDetailComponent {
     this.addressService.getAddressBalance(this.address)
       .then(data => {
         this.addressBalance = data;
+        this.currentUsdValue = data.tokenBalances
+          .map(x => x.usdValue)
+          .reduce((a, b) => a + b);
       })
   }
 }

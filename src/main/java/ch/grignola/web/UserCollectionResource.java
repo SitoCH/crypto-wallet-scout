@@ -8,6 +8,7 @@ import ch.grignola.repository.UserCollectionRepository;
 import ch.grignola.service.UserService;
 import ch.grignola.service.balance.AddressBalance;
 import ch.grignola.service.balance.AddressBalanceChecker;
+import ch.grignola.web.model.HistoricalAddressBalance;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jboss.logging.Logger;
 
@@ -51,7 +52,7 @@ public class UserCollectionResource {
     @GET
     @Path("{collectionId}/balance/history")
     @Transactional
-    public HistoricalAddressBalance getHistoricalAddressBalance(@PathParam("collectionId") long collectionId) {
+    public HistoricalAddressBalance getHistoricalCollectionBalance(@PathParam("collectionId") long collectionId) {
         UserCollection userCollection = getUserCollection(collectionId);
 
         HistoricalAddressBalance response = new HistoricalAddressBalance();
@@ -117,11 +118,6 @@ public class UserCollectionResource {
         userCollection.setName(newUserCollection.name);
         userCollectionRepository.persist(userCollection);
         return new UserCollectionSummary(userCollection);
-    }
-
-    public static class HistoricalAddressBalance {
-        @JsonProperty("snapshots")
-        public Map<OffsetDateTime, BigDecimal> snapshots;
     }
 
     public static class NewUserCollection {

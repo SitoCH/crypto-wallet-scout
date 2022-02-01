@@ -1,0 +1,17 @@
+<div class="row" *ngIf="(lineChartData$ | async)!.datasets.length > 0">
+  <div class="col-md-12 my-4">
+    <div class="card shadow">
+      <div class="card-body">
+        <h5 class="card-title">History</h5>
+        <p class="card-text"></p>
+        <div style="height: 150px">
+          <canvas baseChart
+                  [data]="(lineChartData$ | async)!"
+                  [options]="lineChartOptions"
+                  [type]="'line'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

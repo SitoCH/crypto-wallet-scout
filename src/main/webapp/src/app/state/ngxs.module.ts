@@ -6,6 +6,7 @@ import { NgxsModule } from "@ngxs/store";
 import { UserCollectionsState } from "./user-collections.state";
 import { AuthenticationState } from "./authentication.state";
 import { environment } from "../../environments/environment";
+import { AddressState } from "./address.state";
 
 interface SerializableTokenStateModel {
   tokens: string | null;
@@ -45,7 +46,8 @@ function serializeTokenState(obj: TokenStateModel): SerializableTokenStateModel 
         UserCollectionsState,
         ApplicationState,
         AuthenticationState,
-        TokenState],
+        TokenState,
+        AddressState],
       {
         developmentMode: !environment.production
       }),
