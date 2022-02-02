@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-02-01 22:45:42.
+// Generated using typescript-generator version 2.34.976 on 2022-02-02 23:22:02.
 
 export interface AddressBalance {
     tokenBalances: TokenBalance[];
