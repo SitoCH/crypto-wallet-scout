@@ -2,7 +2,28 @@
   <div class="col-md-12 my-4">
     <div class="card shadow">
       <div class="card-body">
-        <h5 class="card-title">History</h5>
+        <div class="toolbar">
+          <div class="row">
+            <div class="col-auto mr-auto">
+              <h5 class="card-title">History</h5>
+            </div>
+            <div class="col-auto">
+
+              <div class="btn-group" role="group">
+                <button type="button" class="btn mb-2"
+                        [class.btn-outline-primary]="(historicalChartRange$ | async) !== HistoricalChartRange.THREE_DAYS"
+                        [class.btn-primary]="(historicalChartRange$ | async) === HistoricalChartRange.THREE_DAYS"
+                        (click)="onRangeChange(HistoricalChartRange.THREE_DAYS)">3d
+                </button>
+                <button type="button" class="btn mb-2"
+                        [class.btn-outline-primary]="(historicalChartRange$ | async) !== HistoricalChartRange.SEVEN_DAYS"
+                        [class.btn-primary]="(historicalChartRange$ | async) === HistoricalChartRange.SEVEN_DAYS"
+                        (click)="onRangeChange(HistoricalChartRange.SEVEN_DAYS)">7d
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <p class="card-text"></p>
         <div style="height: 150px">
           <canvas baseChart
@@ -15,3 +36,6 @@
     </div>
   </div>
 </div>
+
+
+

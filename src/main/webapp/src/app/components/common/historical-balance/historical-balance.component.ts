@@ -1,7 +1,11 @@
 import { Component, Inject, Input, LOCALE_ID, OnChanges, SimpleChanges } from '@angular/core';
 import { ChartConfiguration } from "chart.js";
 import { formatDate } from "@angular/common";
-import { map, Observable } from "rxjs";
+import { BehaviorSubject, combineLatest, map, Observable } from "rxjs";
+
+enum HistoricalChartRange {
+  THREE_DAYS = 'THREE_DAYS', SEVEN_DAYS = 'SEVEN_DAYS'
+}
 
 @Component({
   selector: 'app-historical-balance',
@@ -10,8 +14,12 @@ import { map, Observable } from "rxjs";
 })
 export class HistoricalBalanceComponent implements OnChanges {
 
+  HistoricalChartRange = HistoricalChartRange;
+
   @Input()
   balances$?: Observable<{ [index: string]: number }>;
+
+  historicalChartRange$ = new BehaviorSubject(HistoricalChartRange.THREE_DAYS);
 
   lineChartData$?: Observable<ChartConfiguration['data']>;
 
@@ -30,7 +38,7 @@ export class HistoricalBalanceComponent implements OnChanges {
     },
     elements: {
       line: {
-        tension: 0.2
+        tension: 0.1
       }
     },
     plugins: {
@@ -43,15 +51,22 @@ export class HistoricalBalanceComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['balances$'] && this.balances$) {
-      this.lineChartData$ = this.balances$.pipe(
-        map(result => this.getChartData(result))
-      );
+      this.lineChartData$ =
+        combineLatest([this.balances$, this.historicalChartRange$]).pipe(
+          map(([balances, range]) => this.getChartData(balances, range))
+        );
     }
   }
 
-  getChartData(lineChartData: { [index: string]: number } | undefined): ChartConfiguration['data'] {
+  getChartData(lineChartData: { [index: string]: number } | undefined, range: string): ChartConfiguration['data'] {
+    let daysToConsider = range === HistoricalChartRange.THREE_DAYS ? 3 : 7;
+    let fromDate = new Date(new Date().getTime() - (daysToConsider * 24 * 60 * 60 * 1000));
 
-    let sortedKeys = Object.keys(lineChartData || []).sort();
+    let sortedKeys = Object.keys(lineChartData || [])
+      .filter(dateAsString => {
+        return new Date(dateAsString) > fromDate;
+      })
+      .sort();
 
     if (!lineChartData || sortedKeys.length < 2) {
       return {
@@ -66,7 +81,7 @@ export class HistoricalBalanceComponent implements OnChanges {
           backgroundColor: 'rgba(0,0,0,0)',
           borderColor: '#1b68ff',
           pointBackgroundColor: '#1b68ff',
-          pointBorderColor: '#fff',
+          pointRadius: 0,
           fill: 'origin'
         }
       ],
@@ -79,4 +94,7 @@ export class HistoricalBalanceComponent implements OnChanges {
     return formatDate(date, 'HH:mm', this.locale);
   }
 
+  onRangeChange(value: HistoricalChartRange) {
+    this.historicalChartRange$.next(value);
+  }
 }
