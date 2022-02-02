@@ -39,6 +39,7 @@ import { UserCollectionHistoricalBalanceComponent } from './components/main/user
 import { NgChartsModule } from "ng2-charts";
 import { HistoricalBalanceComponent } from './components/common/historical-balance/historical-balance.component';
 import { AddressHistoricalBalanceComponent } from './components/main/user-collections/address-historical-balance/address-historical-balance.component';
+import { TokenBalanceChartsComponent } from './components/common/token-balance-charts/token-balance-charts.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { AddressHistoricalBalanceComponent } from './components/main/user-collec
     TokenBalanceComponent,
     UserCollectionHistoricalBalanceComponent,
     HistoricalBalanceComponent,
-    AddressHistoricalBalanceComponent
+    AddressHistoricalBalanceComponent,
+    TokenBalanceChartsComponent
   ],
   imports: [
     BrowserModule,
