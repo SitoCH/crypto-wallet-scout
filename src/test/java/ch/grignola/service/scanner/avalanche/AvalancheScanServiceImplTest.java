@@ -1,18 +1,18 @@
 package ch.grignola.service.scanner.avalanche;
 
+import ch.grignola.model.BannedContract;
+import ch.grignola.repository.BannedContractRepository;
+import ch.grignola.service.scanner.bitquery.BitqueryClient;
+import ch.grignola.service.scanner.bitquery.model.Balance;
+import ch.grignola.service.scanner.bitquery.model.Currency;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
-import ch.grignola.service.scanner.ethereum.EthereumTokenBalanceResult;
-import ch.grignola.service.scanner.ethereum.EthereumTokenEventResult;
-import ch.grignola.service.scanner.ethereum.EthereumTokenEventsResult;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -21,49 +21,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @QuarkusTest
 class AvalancheScanServiceImplTest {
 
     private static final String ADDRESS = "0x1234";
-    private static final String TST_CONTRACT = "0xTEST1234";
     private static final String TST_SYMBOL = "TST";
-    private static final String TST_NAME = "Test token";
-    private static final String TST_DECIMALS = "2";
+    private static final String TST_TKN_ADDRESS = "0x1234";
 
     @InjectMock
-    @RestClient
-    AvalancheScanRestClient avalancheScanRestClient;
+    BitqueryClient bitqueryClient;
+
+    @InjectMock
+    BannedContractRepository bannedContractRepository;
 
     @Inject
-    AvalancheScanService avalancheScanService;
-
+    AvalancheScanService AvalancheScanService;
 
     @BeforeEach
     public void setup() {
-        EthereumTokenEventsResult eventsResult = new EthereumTokenEventsResult();
-        eventsResult.result = emptyList();
 
-        when(avalancheScanRestClient.getTokenEvents(any(), any(), eq(ADDRESS)))
-                .thenReturn(eventsResult);
+        when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
+                .thenReturn(emptyList());
 
-        when(avalancheScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), any()))
-                .thenReturn(new EthereumTokenBalanceResult());
-
-        EthereumTokenBalanceResult networkTokenBalanceResult = new EthereumTokenBalanceResult();
-        networkTokenBalanceResult.result = new BigInteger("0");
-
-        when(avalancheScanRestClient.getBalance(any(), any(), eq(ADDRESS)))
-                .thenReturn(networkTokenBalanceResult);
+        when(bannedContractRepository.findByNetwork(any()))
+                .thenReturn(emptyList());
     }
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = avalancheScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> balance = AvalancheScanService.getAddressBalance(ADDRESS);
 
-        verify(avalancheScanRestClient).getTokenEvents(any(), any(), eq(ADDRESS));
-        verify(avalancheScanRestClient, never()).getTokenBalance(any(), any(), eq(ADDRESS), any());
+        verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
 
         assertTrue(balance.isEmpty());
     }
@@ -71,31 +62,45 @@ class AvalancheScanServiceImplTest {
     @Test
     void getSimpleAddressBalanceWithoutMatic() {
 
-        EthereumTokenEventResult result = new EthereumTokenEventResult();
-        result.contractAddress = TST_CONTRACT;
-        result.tokenDecimal = TST_DECIMALS;
-        result.tokenSymbol = TST_SYMBOL;
-        result.tokenName = TST_NAME;
+        Balance balance = new Balance();
+        balance.currency = new Currency();
+        balance.currency.symbol = TST_SYMBOL;
+        balance.currency.address = TST_TKN_ADDRESS;
+        balance.value = 45.5;
 
-        EthereumTokenEventsResult eventsResult = new EthereumTokenEventsResult();
-        eventsResult.result = singletonList(result);
+        when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
+                .thenReturn(singletonList(balance));
 
-        when(avalancheScanRestClient.getTokenEvents(any(), any(), eq(ADDRESS)))
-                .thenReturn(eventsResult);
+        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS);
 
-        EthereumTokenBalanceResult balanceResult = new EthereumTokenBalanceResult();
-        balanceResult.result = new BigInteger("4550");
-
-        when(avalancheScanRestClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT)))
-                .thenReturn(balanceResult);
-
-        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS);
-
-        verify(avalancheScanRestClient).getTokenEvents(any(), any(), eq(ADDRESS));
-        verify(avalancheScanRestClient).getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_CONTRACT));
+        verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
 
         assertEquals(1, addressBalance.size());
         assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getNativeValue());
         assertEquals(TST_SYMBOL, addressBalance.get(0).getTokenSymbol());
+    }
+
+    @Test
+    void getSimpleAddressBalanceWithBannedContract() {
+
+        BannedContract bannedContract = new BannedContract();
+        bannedContract.setContractId(TST_TKN_ADDRESS);
+        when(bannedContractRepository.findByNetwork(any()))
+                .thenReturn(singletonList(bannedContract));
+
+        Balance balance = new Balance();
+        balance.currency = new Currency();
+        balance.currency.symbol = TST_SYMBOL;
+        balance.currency.address = TST_TKN_ADDRESS;
+        balance.value = 45.5;
+
+        when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
+                .thenReturn(singletonList(balance));
+
+        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS);
+
+        verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
+
+        assertTrue(addressBalance.isEmpty());
     }
 }
