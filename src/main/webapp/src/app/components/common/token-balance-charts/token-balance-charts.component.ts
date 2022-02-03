@@ -58,6 +58,8 @@ export class TokenBalanceChartsComponent implements OnChanges {
           datasets: [
             {
               data: sortedKeys.map(x => tokensByTokenId.get(x) || 0),
+              borderColor: '#343a40',
+              borderWidth: 1
             }
           ],
           labels: sortedKeys.map((x, index) => tokens[index]!.name)
