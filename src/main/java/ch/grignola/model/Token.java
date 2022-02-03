@@ -9,6 +9,7 @@ public class Token {
     private String name;
     private String symbol;
     private String coinGeckoId;
+    private String parentCoinGeckoId;
     private boolean excludeFromBalance;
 
     @Id
@@ -44,6 +45,14 @@ public class Token {
 
     public void setCoinGeckoId(String coinGeckoId) {
         this.coinGeckoId = coinGeckoId;
+    }
+
+    public String getParentCoinGeckoId() {
+        return parentCoinGeckoId;
+    }
+
+    public void setParentCoinGeckoId(String parentCoinGeckoId) {
+        this.parentCoinGeckoId = parentCoinGeckoId;
     }
 
     public boolean isExcludeFromBalance() {
