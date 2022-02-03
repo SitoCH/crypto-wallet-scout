@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-02-02 23:22:02.
+// Generated using typescript-generator version 2.34.976 on 2022-02-03 21:42:38.
 
 export interface AddressBalance {
     tokenBalances: TokenBalance[];
@@ -114,6 +114,20 @@ export class AddressBalanceResourceClient {
     }
 }
 
+export class TokenResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/token/{id}
+     * Java method: ch.grignola.web.TokenResource.getToken
+     */
+    getToken(id: string): RestResponse<TokenResult> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
+    }
+}
+
 export class AsynchronousDispatcherClient {
 
     constructor(protected httpClient: HttpClient) {
@@ -141,20 +155,6 @@ export class AsynchronousDispatcherClient {
      */
     remove(jobId: string): RestResponse<void> {
         return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
-    }
-}
-
-export class TokenResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/token/{id}
-     * Java method: ch.grignola.web.TokenResource.getToken
-     */
-    getToken(id: string): RestResponse<TokenResult> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
     }
 }
 
