@@ -5,6 +5,7 @@ import { Store } from "@ngxs/store";
 import { TokenState } from "../../../state/token.state";
 import { from, mergeMap, toArray } from "rxjs";
 import { formatNumber } from "@angular/common";
+import { Allocation } from "../../../../generated/client";
 
 @Component({
   selector: 'app-token-balance-charts',
@@ -16,7 +17,9 @@ export class TokenBalanceChartsComponent implements OnChanges {
   @Input()
   tokens!: TokenList;
 
-  pieChartData?: ChartConfiguration['data'];
+  chartByTokenData?: ChartConfiguration['data'];
+
+  chartByAllocationData?: ChartConfiguration['data'];
 
   pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
@@ -42,31 +45,58 @@ export class TokenBalanceChartsComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tokens'].currentValue) {
       let tokensByTokenId = new Map<string, number>();
+      let tokensByAllocation = new Map<Allocation, number>();
+
       this.tokens.tokenBalances.forEach(tokenBalance => {
         let currentBalance = tokensByTokenId.get(tokenBalance.tokenId) || 0;
         tokensByTokenId.set(tokenBalance.tokenId, currentBalance + tokenBalance.usdValue);
+
+        let currentAllocationBalance = tokensByAllocation.get(tokenBalance.allocation) || 0;
+        tokensByAllocation.set(tokenBalance.allocation, currentAllocationBalance + tokenBalance.usdValue);
       });
 
-      let sortedKeys = Array.from(tokensByTokenId.keys());
+      this.generateChartByTokens(tokensByTokenId);
 
-      from(sortedKeys)
-        .pipe(
-          mergeMap((tokenId) => this.store.selectOnce(TokenState.getTokenById(tokenId))),
-          toArray()
-        ).subscribe(tokens => {
-        this.pieChartData = {
-          datasets: [
-            {
-              data: sortedKeys.map(x => tokensByTokenId.get(x) || 0),
-              borderColor: '#343a40',
-              borderWidth: 1
-            }
-          ],
-          labels: sortedKeys.map((x, index) => tokens[index]!.name)
-        };
-      });
+      this.generateChartByAllocation(tokensByAllocation);
 
     }
   }
 
+  private generateChartByAllocation(tokensByAllocation: Map<Allocation, number>) {
+
+    let sortedKeys = Array.from(tokensByAllocation.keys());
+
+    this.chartByAllocationData = {
+      datasets: [
+        {
+          data: sortedKeys.map(x => tokensByAllocation.get(x) || 0),
+          borderColor: '#343a40',
+          borderWidth: 1
+        }
+      ],
+      labels: sortedKeys
+    };
+  }
+
+  private generateChartByTokens(tokensByTokenId: Map<string, number>) {
+
+    let sortedKeys = Array.from(tokensByTokenId.keys());
+
+    from(sortedKeys)
+      .pipe(
+        mergeMap((tokenId) => this.store.selectOnce(TokenState.getTokenById(tokenId))),
+        toArray()
+      ).subscribe(tokens => {
+      this.chartByTokenData = {
+        datasets: [
+          {
+            data: sortedKeys.map(x => tokensByTokenId.get(x) || 0),
+            borderColor: '#343a40',
+            borderWidth: 1
+          }
+        ],
+        labels: sortedKeys.map((x, index) => tokens[index]!.name)
+      };
+    });
+  }
 }
