@@ -8,6 +8,7 @@ import ch.grignola.service.token.model.CoingeckoCoinDetail;
 import ch.grignola.service.token.model.TokenDetail;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
+import io.quarkus.cache.CacheResult;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
@@ -70,7 +71,7 @@ public class TokenProviderImpl implements TokenProvider {
             return Optional.of(new TokenDetail(token.getId().toString(), token.getName(), coin.image.small, token.getSymbol(),
                     coin.marketData.currentPrice.usd, defaultAllocation, coin.marketData.priceChangePercentage24h, coin.marketData.priceChangePercentage7d));
         } catch (InterruptedException e) {
-            LOG.infof("Unable to load coin %s from Coingecko", coinGeckoId);
+            LOG.warnf("Unable to load coin %s from Coingecko", coinGeckoId);
             Thread.currentThread().interrupt();
             return Optional.empty();
         }
@@ -101,11 +102,13 @@ public class TokenProviderImpl implements TokenProvider {
     }
 
     @Override
+    @CacheResult(cacheName = "token-provider-get-by-symbol")
     public Optional<TokenDetail> getBySymbol(String symbol) {
         return getInfoFromCoingecko(tokenRepository.findBySymbol(symbol).orElseGet(() -> createNewToken(symbol)));
     }
 
     @Override
+    @CacheResult(cacheName = "token-provider-get-by-id")
     public Optional<TokenDetail> getById(String tokenId) {
         return tokenRepository.findByIdOptional(Long.parseLong(tokenId)).flatMap(this::getInfoFromCoingecko);
     }
