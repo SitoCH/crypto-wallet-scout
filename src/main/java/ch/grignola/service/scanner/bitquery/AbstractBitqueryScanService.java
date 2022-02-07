@@ -42,7 +42,7 @@ public abstract class AbstractBitqueryScanService implements ScanService {
 
     @Override
     public List<ScannerTokenBalance> getAddressBalance(String address) {
-
+        LOG.infof("Getting %s balance for address %s", network, address);
         Set<String> bannedContracts = bannedContractRepository.findByNetwork(network).stream()
                 .map(BannedContract::getContractId)
                 .collect(toUnmodifiableSet());

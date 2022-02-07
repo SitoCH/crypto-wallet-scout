@@ -33,6 +33,7 @@ public class CosmosScanServiceImpl implements CosmosScanService {
 
     @Override
     public List<ScannerTokenBalance> getAddressBalance(String address) {
+        LOG.infof("Getting Cosmos balance for address %s", address);
 
         List<ScannerTokenBalance> balances = new ArrayList<>();
 

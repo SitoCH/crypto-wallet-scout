@@ -26,6 +26,10 @@ public final class TokenBalance {
         this.tokenId = tokenId;
     }
 
+    public String getTokenId() {
+        return tokenId;
+    }
+
     public BigDecimal getUsdValue() {
         return usdValue;
     }
