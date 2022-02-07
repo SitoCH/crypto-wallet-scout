@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.polygon;
 
 import ch.grignola.model.BannedContract;
-import ch.grignola.repository.BannedContractRepository;
+import ch.grignola.model.Network;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
 import ch.grignola.service.scanner.bitquery.model.Balance;
 import ch.grignola.service.scanner.bitquery.model.Currency;
@@ -33,9 +33,6 @@ class PolygonScanServiceImplTest {
     @InjectMock
     BitqueryClient bitqueryClient;
 
-    @InjectMock
-    BannedContractRepository bannedContractRepository;
-
     @Inject
     PolygonScanService polygonScanService;
 
@@ -46,8 +43,6 @@ class PolygonScanServiceImplTest {
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
                 .thenReturn(emptyList());
 
-        when(bannedContractRepository.findByNetwork(any()))
-                .thenReturn(emptyList());
     }
 
     @Test
@@ -85,8 +80,6 @@ class PolygonScanServiceImplTest {
 
         BannedContract bannedContract = new BannedContract();
         bannedContract.setContractId(TST_TKN_ADDRESS);
-        when(bannedContractRepository.findByNetwork(any()))
-                .thenReturn(singletonList(bannedContract));
 
         Balance balance = new Balance();
         balance.currency = new Currency();
@@ -97,7 +90,7 @@ class PolygonScanServiceImplTest {
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS, singletonMap(Network.POLYGON, singletonList(bannedContract)));
 
         verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
 

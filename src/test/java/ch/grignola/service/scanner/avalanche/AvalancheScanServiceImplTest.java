@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.avalanche;
 
 import ch.grignola.model.BannedContract;
-import ch.grignola.repository.BannedContractRepository;
+import ch.grignola.model.Network;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
 import ch.grignola.service.scanner.bitquery.model.Balance;
 import ch.grignola.service.scanner.bitquery.model.Currency;
@@ -33,9 +33,6 @@ class AvalancheScanServiceImplTest {
     @InjectMock
     BitqueryClient bitqueryClient;
 
-    @InjectMock
-    BannedContractRepository bannedContractRepository;
-
     @Inject
     AvalancheScanService AvalancheScanService;
 
@@ -43,9 +40,6 @@ class AvalancheScanServiceImplTest {
     public void setup() {
 
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
-                .thenReturn(emptyList());
-
-        when(bannedContractRepository.findByNetwork(any()))
                 .thenReturn(emptyList());
     }
 
@@ -84,8 +78,7 @@ class AvalancheScanServiceImplTest {
 
         BannedContract bannedContract = new BannedContract();
         bannedContract.setContractId(TST_TKN_ADDRESS);
-        when(bannedContractRepository.findByNetwork(any()))
-                .thenReturn(singletonList(bannedContract));
+
 
         Balance balance = new Balance();
         balance.currency = new Currency();
@@ -96,7 +89,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS, singletonMap(Network.AVALANCHE, singletonList(bannedContract)));
 
         verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
 
