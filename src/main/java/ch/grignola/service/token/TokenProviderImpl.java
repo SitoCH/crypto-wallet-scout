@@ -69,7 +69,7 @@ public class TokenProviderImpl implements TokenProvider {
         }
 
         return Optional.of(new TokenDetail(token.getId().toString(), token.getName(), coin.image, token.getSymbol(),
-                coin.usdValue, null, coin.priceChangePercentage24h, coin.priceChangePercentage7d));
+                coin.usdValue, token.getAllocation(), coin.priceChangePercentage24h, coin.priceChangePercentage7d));
     }
 
     private CachedCoinDetail getCoingeckoCoin(String coinGeckoId) {

@@ -11,6 +11,7 @@ public class Token {
     private String coinGeckoId;
     private String parentCoinGeckoId;
     private boolean excludeFromBalance;
+    private Allocation allocation;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +64,15 @@ public class Token {
         this.excludeFromBalance = excludeFromBalance;
     }
 
+    @Enumerated(EnumType.STRING)
+    public Allocation getAllocation() {
+        return allocation;
+    }
+
+    public void setAllocation(Allocation allocation) {
+        this.allocation = allocation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -72,11 +82,11 @@ public class Token {
             return false;
         }
         Token token = (Token) o;
-        return excludeFromBalance == token.excludeFromBalance && Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId);
+        return excludeFromBalance == token.excludeFromBalance && Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId) && Objects.equals(parentCoinGeckoId, token.parentCoinGeckoId) && allocation == token.allocation;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, symbol, coinGeckoId, excludeFromBalance);
+        return Objects.hash(id, name, symbol, coinGeckoId, parentCoinGeckoId, excludeFromBalance, allocation);
     }
 }
