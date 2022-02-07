@@ -7,7 +7,6 @@ import org.jboss.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @ApplicationScoped

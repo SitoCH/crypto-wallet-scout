@@ -10,4 +10,5 @@ public interface TokenProvider {
 
     Optional<TokenDetail> getById(String tokenId);
 
+    void refreshCache();
 }
