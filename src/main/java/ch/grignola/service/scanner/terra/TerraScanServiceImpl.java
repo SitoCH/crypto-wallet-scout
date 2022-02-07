@@ -1,6 +1,7 @@
 package ch.grignola.service.scanner.terra;
 
 import ch.grignola.model.Allocation;
+import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.terra.model.TerraBalanceResult;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static ch.grignola.model.Allocation.*;
 import static java.math.BigDecimal.ZERO;
@@ -33,7 +35,7 @@ public class TerraScanServiceImpl implements TerraScanService {
     }
 
     @Override
-    public List<ScannerTokenBalance> getAddressBalance(String address) {
+    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
 
         TerraBalanceResult result = terraRestClient.getBalance(address);
 

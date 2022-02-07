@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -43,7 +44,7 @@ class CronosScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = cronosScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> balance = cronosScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(cronosRestClient).getBalance(eq(ADDRESS));
 

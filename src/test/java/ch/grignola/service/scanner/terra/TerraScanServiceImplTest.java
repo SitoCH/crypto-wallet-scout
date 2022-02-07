@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import javax.inject.Inject;
 import java.util.List;
 
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +39,7 @@ class TerraScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = terraScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> balance = terraScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(terraRestClient).getBalance(ADDRESS);
 

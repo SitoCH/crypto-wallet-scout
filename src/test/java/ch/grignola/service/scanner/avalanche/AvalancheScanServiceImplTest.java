@@ -15,8 +15,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +51,7 @@ class AvalancheScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = AvalancheScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> balance = AvalancheScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
 
@@ -71,7 +70,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
 
@@ -97,7 +96,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
 

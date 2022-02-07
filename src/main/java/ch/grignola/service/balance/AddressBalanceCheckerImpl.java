@@ -1,6 +1,9 @@
 package ch.grignola.service.balance;
 
 import ch.grignola.model.Allocation;
+import ch.grignola.model.BannedContract;
+import ch.grignola.model.Network;
+import ch.grignola.repository.BannedContractRepository;
 import ch.grignola.service.scanner.avalanche.AvalancheScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
@@ -16,6 +19,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Comparator.comparing;
@@ -40,15 +44,18 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     CronosScanService cronosScanService;
     @Inject
     CosmosScanService cosmosScanService;
+    @Inject
+    BannedContractRepository bannedContractRepository;
 
     private List<ScanService> getScanServices() {
         return List.of(polygonScanService, avalancheScanService, terraScanService, cronosScanService, solanaScanService, cosmosScanService);
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
-        return getScanServices().stream()
+        Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
+        return getScanServices().parallelStream()
                 .filter(x -> x.accept(address))
-                .flatMap(x -> x.getAddressBalance(address).stream())
+                .flatMap(x -> x.getAddressBalance(address, bannedContracts).stream())
                 .toList();
     }
 
