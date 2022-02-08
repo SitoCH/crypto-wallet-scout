@@ -20,6 +20,16 @@
                         [class.btn-primary]="(historicalChartRange$ | async) === HistoricalChartRange.SEVEN_DAYS"
                         (click)="onRangeChange(HistoricalChartRange.SEVEN_DAYS)">7d
                 </button>
+                <button type="button" class="btn mb-2"
+                        [class.btn-outline-primary]="(historicalChartRange$ | async) !== HistoricalChartRange.FOURTEEN_DAYS"
+                        [class.btn-primary]="(historicalChartRange$ | async) === HistoricalChartRange.FOURTEEN_DAYS"
+                        (click)="onRangeChange(HistoricalChartRange.FOURTEEN_DAYS)">14d
+                </button>
+                <button type="button" class="btn mb-2"
+                        [class.btn-outline-primary]="(historicalChartRange$ | async) !== HistoricalChartRange.THIRTY_DAYS"
+                        [class.btn-primary]="(historicalChartRange$ | async) === HistoricalChartRange.THIRTY_DAYS"
+                        (click)="onRangeChange(HistoricalChartRange.THIRTY_DAYS)">30d
+                </button>
               </div>
             </div>
           </div>

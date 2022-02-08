@@ -4,7 +4,10 @@ import { formatDate } from "@angular/common";
 import { BehaviorSubject, combineLatest, map, Observable } from "rxjs";
 
 enum HistoricalChartRange {
-  THREE_DAYS = 'THREE_DAYS', SEVEN_DAYS = 'SEVEN_DAYS'
+  THREE_DAYS = 'THREE_DAYS',
+  SEVEN_DAYS = 'SEVEN_DAYS',
+  FOURTEEN_DAYS = 'FOURTEEN_DAYS',
+  THIRTY_DAYS = 'THIRTY_DAYS'
 }
 
 @Component({
@@ -19,7 +22,7 @@ export class HistoricalBalanceComponent implements OnChanges {
   @Input()
   balances$?: Observable<{ [index: string]: number }>;
 
-  historicalChartRange$ = new BehaviorSubject(HistoricalChartRange.THREE_DAYS);
+  historicalChartRange$ = new BehaviorSubject(HistoricalChartRange.SEVEN_DAYS);
 
   lineChartData$?: Observable<ChartConfiguration['data']>;
 
@@ -59,7 +62,7 @@ export class HistoricalBalanceComponent implements OnChanges {
   }
 
   getChartData(lineChartData: { [index: string]: number } | undefined, range: string): ChartConfiguration['data'] {
-    let daysToConsider = range === HistoricalChartRange.THREE_DAYS ? 3 : 7;
+    let daysToConsider = this.getDaysToConsider(range);
     let fromDate = new Date(new Date().getTime() - (daysToConsider * 24 * 60 * 60 * 1000));
 
     let sortedKeys = Object.keys(lineChartData || [])
@@ -87,6 +90,22 @@ export class HistoricalBalanceComponent implements OnChanges {
       ],
       labels: sortedKeys.map(x => this.formatLabel(x))
     };
+  }
+
+  private getDaysToConsider(range: string) {
+    if (range === HistoricalChartRange.THREE_DAYS) {
+      return 3;
+    }
+    if (range === HistoricalChartRange.SEVEN_DAYS) {
+      return 7;
+    }
+    if (range === HistoricalChartRange.FOURTEEN_DAYS) {
+      return 14;
+    }
+    if (range === HistoricalChartRange.THIRTY_DAYS) {
+      return 30;
+    }
+    return 3;
   }
 
   private formatLabel(label: string) {
