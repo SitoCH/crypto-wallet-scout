@@ -51,8 +51,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
         return List.of(polygonScanService, avalancheScanService, terraScanService, cronosScanService, solanaScanService, cosmosScanService);
     }
 
-    private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
-        Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
+    private List<ScannerTokenBalance> getBalancesFromScanServices(String address, Map<Network, List<BannedContract>> bannedContracts) {
         return getScanServices().parallelStream()
                 .filter(x -> x.accept(address))
                 .flatMap(x -> x.getAddressBalance(address, bannedContracts).stream())
@@ -60,21 +59,35 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     }
 
     @Override
-    public AddressBalance getAddressBalance(String address) {
-        return new AddressBalance(getBalancesFromScanServices(address).stream()
-                .map(this::toAddressBalance)
-                .filter(x -> x != null && x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
-                .sorted(comparing(TokenBalance::getTokenId))
-                .toList());
+    public List<TokenBalance> getBalances(List<String> addresses) {
+        Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
+        List<ScannerTokenBalance> rawBalances = addresses.parallelStream()
+                .flatMap(x -> getBalancesFromScanServices(x, bannedContracts).stream())
+                .toList();
+        return getTokenBalances(rawBalances);
     }
 
-    private TokenBalance toAddressBalance(ScannerTokenBalance balance) {
+    @Override
+    public List<TokenBalance> getBalance(String address) {
+        Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
+        return getTokenBalances(getBalancesFromScanServices(address, bannedContracts));
+    }
+
+    private List<TokenBalance> getTokenBalances(List<ScannerTokenBalance> rawBalances) {
+        return rawBalances.stream()
+                .map(this::toTokenBalance)
+                .filter(x -> x != null && x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
+                .sorted(comparing(TokenBalance::getTokenId))
+                .toList();
+    }
+
+    private TokenBalance toTokenBalance(ScannerTokenBalance balance) {
         return tokenProvider.getBySymbol(balance.getTokenSymbol())
                 .map(tokenDetail -> {
                     LOG.infof("Token %s: 1 USD - %f %s", tokenDetail.getName(), tokenDetail.getUsdValue(), tokenDetail.getSymbol());
                     Allocation allocation = tokenDetail.getAllocation() != null ? tokenDetail.getAllocation() : balance.getAllocation();
                     BigDecimal usdValue = balance.getNativeValue().equals(ZERO) ? ZERO : balance.getNativeValue().multiply(BigDecimal.valueOf(tokenDetail.getUsdValue()));
-                    return new TokenBalance(balance.getNetwork(), allocation, balance.getNativeValue(), usdValue, tokenDetail.getId());
+                    return new TokenBalance(balance.getNetwork(), allocation, balance.getNativeValue(), usdValue, tokenDetail.getId(), tokenDetail.getParentId());
                 })
                 .orElse(null);
     }

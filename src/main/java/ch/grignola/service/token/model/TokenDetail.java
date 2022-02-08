@@ -4,6 +4,7 @@ import ch.grignola.model.Allocation;
 
 public class TokenDetail {
     private final String id;
+    private final String parentId;
     private final String image;
     private final String name;
     private final String symbol;
@@ -12,9 +13,11 @@ public class TokenDetail {
     private final float priceChangePercentage24h;
     private final float priceChangePercentage7d;
 
-    public TokenDetail(String id, String name, String image, String symbol, float usdValue, Allocation allocation,
-                       float priceChangePercentage24h, float priceChangePercentage7d) {
+    @SuppressWarnings("java:S107")
+    public TokenDetail(String id, String parentId, String name, String image, String symbol, float usdValue,
+                       Allocation allocation, float priceChangePercentage24h, float priceChangePercentage7d) {
         this.id = id;
+        this.parentId = parentId;
         this.usdValue = usdValue;
         this.image = image;
         this.name = name;
@@ -26,6 +29,10 @@ public class TokenDetail {
 
     public String getId() {
         return id;
+    }
+
+    public String getParentId() {
+        return parentId;
     }
 
     public Float getUsdValue() {

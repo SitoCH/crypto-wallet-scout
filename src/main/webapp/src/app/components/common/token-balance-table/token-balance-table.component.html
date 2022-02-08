@@ -1,4 +1,4 @@
-<div class="row" *ngIf="tokens && tokens.tokenBalances.length > 0">
+<div class="row" *ngIf="tokens && tokens.length > 0">
   <div class="col-md-12 my-4">
     <div class="card shadow">
       <div class="card-body">
@@ -21,7 +21,7 @@
               <fa-icon icon="spinner" [spin]="true"></fa-icon>
             </td>
           </tr>
-          <ng-container *ngFor="let tokenBalance of tokens?.tokenBalances">
+          <ng-container *ngFor="let tokenBalance of tokens">
             <tr *ngIf="getToken(tokenBalance.tokenId) | async as token">
               <td>
                 <app-token-logo [network]="tokenBalance.network"

@@ -68,7 +68,7 @@ public class TokenProviderImpl implements TokenProvider {
             token.setCoinGeckoId(coin.id);
         }
 
-        return Optional.of(new TokenDetail(token.getId().toString(), token.getName(), coin.image, token.getSymbol(),
+        return Optional.of(new TokenDetail(token.getId().toString(), token.getParentId(), token.getName(), coin.image, token.getSymbol(),
                 coin.usdValue, token.getAllocation(), coin.priceChangePercentage24h, coin.priceChangePercentage7d));
     }
 

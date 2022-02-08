@@ -17,13 +17,16 @@ public final class TokenBalance {
     private final BigDecimal usdValue;
     @JsonProperty("tokenId")
     private final String tokenId;
+    @JsonProperty("parentTokenId")
+    private final String parentTokenId;
 
-    public TokenBalance(Network network, Allocation allocation, BigDecimal nativeValue, BigDecimal usdValue, String tokenId) {
+    public TokenBalance(Network network, Allocation allocation, BigDecimal nativeValue, BigDecimal usdValue, String tokenId, String parentTokenId) {
         this.network = network;
         this.allocation = allocation;
         this.nativeValue = nativeValue;
         this.usdValue = usdValue;
         this.tokenId = tokenId;
+        this.parentTokenId = parentTokenId;
     }
 
     public String getTokenId() {

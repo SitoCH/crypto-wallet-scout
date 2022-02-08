@@ -6,8 +6,8 @@ import ch.grignola.model.UserCollectionAddress;
 import ch.grignola.repository.AddressSnapshotRepository;
 import ch.grignola.repository.UserCollectionRepository;
 import ch.grignola.service.UserService;
-import ch.grignola.service.balance.AddressBalance;
 import ch.grignola.service.balance.AddressBalanceChecker;
+import ch.grignola.service.balance.TokenBalance;
 import ch.grignola.web.model.HistoricalAddressBalance;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jboss.logging.Logger;
@@ -44,9 +44,9 @@ public class UserCollectionResource {
     @GET
     @Path("{collectionId}/balance")
     @Transactional
-    public List<AddressBalance> getAddressBalance(@PathParam("collectionId") long collectionId) {
+    public List<TokenBalance> getAddressBalance(@PathParam("collectionId") long collectionId) {
         UserCollection userCollection = getUserCollection(collectionId);
-        return userCollection.getUserCollectionAddresses().stream().map(x -> addressBalanceChecker.getAddressBalance(x.getAddress())).toList();
+        return addressBalanceChecker.getBalances(userCollection.getUserCollectionAddresses().stream().map(UserCollectionAddress::getAddress).toList());
     }
 
     @GET

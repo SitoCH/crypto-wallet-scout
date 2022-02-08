@@ -9,7 +9,7 @@ public class Token {
     private String name;
     private String symbol;
     private String coinGeckoId;
-    private String parentCoinGeckoId;
+    private String parentId;
     private boolean excludeFromBalance;
     private Allocation allocation;
 
@@ -48,12 +48,12 @@ public class Token {
         this.coinGeckoId = coinGeckoId;
     }
 
-    public String getParentCoinGeckoId() {
-        return parentCoinGeckoId;
+    public String getParentId() {
+        return parentId;
     }
 
-    public void setParentCoinGeckoId(String parentCoinGeckoId) {
-        this.parentCoinGeckoId = parentCoinGeckoId;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public boolean isExcludeFromBalance() {
@@ -82,11 +82,11 @@ public class Token {
             return false;
         }
         Token token = (Token) o;
-        return excludeFromBalance == token.excludeFromBalance && Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId) && Objects.equals(parentCoinGeckoId, token.parentCoinGeckoId) && allocation == token.allocation;
+        return excludeFromBalance == token.excludeFromBalance && Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId) && Objects.equals(parentId, token.parentId) && allocation == token.allocation;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, symbol, coinGeckoId, parentCoinGeckoId, excludeFromBalance, allocation);
+        return Objects.hash(id, name, symbol, coinGeckoId, parentId, excludeFromBalance, allocation);
     }
 }

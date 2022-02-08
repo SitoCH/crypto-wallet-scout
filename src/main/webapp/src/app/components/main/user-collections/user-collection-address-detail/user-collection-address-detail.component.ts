@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { AddressBalance } from "../../../../../generated/client";
+import { TokenBalance } from "../../../../../generated/client";
 import { AddressBalanceService } from "../../../../services/address-balance.service";
 
 @Component({
@@ -13,7 +13,7 @@ export class UserCollectionAddressDetailComponent {
   id!: number;
   address!: string;
 
-  addressBalance: AddressBalance | null = null;
+  addressBalance: TokenBalance[] | null = null;
   currentUsdValue: number | undefined = undefined;
 
   constructor(private addressService: AddressBalanceService,
@@ -32,9 +32,9 @@ export class UserCollectionAddressDetailComponent {
   private loadBalance() {
     this.addressBalance = null;
     this.addressService.getAddressBalance(this.address)
-      .then(data => {
-        this.addressBalance = data;
-        this.currentUsdValue = data.tokenBalances
+      .then(tokenBalances => {
+        this.addressBalance = tokenBalances;
+        this.currentUsdValue = tokenBalances
           .map(x => x.usdValue)
           .reduce((a, b) => a + b);
       })

@@ -1,5 +1,5 @@
 <div class="row" *ngIf="chartByTokenData && chartByTokenData?.datasets!.length > 0">
-  <div class="col-md-6 my-2">
+  <div class="col-md-4 my-2">
     <div class="card shadow">
       <div class="card-body">
         <div class="toolbar">
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <div class="col-md-6 my-2">
+  <div class="col-md-4 my-2">
     <div class="card shadow">
       <div class="card-body">
         <div class="toolbar">
@@ -35,6 +35,28 @@
         <div style="height: 150px">
           <canvas baseChart
                   [data]="chartByAllocationData"
+                  [options]="pieChartOptions"
+                  [type]="'pie'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 my-2">
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="row">
+            <div class="col-auto mr-auto">
+              <h5 class="card-title">Network</h5>
+            </div>
+          </div>
+        </div>
+        <p class="card-text"></p>
+        <div style="height: 150px">
+          <canvas baseChart
+                  [data]="chartByNetworkData"
                   [options]="pieChartOptions"
                   [type]="'pie'">
           </canvas>

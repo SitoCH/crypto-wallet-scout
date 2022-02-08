@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserCollectionService } from "../../../../services/user-collection.service";
 import { TokenBalance } from "../../../../../generated/client";
-import { TokenList } from "../../../../utils/balance";
 
 @Component({
   selector: 'app-user-collection-detail',
@@ -12,7 +11,7 @@ import { TokenList } from "../../../../utils/balance";
 export class UserCollectionDetailComponent implements OnInit {
 
   id!: number;
-  aggregatedTokenBalances: TokenList | null = null;
+  aggregatedTokenBalances: TokenBalance[] | null = null;
   collectionUsdValue?: number;
 
   constructor(private userCollectionService: UserCollectionService,
@@ -35,25 +34,21 @@ export class UserCollectionDetailComponent implements OnInit {
   private loadBalance() {
     this.aggregatedTokenBalances = null;
     this.userCollectionService.getAddressBalance(this.id)
-      .then(data => {
+      .then(tokenBalances => {
         this.collectionUsdValue = 0;
         let tokens = new Map<string, TokenBalance>();
-        data.forEach(addressBalance => {
-          addressBalance.tokenBalances.forEach(tokenBalance => {
-            let key = UserCollectionDetailComponent.makeKey(tokenBalance);
-            this.collectionUsdValue! += tokenBalance.usdValue;
-            if (!tokens.has(key)) {
-              tokens.set(key, tokenBalance);
-            } else {
-              tokens.get(key)!.nativeValue += tokenBalance.nativeValue;
-              tokens.get(key)!.usdValue += tokenBalance.usdValue;
-            }
-          });
+        tokenBalances.forEach(tokenBalance => {
+          let key = UserCollectionDetailComponent.makeKey(tokenBalance);
+          this.collectionUsdValue! += tokenBalance.usdValue;
+          if (!tokens.has(key)) {
+            tokens.set(key, tokenBalance);
+          } else {
+            tokens.get(key)!.nativeValue += tokenBalance.nativeValue;
+            tokens.get(key)!.usdValue += tokenBalance.usdValue;
+          }
         });
 
-        this.aggregatedTokenBalances = {
-          tokenBalances: Array.from(tokens, ([name, value]) => (value))
-        };
+        this.aggregatedTokenBalances = Array.from(tokens, ([_, value]) => (value));
       })
   }
 }

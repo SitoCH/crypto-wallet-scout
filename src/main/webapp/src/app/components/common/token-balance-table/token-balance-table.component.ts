@@ -1,9 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { TokenResult } from "../../../../generated/client";
+import { TokenBalance, TokenResult } from "../../../../generated/client";
 import { Store } from "@ngxs/store";
 import { mergeMap, Observable } from "rxjs";
 import { GetTokenById, TokenState } from "../../../state/token.state";
-import { TokenList } from "../../../utils/balance";
 
 @Component({
   selector: 'app-token-balance-table',
@@ -13,7 +12,7 @@ import { TokenList } from "../../../utils/balance";
 export class TokenBalanceTableComponent {
 
   @Input()
-  tokens!: TokenList;
+  tokens!: TokenBalance[];
 
   @Input()
   title!: string;

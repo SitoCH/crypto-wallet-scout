@@ -1,8 +1,8 @@
 package ch.grignola.web;
 
 import ch.grignola.repository.AddressSnapshotRepository;
-import ch.grignola.service.balance.AddressBalance;
 import ch.grignola.service.balance.AddressBalanceChecker;
+import ch.grignola.service.balance.TokenBalance;
 import ch.grignola.web.model.HistoricalAddressBalance;
 
 import javax.inject.Inject;
@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 
 @Path("/api/address/balance")
 @Produces("application/json")
@@ -29,8 +30,8 @@ public class AddressBalanceResource {
     @GET
     @Path("/{address}")
     @Transactional
-    public AddressBalance getAddressBalance(@PathParam("address") String address) {
-        return addressBalanceChecker.getAddressBalance(address);
+    public List<TokenBalance> getAddressBalance(@PathParam("address") String address) {
+        return addressBalanceChecker.getBalance(address);
     }
 
     @GET

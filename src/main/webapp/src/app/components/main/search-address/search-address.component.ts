@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AddressBalance, UserCollectionSummary } from "../../../../generated/client";
+import { TokenBalance, UserCollectionSummary } from "../../../../generated/client";
 import { AddressBalanceService } from "../../../services/address-balance.service";
 import { Select, Store } from "@ngxs/store";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
@@ -17,7 +17,7 @@ export class SearchAddressComponent {
   activeAddress = '';
   firstSearchDone = false;
   searchRunning = false;
-  addressBalance: AddressBalance | null = null;
+  addressBalance: TokenBalance[] | null = null;
 
   @Select(UserCollectionsState.getUserCollections)
   userCollections$!: Observable<UserCollectionSummary[]>;
