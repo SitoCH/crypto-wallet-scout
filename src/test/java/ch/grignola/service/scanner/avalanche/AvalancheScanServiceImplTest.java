@@ -3,7 +3,7 @@ package ch.grignola.service.scanner.avalanche;
 import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
-import ch.grignola.service.scanner.bitquery.model.Balance;
+import ch.grignola.service.scanner.bitquery.model.BitqueryBalance;
 import ch.grignola.service.scanner.bitquery.model.Currency;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import io.quarkus.test.junit.QuarkusTest;
@@ -55,7 +55,7 @@ class AvalancheScanServiceImplTest {
     @Test
     void getSimpleAddressBalanceWithoutMatic() {
 
-        Balance balance = new Balance();
+        BitqueryBalance balance = new BitqueryBalance();
         balance.currency = new Currency();
         balance.currency.symbol = TST_SYMBOL;
         balance.currency.address = TST_TKN_ADDRESS;
@@ -80,7 +80,7 @@ class AvalancheScanServiceImplTest {
         bannedContract.setContractId(TST_TKN_ADDRESS);
 
 
-        Balance balance = new Balance();
+        BitqueryBalance balance = new BitqueryBalance();
         balance.currency = new Currency();
         balance.currency.symbol = TST_SYMBOL;
         balance.currency.address = TST_TKN_ADDRESS;

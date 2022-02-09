@@ -2,7 +2,7 @@ package ch.grignola.service.scanner.bitquery;
 
 import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
-import ch.grignola.service.scanner.bitquery.model.Balance;
+import ch.grignola.service.scanner.bitquery.model.BitqueryBalance;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import org.jboss.logging.Logger;
@@ -63,7 +63,7 @@ public abstract class AbstractBitqueryScanService implements ScanService {
         throw new NotSupportedException();
     }
 
-    private boolean filterBannedContracts(Set<String> bannedContracts, String address, Balance balance) {
+    private boolean filterBannedContracts(Set<String> bannedContracts, String address, BitqueryBalance balance) {
         if (bannedContracts.contains(balance.currency.address)) {
             LOG.infof("Found banned contract for address %s on %s: %s (%s)", address, network, balance.currency.symbol, balance.currency.address);
             return false;
@@ -71,7 +71,7 @@ public abstract class AbstractBitqueryScanService implements ScanService {
         return true;
     }
 
-    private ScannerTokenBalance toAddressBalance(String address, Balance balance) {
+    private ScannerTokenBalance toAddressBalance(String address, BitqueryBalance balance) {
         LOG.infof("Token balance for address %s on %s based on event for symbol %s (%s): %s", address, network, balance.currency.symbol, balance.currency.address, balance.value);
         BigDecimal nativeValue = BigDecimal.valueOf(balance.value);
         return new ScannerTokenBalance(network, LIQUID, nativeValue, balance.currency.symbol);

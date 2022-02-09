@@ -9,6 +9,4 @@ public class Currency {
     public String address;
     @JsonProperty("symbol")
     public String symbol;
-    @JsonProperty("tokenType")
-    public String tokenType;
 }

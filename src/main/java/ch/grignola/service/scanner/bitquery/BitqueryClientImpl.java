@@ -1,14 +1,17 @@
 package ch.grignola.service.scanner.bitquery;
 
-import ch.grignola.service.scanner.bitquery.model.Balance;
+import ch.grignola.service.scanner.bitquery.model.BitqueryBalance;
 import ch.grignola.service.scanner.bitquery.model.BitqueryResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
+import io.quarkus.cache.Cache;
+import io.quarkus.cache.CacheName;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -29,6 +32,10 @@ public class BitqueryClientImpl implements BitqueryClient {
     @ConfigProperty(name = "bitquery.api.key")
     String apiKey;
 
+    @Inject
+    @CacheName("bitquery-cache")
+    Cache cache;
+
     private final HttpClient httpClient;
 
     private final BlockingBucket bucket;
@@ -40,11 +47,16 @@ public class BitqueryClientImpl implements BitqueryClient {
                 .build().asBlocking();
     }
 
-    public List<Balance> getRawBalance(String network, String address) {
+    public List<BitqueryBalance> getRawBalance(String network, String address) {
+        String key = network + "-" + address;
+        return cache.get(key, x -> getFromBitquery(network, address)).await().indefinitely();
+    }
+
+    private List<BitqueryBalance> getFromBitquery(String network, String address) {
         String rawRequest = "{\"query\":\"{  ethereum(network: " + network + ") { " +
                 "address(address: {is: \\\"" + address + "\\\"}) { " +
                 "balances { " +
-                "currency { address symbol tokenType } value } } }}\"}";
+                "currency { address symbol } value } } }}\"}";
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(rawRequest))

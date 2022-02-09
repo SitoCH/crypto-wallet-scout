@@ -8,6 +8,6 @@ import java.util.List;
 @RegisterForReflection
 public class Address {
     @JsonProperty("balances")
-    public List<Balance> balances = null;
+    public List<BitqueryBalance> balances = null;
 
 }
