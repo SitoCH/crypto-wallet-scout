@@ -27,7 +27,7 @@ export class TokenBalanceChartsComponent implements OnChanges {
     maintainAspectRatio: false,
     elements: {},
     plugins: {
-      legend: {display: true, position: "right"},
+      legend: {display: true, position: "bottom"},
       tooltip: {
         callbacks: {
           label: (tooltipItem) => {
