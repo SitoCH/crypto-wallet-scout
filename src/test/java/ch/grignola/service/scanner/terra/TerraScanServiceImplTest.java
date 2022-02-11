@@ -1,7 +1,9 @@
 package ch.grignola.service.scanner.terra;
 
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
-import ch.grignola.service.scanner.terra.model.TerraBalanceResult;
+import ch.grignola.service.scanner.terra.model.TerraBalancesResponse;
+import ch.grignola.service.scanner.terra.model.TerraRewardsResponse;
+import ch.grignola.service.scanner.terra.model.TerraStackingResponse;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -30,18 +32,24 @@ class TerraScanServiceImplTest {
 
     @BeforeEach
     public void setup() {
-        TerraBalanceResult balance = new TerraBalanceResult();
-        balance.availableLuna = "0";
-        when(terraRestClient.getBalance(ADDRESS))
-                .thenReturn(balance);
+        TerraBalancesResponse balancesResponse = new TerraBalancesResponse();
+        when(terraRestClient.getBalances(ADDRESS))
+                .thenReturn(balancesResponse);
 
+        TerraStackingResponse stackingResponse = new TerraStackingResponse();
+        when(terraRestClient.getStacking(ADDRESS))
+                .thenReturn(stackingResponse);
+
+        TerraRewardsResponse rewardsResponse = new TerraRewardsResponse();
+        when(terraRestClient.getRewards(ADDRESS))
+                .thenReturn(rewardsResponse);
     }
 
     @Test
     void getEmptyAddressBalance() {
         List<ScannerTokenBalance> balance = terraScanService.getAddressBalance(ADDRESS, emptyMap());
 
-        verify(terraRestClient).getBalance(ADDRESS);
+        verify(terraRestClient).getBalances(ADDRESS);
 
         assertTrue(balance.isEmpty());
     }
