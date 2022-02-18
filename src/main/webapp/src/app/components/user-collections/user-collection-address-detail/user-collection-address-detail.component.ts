@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { TokenBalance } from "../../../../../generated/client";
-import { AddressBalanceService } from "../../../../services/address-balance.service";
+import { TokenBalance } from "../../../../generated/client";
+import { AddressBalanceService } from "../../../services/address-balance.service";
 
 @Component({
   selector: 'app-user-collection-address-detail',

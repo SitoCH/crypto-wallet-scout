@@ -12,12 +12,6 @@
         </a>
       </li>
       <li class="nav-item w-100">
-        <a class="nav-link" routerLink="/dashboard" *ngIf="isAuthenticated$ | async">
-          <fa-icon icon="tachometer-alt"></fa-icon>
-          <span class="ml-3 item-text">Dashboard</span>
-        </a>
-      </li>
-      <li class="nav-item w-100">
         <a class="nav-link" routerLink="/search" *ngIf="isAuthenticated$ | async">
           <fa-icon icon="search"></fa-icon>
           <span class="ml-3 item-text">Search</span>

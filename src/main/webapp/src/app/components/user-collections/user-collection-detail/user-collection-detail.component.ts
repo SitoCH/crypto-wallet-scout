@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { UserCollectionService } from "../../../../services/user-collection.service";
-import { TokenBalance } from "../../../../../generated/client";
+import { UserCollectionService } from "../../../services/user-collection.service";
+import { TokenBalance } from "../../../../generated/client";
 
 @Component({
   selector: 'app-user-collection-detail',

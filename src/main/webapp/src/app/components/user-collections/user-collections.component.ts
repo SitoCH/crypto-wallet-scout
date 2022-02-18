@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable } from "rxjs";
 import { Select, Store } from "@ngxs/store";
-import { UserCollectionSummary } from "../../../../generated/client";
-import { AddUserCollection, UserCollectionsState } from "../../../state/user-collections.state";
+import { UserCollectionSummary } from "../../../generated/client";
+import { AddUserCollection, UserCollectionsState } from "../../state/user-collections.state";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({

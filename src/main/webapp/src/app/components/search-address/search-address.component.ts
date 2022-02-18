@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { TokenBalance, UserCollectionSummary } from "../../../../generated/client";
-import { AddressBalanceService } from "../../../services/address-balance.service";
 import { Select, Store } from "@ngxs/store";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AddAddressToCollection, UserCollectionsState } from "../../../state/user-collections.state";
 import { Observable } from "rxjs";
+import { TokenBalance, UserCollectionSummary } from "../../../generated/client";
+import { AddAddressToCollection, UserCollectionsState } from "../../state/user-collections.state";
+import { AddressBalanceService } from "../../services/address-balance.service";
 
 @Component({
   selector: 'app-search-address',
@@ -30,11 +30,12 @@ export class SearchAddressComponent {
   }
 
   getAccountBalance(activeAddress: string) {
-    this.firstSearchDone = true;
+    this.firstSearchDone = false;
     this.addressBalance = null;
     this.searchRunning = true;
     this.addressService.getAddressBalance(activeAddress)
       .then(data => {
+        this.firstSearchDone = true;
         this.activeAddress = activeAddress;
         this.searchRunning = false;
         this.addressBalance = data;

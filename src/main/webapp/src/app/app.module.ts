@@ -13,38 +13,38 @@ import { InjectableRestApplicationClient } from "./services/utils/injectable-res
 import { AddressBalanceService } from "./services/address-balance.service";
 import { HeaderComponent } from "./layout/header/header.component";
 import { SidenavComponent } from "./layout/sidenav/sidenav.component";
-import { UserCollectionsComponent } from "./components/main/user-collections/user-collections.component";
-import { HomeComponent } from "./components/main/home/home.component";
-import { DashboardComponent } from "./components/main/dashboard/dashboard.component";
 import { OAuthInterceptor } from "./auth/oauth-interceptor.service";
 import { AuthConfigModule } from "./auth/auth-config.module";
-import { SearchAddressComponent } from './components/main/search-address/search-address.component';
-import {
-  TokenBalanceTableComponent
-} from './components/common/token-balance-table/token-balance-table.component';
+import { TokenBalanceTableComponent } from './components/common/token-balance-table/token-balance-table.component';
 import {
   TokenBalanceOverviewComponent
 } from './components/common/token-balance-overview/token-balance-overview.component';
-import {
-  UserCollectionAddressDetailComponent
-} from "./components/main/user-collections/user-collection-address-detail/user-collection-address-detail.component";
 import { TokenLogoComponent } from './components/common/token-logo/token-logo.component';
 import { NetworkImagePipe } from './components/common/token-logo/network-image.pipe';
-import {
-  UserCollectionDetailComponent
-} from './components/main/user-collections/user-collection-detail/user-collection-detail.component';
 import { NgxsConfigModule } from "./state/ngxs.module";
 import { TokenBalanceComponent } from './components/common/token-balance/token-balance.component';
-import { UserCollectionHistoricalBalanceComponent } from './components/main/user-collections/user-collection-historical-balance/user-collection-historical-balance.component';
 import { NgChartsModule } from "ng2-charts";
 import { HistoricalBalanceComponent } from './components/common/historical-balance/historical-balance.component';
-import { AddressHistoricalBalanceComponent } from './components/main/user-collections/address-historical-balance/address-historical-balance.component';
 import { TokenBalanceChartsComponent } from './components/common/token-balance-charts/token-balance-charts.component';
+import { HomeComponent } from "./components/home/home.component";
+import { UserCollectionsComponent } from "./components/user-collections/user-collections.component";
+import { SearchAddressComponent } from "./components/search-address/search-address.component";
+import {
+  UserCollectionAddressDetailComponent
+} from "./components/user-collections/user-collection-address-detail/user-collection-address-detail.component";
+import {
+  UserCollectionDetailComponent
+} from "./components/user-collections/user-collection-detail/user-collection-detail.component";
+import {
+  UserCollectionHistoricalBalanceComponent
+} from "./components/user-collections/common/user-collection-historical-balance/user-collection-historical-balance.component";
+import {
+  AddressHistoricalBalanceComponent
+} from "./components/user-collections/common/address-historical-balance/address-historical-balance.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashboardComponent,
     HomeComponent,
     HeaderComponent,
     SidenavComponent,
