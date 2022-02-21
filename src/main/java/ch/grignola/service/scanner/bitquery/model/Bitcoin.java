@@ -1,11 +1,11 @@
 package ch.grignola.service.scanner.bitquery.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@RegisterForReflection
 public class Bitcoin {
 
     @JsonProperty("inputs")
