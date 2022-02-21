@@ -3,7 +3,7 @@ package ch.grignola.service.scanner.polygon;
 import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
-import ch.grignola.service.scanner.bitquery.model.BitqueryBalance;
+import ch.grignola.service.scanner.bitquery.model.BitqueryEthereumBalance;
 import ch.grignola.service.scanner.bitquery.model.Currency;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import io.quarkus.test.junit.QuarkusTest;
@@ -40,7 +40,7 @@ class PolygonScanServiceImplTest {
     @BeforeEach
     public void setup() {
 
-        when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
+        when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(emptyList());
 
     }
@@ -49,7 +49,7 @@ class PolygonScanServiceImplTest {
     void getEmptyAddressBalance() {
         List<ScannerTokenBalance> balance = polygonScanService.getAddressBalance(ADDRESS, emptyMap());
 
-        verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
+        verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
         assertTrue(balance.isEmpty());
     }
@@ -57,18 +57,18 @@ class PolygonScanServiceImplTest {
     @Test
     void getSimpleAddressBalanceWithoutMatic() {
 
-        BitqueryBalance balance = new BitqueryBalance();
+        BitqueryEthereumBalance balance = new BitqueryEthereumBalance();
         balance.currency = new Currency();
         balance.currency.symbol = TST_SYMBOL;
         balance.currency.address = TST_TKN_ADDRESS;
         balance.value = 45.5;
 
-        when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
+        when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
         List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS, emptyMap());
 
-        verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
+        verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
         assertEquals(1, addressBalance.size());
         assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getNativeValue());
@@ -81,18 +81,18 @@ class PolygonScanServiceImplTest {
         BannedContract bannedContract = new BannedContract();
         bannedContract.setContractId(TST_TKN_ADDRESS);
 
-        BitqueryBalance balance = new BitqueryBalance();
+        BitqueryEthereumBalance balance = new BitqueryEthereumBalance();
         balance.currency = new Currency();
         balance.currency.symbol = TST_SYMBOL;
         balance.currency.address = TST_TKN_ADDRESS;
         balance.value = 45.5;
 
-        when(bitqueryClient.getRawBalance(any(), eq(ADDRESS)))
+        when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
         List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS, singletonMap(Network.POLYGON, singletonList(bannedContract)));
 
-        verify(bitqueryClient).getRawBalance(any(), eq(ADDRESS));
+        verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
         assertTrue(addressBalance.isEmpty());
     }

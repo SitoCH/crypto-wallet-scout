@@ -5,6 +5,7 @@ import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.repository.BannedContractRepository;
 import ch.grignola.service.scanner.avalanche.AvalancheScanService;
+import ch.grignola.service.scanner.bitcoin.BitcoinScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.cosmos.CosmosScanService;
@@ -31,6 +32,8 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     private static final Logger LOG = Logger.getLogger(AddressBalanceCheckerImpl.class);
 
     @Inject
+    BannedContractRepository bannedContractRepository;
+    @Inject
     TokenProvider tokenProvider;
     @Inject
     PolygonScanService polygonScanService;
@@ -45,10 +48,11 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     @Inject
     CosmosScanService cosmosScanService;
     @Inject
-    BannedContractRepository bannedContractRepository;
+    BitcoinScanService bitcoinScanService;
 
     private List<ScanService> getScanServices() {
-        return List.of(polygonScanService, avalancheScanService, terraScanService, cronosScanService, solanaScanService, cosmosScanService);
+        return List.of(polygonScanService, avalancheScanService, terraScanService, cronosScanService, solanaScanService,
+                cosmosScanService, bitcoinScanService);
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address, Map<Network, List<BannedContract>> bannedContracts) {

@@ -1,7 +1,6 @@
 package ch.grignola.service.scanner.bitquery;
 
-import ch.grignola.service.scanner.bitquery.model.BitqueryBalance;
-import ch.grignola.service.scanner.bitquery.model.BitqueryResponse;
+import ch.grignola.service.scanner.bitquery.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
@@ -18,6 +17,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Optional;
 
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
@@ -47,17 +47,48 @@ public class BitqueryClientImpl implements BitqueryClient {
                 .build().asBlocking();
     }
 
-    public List<BitqueryBalance> getRawBalance(String network, String address) {
+    @Override
+    public double getBitcoinBalances(String network, String address) {
         String key = network + "-" + address;
-        return cache.get(key, x -> getFromBitquery(network, address)).await().indefinitely();
+        return cache.get(key, x -> bitcoinBalances(network, address)).await().indefinitely();
     }
 
-    private List<BitqueryBalance> getFromBitquery(String network, String address) {
+    private double bitcoinBalances(String network, String address) {
+        String rawRequest = "{\"query\":\"{  bitcoin(network: " + network + ") { " +
+                "inputs(inputAddress: {is: \\\"" + address + "\\\"}) { value } " +
+                "outputs(outputAddress: {is: \\\"" + address + "\\\"}) { value }  }}\"}";
+
+        return executeRequest(BitqueryBitcoinResponse.class, rawRequest)
+                .map(response -> getTotalBitcoins(response.data.bitcoin))
+                .orElse(0d);
+    }
+
+    private double getTotalBitcoins(Bitcoin bitcoin) {
+        return aggregate(bitcoin.outputs) - aggregate(bitcoin.inputs);
+    }
+
+    private Double aggregate(List<BitcoinField> fields) {
+        return fields.stream().map(x -> x.value).reduce(0d, Double::sum);
+    }
+
+    @Override
+    public List<BitqueryEthereumBalance> getEthereumBalances(String network, String address) {
+        String key = network + "-" + address;
+        return cache.get(key, x -> ethereumBalances(network, address)).await().indefinitely();
+    }
+
+    private List<BitqueryEthereumBalance> ethereumBalances(String network, String address) {
         String rawRequest = "{\"query\":\"{  ethereum(network: " + network + ") { " +
                 "address(address: {is: \\\"" + address + "\\\"}) { " +
                 "balances { " +
                 "currency { address symbol } value } } }}\"}";
 
+        return executeRequest(BitqueryEthereumResponse.class, rawRequest)
+                .map(response -> response.data.ethereum.address.stream().flatMap(x -> x.balances.stream()).toList())
+                .orElse(emptyList());
+    }
+
+    private <T> Optional<T> executeRequest(Class<T> clazz, String rawRequest) {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(rawRequest))
                 .uri(URI.create("https://graphql.bitquery.io/"))
@@ -68,15 +99,15 @@ public class BitqueryClientImpl implements BitqueryClient {
         try {
             bucket.consume(1);
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return new ObjectMapper().readValue(response.body(), BitqueryResponse.class).data.ethereum.address.stream()
-                    .flatMap(x -> x.balances.stream()).toList();
+
+            return Optional.of(new ObjectMapper().readValue(response.body(), clazz));
         } catch (IOException e) {
             LOG.error("BitqueryClient IOException", e);
-            return emptyList();
+            return Optional.empty();
         } catch (InterruptedException e) {
             LOG.error("BitqueryClient InterruptedException", e);
             Thread.currentThread().interrupt();
-            return emptyList();
+            return Optional.empty();
         }
     }
 }

@@ -20,6 +20,8 @@ export class NetworkImagePipe implements PipeTransform {
         return 'assets/images/network/Solana.png';
       case Network.COSMOS:
         return 'assets/images/network/Cosmos.png';
+      case Network.BITCOIN:
+        return 'assets/images/network/Bitcoin.png';
     }
 
     return null;

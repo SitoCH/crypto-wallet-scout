@@ -2,7 +2,7 @@ package ch.grignola.service.scanner.bitquery;
 
 import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
-import ch.grignola.service.scanner.bitquery.model.BitqueryBalance;
+import ch.grignola.service.scanner.bitquery.model.BitqueryEthereumBalance;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import org.jboss.logging.Logger;
@@ -20,16 +20,16 @@ import static ch.grignola.model.Network.POLYGON;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
-public abstract class AbstractBitqueryScanService implements ScanService {
+public abstract class AbstractEthereumBitqueryScanService implements ScanService {
 
-    private static final Logger LOG = Logger.getLogger(AbstractBitqueryScanService.class);
+    private static final Logger LOG = Logger.getLogger(AbstractEthereumBitqueryScanService.class);
 
     private final Network network;
 
     @Inject
     BitqueryClient bitqueryClient;
 
-    protected AbstractBitqueryScanService(Network network) {
+    protected AbstractEthereumBitqueryScanService(Network network) {
         this.network = network;
     }
 
@@ -45,7 +45,7 @@ public abstract class AbstractBitqueryScanService implements ScanService {
                 .map(BannedContract::getContractId)
                 .collect(toUnmodifiableSet());
 
-        return bitqueryClient.getRawBalance(getBitqueryNetwork(network), address).stream()
+        return bitqueryClient.getEthereumBalances(getBitqueryNetwork(network), address).stream()
                 .filter(x -> filterBannedContracts(filteredBannedContracts, address, x))
                 .map(x -> toAddressBalance(address, x))
                 .toList();
@@ -63,7 +63,7 @@ public abstract class AbstractBitqueryScanService implements ScanService {
         throw new NotSupportedException();
     }
 
-    private boolean filterBannedContracts(Set<String> bannedContracts, String address, BitqueryBalance balance) {
+    private boolean filterBannedContracts(Set<String> bannedContracts, String address, BitqueryEthereumBalance balance) {
         if (bannedContracts.contains(balance.currency.address)) {
             LOG.infof("Found banned contract for address %s on %s: %s (%s)", address, network, balance.currency.symbol, balance.currency.address);
             return false;
@@ -71,7 +71,7 @@ public abstract class AbstractBitqueryScanService implements ScanService {
         return true;
     }
 
-    private ScannerTokenBalance toAddressBalance(String address, BitqueryBalance balance) {
+    private ScannerTokenBalance toAddressBalance(String address, BitqueryEthereumBalance balance) {
         LOG.infof("Token balance for address %s on %s based on event for symbol %s (%s): %s", address, network, balance.currency.symbol, balance.currency.address, balance.value);
         BigDecimal nativeValue = BigDecimal.valueOf(balance.value);
         return new ScannerTokenBalance(network, LIQUID, nativeValue, balance.currency.symbol);
