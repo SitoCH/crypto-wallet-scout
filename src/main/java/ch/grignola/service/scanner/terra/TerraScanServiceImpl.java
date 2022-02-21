@@ -4,9 +4,9 @@ import ch.grignola.model.Allocation;
 import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
-import ch.grignola.service.scanner.terra.model.TerraBalancesResponse;
-import ch.grignola.service.scanner.terra.model.TerraRewardsResponse;
-import ch.grignola.service.scanner.terra.model.TerraStackingResponse;
+import ch.grignola.service.scanner.terra.model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
@@ -14,17 +14,22 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static ch.grignola.model.Allocation.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @ApplicationScoped
 public class TerraScanServiceImpl implements TerraScanService {
 
     private static final Logger LOG = Logger.getLogger(TerraScanServiceImpl.class);
+
+    private static final Map<String, String> CONTRACTS;
+
+    static {
+        CONTRACTS = new HashMap<>();
+        CONTRACTS.put("ANC", "terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76");
+    }
 
     @Inject
     @RestClient
@@ -65,7 +70,34 @@ public class TerraScanServiceImpl implements TerraScanService {
                     .toList());
         }
 
+        balances.addAll(CONTRACTS.entrySet().stream()
+                .map(x -> getBalanceFromContract(address, x.getValue(), x.getKey()))
+                .filter(Objects::nonNull)
+                .toList());
+
         return balances;
+    }
+
+    private String getAddressAsBase64Request(String address) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return Base64.getEncoder().encodeToString(objectMapper.writeValueAsString(new TerraContractBalanceRequest(address)).getBytes(UTF_8));
+    }
+
+    private ScannerTokenBalance getBalanceFromContract(String address, String contract, String symbol) {
+        try {
+            TerraContractBalanceResponse balance = terraRestClient.getContractBalance(contract, getAddressAsBase64Request(address));
+            long amount = balance.queryResult.balance;
+            if (amount == 0) {
+                return null;
+            }
+            BigDecimal tokenDigits = new BigDecimal("1000000");
+            BigDecimal nativeValue = new BigDecimal(amount).divide(tokenDigits, MathContext.DECIMAL64);
+            LOG.infof("Token balance for address %s on Terra: %s %s", address, nativeValue, symbol);
+            return new ScannerTokenBalance(Network.TERRA, LIQUID, nativeValue, symbol);
+        } catch (JsonProcessingException e) {
+            LOG.warnf("Unable to get balance for %s on contract %s", address, contract);
+            return null;
+        }
     }
 
     private String getNativeSymbol(String symbol) {
@@ -77,6 +109,7 @@ public class TerraScanServiceImpl implements TerraScanService {
             return "UST";
         }
 
+        LOG.infof("Found token not currently supported: %s", symbol);
         return null;
     }
 
