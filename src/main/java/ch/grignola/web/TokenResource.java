@@ -32,6 +32,8 @@ public class TokenResource {
         private final String image;
         @JsonProperty("symbol")
         private final String symbol;
+        @JsonProperty("usdValue")
+        private final float usdValue;
         @JsonProperty("priceChange24h")
         private final float priceChange24h;
         @JsonProperty("priceChange7d")
@@ -41,6 +43,7 @@ public class TokenResource {
             this.name = tokenDetail.getName();
             this.image = tokenDetail.getImage();
             this.symbol = tokenDetail.getSymbol();
+            this.usdValue = tokenDetail.getUsdValue();
             this.priceChange24h = tokenDetail.getPriceChangePercentage24h();
             this.priceChange7d = tokenDetail.getPriceChangePercentage7d();
         }

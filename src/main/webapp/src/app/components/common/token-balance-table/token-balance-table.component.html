@@ -4,45 +4,49 @@
       <div class="card-body">
         <h5 class="card-title">{{title || 'Tokens'}}</h5>
         <p class="card-text"></p>
-        <table class="table mb-0">
-          <thead class="thead-dark">
-          <tr>
-            <th scope="col">Token</th>
-            <th scope="col">Native value</th>
-            <th scope="col"></th>
-            <th scope="col">USD value</th>
-            <th scope="col" class="action-column">24h</th>
-            <th scope="col" class="action-column">7d</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td colspan="6" *ngIf="!tokens">
-              <fa-icon icon="spinner" [spin]="true"></fa-icon>
-            </td>
-          </tr>
+
+
+        <div class="list-group list-group-flush my-n3">
+
+          <div class="list-group-item" *ngIf="!tokens">
+            <div class="row align-items-center">
+              <div class="col-3 col-md-2">
+                <fa-icon icon="spinner" [spin]="true"></fa-icon>
+              </div>
+            </div>
+          </div>
+
           <ng-container *ngFor="let tokenBalance of tokens">
-            <tr *ngIf="getToken(tokenBalance.tokenId) | async as token">
-              <td>
-                <app-token-logo [network]="tokenBalance.network"
-                                [tokenImage]="token.image"
-                                [tokenName]="token.name"></app-token-logo>
-              </td>
-              <td class="text-right">{{tokenBalance.nativeValue | number:'1.2-4' }}</td>
-              <td>{{token.symbol}}</td>
-              <td class="text-right">${{tokenBalance.usdValue | number:'1.2-2' }}</td>
-              <td class="text-right" [class.positive-change]="token.priceChange24h > 0"
-                  [class.negative-change]="token.priceChange24h < 0">
-                {{token.priceChange24h | number:'1.1-1'}}&percnt;
-              </td>
-              <td class="text-right" [class.positive-change]="token.priceChange7d > 0"
-                  [class.negative-change]="token.priceChange7d < 0">
-                {{token.priceChange7d | number:'1.1-1'}}&percnt;
-              </td>
-            </tr>
+            <div class="list-group-item" *ngIf="getToken(tokenBalance.tokenId) | async as token">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <app-token-logo [network]="tokenBalance.network"
+                                  [tokenImage]="token.image"
+                                  [tokenName]="token.name"></app-token-logo>
+                </div>
+                <div class="col">
+                  <strong>{{token.name}}</strong>
+                  <div class="my-0 text-muted small">${{token.usdValue | number:'1.2-2' }}</div>
+                </div>
+                <div class="col-3 col-md-2 text-right">
+                  <strong>${{tokenBalance.usdValue | number:'1.2-2' }}</strong>
+                  <div class="my-0 text-muted small">{{tokenBalance.nativeValue | number:'1.2-4' }}</div>
+                </div>
+                <div class="percentage-column text-right">
+                  <strong [class.positive-change]="token.priceChange24h > 0"
+                          [class.negative-change]="token.priceChange24h < 0">{{token.priceChange24h | number:'1.1-1'}}&percnt;
+                    (24h)</strong>
+                  <div class="my-0 small"
+                       [class.positive-change]="token.priceChange7d > 0"
+                       [class.negative-change]="token.priceChange7d < 0">{{token.priceChange7d | number:'1.1-1'}}&percnt;
+                    (7d)
+                  </div>
+                </div>
+              </div>
+            </div>
           </ng-container>
-          </tbody>
-        </table>
+        </div>
+
       </div>
     </div>
   </div>
