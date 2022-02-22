@@ -10,6 +10,7 @@ import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.cosmos.CosmosScanService;
 import ch.grignola.service.scanner.cronos.CronosScanService;
+import ch.grignola.service.scanner.polkadot.PolkadotScanService;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
 import ch.grignola.service.scanner.terra.TerraScanService;
@@ -49,10 +50,12 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     CosmosScanService cosmosScanService;
     @Inject
     BitcoinScanService bitcoinScanService;
+    @Inject
+    PolkadotScanService polkadotScanService;
 
     private List<ScanService> getScanServices() {
         return List.of(polygonScanService, avalancheScanService, terraScanService, cronosScanService, solanaScanService,
-                cosmosScanService, bitcoinScanService);
+                cosmosScanService, bitcoinScanService, polkadotScanService);
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address, Map<Network, List<BannedContract>> bannedContracts) {
