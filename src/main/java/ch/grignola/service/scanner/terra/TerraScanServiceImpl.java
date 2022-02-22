@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
+import org.jboss.resteasy.client.exception.ResteasyWebApplicationException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,7 +18,6 @@ import java.math.MathContext;
 import java.util.*;
 
 import static ch.grignola.model.Allocation.*;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @ApplicationScoped
 public class TerraScanServiceImpl implements TerraScanService {
@@ -80,7 +80,7 @@ public class TerraScanServiceImpl implements TerraScanService {
 
     private String getAddressAsBase64Request(String address) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return Base64.getEncoder().encodeToString(objectMapper.writeValueAsString(new TerraContractBalanceRequest(address)).getBytes(UTF_8));
+        return Base64.getEncoder().encodeToString(objectMapper.writeValueAsBytes(new TerraContractBalanceRequest(address)));
     }
 
     private ScannerTokenBalance getBalanceFromContract(String address, String contract, String symbol) {
@@ -95,7 +95,10 @@ public class TerraScanServiceImpl implements TerraScanService {
             LOG.infof("Token balance for address %s on Terra: %s %s", address, nativeValue, symbol);
             return new ScannerTokenBalance(Network.TERRA, LIQUID, nativeValue, symbol);
         } catch (JsonProcessingException e) {
-            LOG.warnf("Unable to get balance for %s on contract %s", address, contract);
+            LOG.warnf("Unable to parse balance response for %s on contract %s", address, contract, e);
+            return null;
+        } catch (ResteasyWebApplicationException e) {
+            LOG.warnf("Unable to request balance for %s on contract %s", address, contract, e);
             return null;
         }
     }
