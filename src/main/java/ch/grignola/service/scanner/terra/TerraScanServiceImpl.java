@@ -7,6 +7,8 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.terra.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.cache.Cache;
+import io.quarkus.cache.CacheName;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.client.exception.ResteasyWebApplicationException;
@@ -32,6 +34,10 @@ public class TerraScanServiceImpl implements TerraScanService {
     }
 
     @Inject
+    @CacheName("bitquery-cache")
+    Cache cache;
+
+    @Inject
     @RestClient
     TerraRestClient terraRestClient;
 
@@ -42,7 +48,10 @@ public class TerraScanServiceImpl implements TerraScanService {
 
     @Override
     public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
+        return cache.get(address, x -> getBalances(address)).await().indefinitely();
+    }
 
+    private List<ScannerTokenBalance> getBalances(String address) {
         List<ScannerTokenBalance> balances = new ArrayList<>();
 
         TerraBalancesResponse balancesResponse = terraRestClient.getBalances(address);
