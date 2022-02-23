@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { UserCollectionService } from "../../../services/user-collection.service";
-import { TokenBalance } from "../../../../generated/client";
+import { TokenBalance, UserCollectionSummary } from "../../../../generated/client";
+import { Store } from "@ngxs/store";
+import { UserCollectionsState } from "../../../state/user-collections.state";
+import { mergeMap, Observable } from "rxjs";
 
 @Component({
   selector: 'app-user-collection-detail',
@@ -13,15 +16,20 @@ export class UserCollectionDetailComponent implements OnInit {
   id!: number;
   aggregatedTokenBalances: TokenBalance[] | null = null;
   collectionUsdValue?: number;
+  userCollection$?: Observable<UserCollectionSummary | undefined>;
 
   constructor(private userCollectionService: UserCollectionService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private store: Store) {
   }
 
   ngOnInit(): void {
     this.route.params
       .subscribe((params: any) => {
           this.id = params.id;
+          this.userCollection$ = this.store.select(UserCollectionsState.getUserCollections).pipe(
+            mergeMap(collections => collections.filter(x => x.id == this.id))
+          );
           this.loadBalance();
         }
       );

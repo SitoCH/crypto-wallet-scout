@@ -1,6 +1,6 @@
 <div class="row align-items-center my-4">
   <div class="col">
-    <h2 class="h3 mb-0 page-title address-with-address"><a routerLink="/collections">Collections</a> &sol; Detail</h2>
+    <h2 class="h3 mb-0 page-title address-with-address"><a routerLink="/collections">Collections</a> &sol; {{(userCollection$ | async)?.name}}</h2>
   </div>
 </div>
 
