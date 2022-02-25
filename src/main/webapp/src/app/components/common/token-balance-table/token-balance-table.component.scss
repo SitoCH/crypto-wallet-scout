@@ -9,6 +9,20 @@
   color: $danger;
 }
 
-.percentage-column {
-  width: 110px;
+.token-logo-wrapper {
+  margin-right: 15px;
+}
+
+.token-column {
+  padding: 0;
+}
+
+@media (max-width: 767px) {
+  .token-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 95px;
+  }
 }

@@ -7,7 +7,6 @@
 
 
         <div class="list-group list-group-flush my-n3">
-
           <div class="list-group-item" *ngIf="!tokens">
             <div class="row align-items-center">
               <div class="col-3 col-md-2">
@@ -19,20 +18,29 @@
           <ng-container *ngFor="let tokenBalance of tokens">
             <div class="list-group-item" *ngIf="getToken(tokenBalance.tokenId) | async as token">
               <div class="row align-items-center">
-                <div class="col-auto">
-                  <app-token-logo [network]="tokenBalance.network"
-                                  [tokenImage]="token.image"
-                                  [tokenName]="token.name"></app-token-logo>
+                <div class="token-column col-5 col-sm-6">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="token-logo-wrapper">
+                        <app-token-logo [network]="tokenBalance.network"
+                                        [tokenImage]="token.image"
+                                        [tokenName]="token.name"></app-token-logo>
+                      </div>
+                      <div>
+                        <div class="token-name">
+                          <strong>{{token.name}}</strong>
+                        </div>
+                        <div class="my-0 text-muted small">${{token.usdValue | number:'1.2-2' }}</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="col">
-                  <strong>{{token.name}}</strong>
-                  <div class="my-0 text-muted small">${{token.usdValue | number:'1.2-2' }}</div>
-                </div>
-                <div class="col-3 col-md-2 text-right">
+
+                <div class="token-column col-3 col-sm-4 text-right">
                   <strong>${{tokenBalance.usdValue | number:'1.2-2' }}</strong>
                   <div class="my-0 text-muted small">{{tokenBalance.nativeValue | number:'1.2-4' }}</div>
                 </div>
-                <div class="percentage-column text-right">
+                <div class="token-column col-4 col-sm-2 text-right">
                   <strong [class.positive-change]="token.priceChange24h > 0"
                           [class.negative-change]="token.priceChange24h < 0">{{token.priceChange24h | number:'1.1-1'}}&percnt;
                     (24h)</strong>
