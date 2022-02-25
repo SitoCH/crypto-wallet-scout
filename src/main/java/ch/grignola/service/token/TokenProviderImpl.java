@@ -23,6 +23,7 @@ import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
 import static java.time.Duration.ofMillis;
 import static java.util.Collections.emptyList;
+import static java.util.Comparator.comparing;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ApplicationScoped
@@ -96,6 +97,7 @@ public class TokenProviderImpl implements TokenProvider {
                 .filter(x -> isNotBlank(token.getCoinGeckoId()) && x.id.equalsIgnoreCase(token.getCoinGeckoId()))
                 .findFirst()
                 .or(() -> coins.stream()
+                        .sorted(comparing(x -> x.name.length()))
                         .filter(x -> x.symbol.equalsIgnoreCase(token.getSymbol()))
                         .findFirst())
                 .flatMap(x -> applyCoingeckoFieldsToToken(x.id, token));
