@@ -41,6 +41,8 @@ import {
 import {
   AddressHistoricalBalanceComponent
 } from "./components/user-collections/common/address-historical-balance/address-historical-balance.component";
+import { TokenUsdValuePipe } from './components/common/pipes/token-usd-value.pipe';
+import { DecimalPipe } from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -60,7 +62,8 @@ import {
     UserCollectionHistoricalBalanceComponent,
     HistoricalBalanceComponent,
     AddressHistoricalBalanceComponent,
-    TokenBalanceChartsComponent
+    TokenBalanceChartsComponent,
+    TokenUsdValuePipe
   ],
   imports: [
     BrowserModule,
@@ -74,6 +77,7 @@ import {
     NgChartsModule
   ],
   providers: [
+    DecimalPipe,
     InjectableRestApplicationClient,
     AddressBalanceService,
     {provide: HTTP_INTERCEPTORS, useClass: OAuthInterceptor, multi: true}

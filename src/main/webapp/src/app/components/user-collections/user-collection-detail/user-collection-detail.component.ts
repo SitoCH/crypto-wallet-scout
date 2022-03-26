@@ -4,7 +4,7 @@ import { UserCollectionService } from "../../../services/user-collection.service
 import { TokenBalance, UserCollectionSummary } from "../../../../generated/client";
 import { Store } from "@ngxs/store";
 import { UserCollectionsState } from "../../../state/user-collections.state";
-import { map, mergeMap, Observable, of } from "rxjs";
+import { map, mergeMap, Observable } from "rxjs";
 import { ApplicationState, ToggleGroupTokenTable } from "../../../state/application.state";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 

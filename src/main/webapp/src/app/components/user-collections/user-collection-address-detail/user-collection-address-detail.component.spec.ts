@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserCollectionAddressDetailComponent } from './user-collection-address-detail.component';
 import { ActivatedRoute } from "@angular/router";
-import { AddressBalanceService } from "../../../../services/address-balance.service";
 import { of } from 'rxjs';
+import { AddressBalanceService } from "../../../services/address-balance.service";
 
 describe('UserCollectionAddressDetailComponent', () => {
   let component: UserCollectionAddressDetailComponent;
