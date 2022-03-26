@@ -3,6 +3,7 @@ package ch.grignola.service.scanner.terra;
 import ch.grignola.model.Allocation;
 import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
+import ch.grignola.repository.TerraTokenContractRepository;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.terra.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,22 +21,19 @@ import java.math.MathContext;
 import java.util.*;
 
 import static ch.grignola.model.Allocation.*;
+import static org.apache.commons.lang3.StringUtils.rightPad;
 
 @ApplicationScoped
 public class TerraScanServiceImpl implements TerraScanService {
 
     private static final Logger LOG = Logger.getLogger(TerraScanServiceImpl.class);
 
-    private static final Map<String, String> CONTRACTS;
-
-    static {
-        CONTRACTS = new HashMap<>();
-        CONTRACTS.put("ANC", "terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76");
-    }
-
     @Inject
     @CacheName("bitquery-cache")
     Cache cache;
+
+    @Inject
+    TerraTokenContractRepository terraTokenContractRepository;
 
     @Inject
     @RestClient
@@ -79,8 +77,9 @@ public class TerraScanServiceImpl implements TerraScanService {
                     .toList());
         }
 
-        balances.addAll(CONTRACTS.entrySet().stream()
-                .map(x -> getBalanceFromContract(address, x.getValue(), x.getKey()))
+
+        balances.addAll(terraTokenContractRepository.streamAll()
+                .map(x -> getBalanceFromContract(address, x.getContractId(), x.getDecimals(), x.getSymbol()))
                 .filter(Objects::nonNull)
                 .toList());
 
@@ -92,14 +91,14 @@ public class TerraScanServiceImpl implements TerraScanService {
         return Base64.getEncoder().encodeToString(objectMapper.writeValueAsBytes(new TerraContractBalanceRequest(address)));
     }
 
-    private ScannerTokenBalance getBalanceFromContract(String address, String contract, String symbol) {
+    private ScannerTokenBalance getBalanceFromContract(String address, String contract, Long decimals, String symbol) {
         try {
             TerraContractBalanceResponse balance = terraRestClient.getContractBalance(contract, getAddressAsBase64Request(address));
             long amount = balance.queryResult.balance;
             if (amount == 0) {
                 return null;
             }
-            BigDecimal tokenDigits = new BigDecimal("1000000");
+            BigDecimal tokenDigits = new BigDecimal(rightPad("1", (int) (decimals + 1), '0'));
             BigDecimal nativeValue = new BigDecimal(amount).divide(tokenDigits, MathContext.DECIMAL64);
             LOG.infof("Token balance for address %s on Terra: %s %s", address, nativeValue, symbol);
             return new ScannerTokenBalance(Network.TERRA, LIQUID, nativeValue, symbol);

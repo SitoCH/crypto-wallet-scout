@@ -59,7 +59,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address, Map<Network, List<BannedContract>> bannedContracts) {
-        return getScanServices().parallelStream()
+        return getScanServices().stream()
                 .filter(x -> x.accept(address))
                 .flatMap(x -> x.getAddressBalance(address, bannedContracts).stream())
                 .toList();
@@ -68,7 +68,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     @Override
     public List<TokenBalance> getBalances(List<String> addresses) {
         Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
-        List<ScannerTokenBalance> rawBalances = addresses.parallelStream()
+        List<ScannerTokenBalance> rawBalances = addresses.stream()
                 .flatMap(x -> getBalancesFromScanServices(x, bannedContracts).stream())
                 .toList();
         return getTokenBalances(rawBalances);

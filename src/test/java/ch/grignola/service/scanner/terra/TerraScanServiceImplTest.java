@@ -9,9 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -20,7 +23,7 @@ import static org.mockito.Mockito.when;
 @QuarkusTest
 class TerraScanServiceImplTest {
 
-    private static final String ADDRESS = "cronos1234";
+    private static final String ADDRESS = "terra1234";
 
     @InjectMock
     @RestClient
@@ -57,5 +60,24 @@ class TerraScanServiceImplTest {
         verify(terraRestClient).getBalances(ADDRESS);
 
         assertTrue(balance.isEmpty());
+    }
+
+    @Test
+    void getAddressBalance() {
+
+        TerraBalancesResponse balancesResponse = new TerraBalancesResponse();
+        Balance balance = new Balance();
+        balance.amount = "10000000";
+        balance.denom = "uluna";
+        balancesResponse.balances = singletonList(balance);
+        when(terraRestClient.getBalances(ADDRESS))
+                .thenReturn(balancesResponse);
+
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+
+        verify(terraRestClient).getBalances(ADDRESS);
+
+        assertEquals(1, result.size());
+        assertEquals(new BigDecimal(10), result.get(0).getNativeValue());
     }
 }
