@@ -5,8 +5,13 @@ export class ToggleSidebar {
   static readonly type = '[Application] ToggleSidebar';
 }
 
+export class ToggleGroupTokenTable {
+  static readonly type = '[Application] ToggleGroupTokenTable';
+}
+
 export class ApplicationStateModel {
   isSidebarClosed = false;
+  groupTokenTable = false;
 }
 
 @State<ApplicationStateModel>({
@@ -26,6 +31,22 @@ export class ApplicationState {
     ctx.setState({
       ...state,
       isSidebarClosed: !state.isSidebarClosed
+    });
+
+    return state;
+  }
+
+  @Selector()
+  static isGroupTokenTable(state: ApplicationStateModel) {
+    return state.groupTokenTable;
+  }
+
+  @Action(ToggleGroupTokenTable)
+  toggleGroupTokenTable(ctx: StateContext<ApplicationStateModel>) {
+    const state = ctx.getState();
+    ctx.setState({
+      ...state,
+      groupTokenTable: !state.groupTokenTable
     });
 
     return state;

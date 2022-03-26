@@ -1,6 +1,17 @@
 <div class="row align-items-center my-4">
   <div class="col">
-    <h2 class="h3 mb-0 page-title address"><a routerLink="/collections">Collections</a> &sol; {{(userCollection$ | async)?.name}}</h2>
+    <h2 class="h3 mb-0 page-title address"><a routerLink="/collections">Collections</a>
+      &sol; {{(userCollection$ | async)?.name}}</h2>
+  </div>
+  <div class="col-auto">
+    <div class="col-auto">
+      <div class="form-group">
+        <button type="button" class="btn btn-sm"
+                (click)="onGroupingChange()">
+          <fa-icon [icon]="(tokenTableGroupingIcon$ | async)!"></fa-icon>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 

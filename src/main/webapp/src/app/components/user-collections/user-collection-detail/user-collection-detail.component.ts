@@ -4,7 +4,9 @@ import { UserCollectionService } from "../../../services/user-collection.service
 import { TokenBalance, UserCollectionSummary } from "../../../../generated/client";
 import { Store } from "@ngxs/store";
 import { UserCollectionsState } from "../../../state/user-collections.state";
-import { mergeMap, Observable } from "rxjs";
+import { map, mergeMap, Observable, of } from "rxjs";
+import { ApplicationState, ToggleGroupTokenTable } from "../../../state/application.state";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 @Component({
   selector: 'app-user-collection-detail',
@@ -17,6 +19,7 @@ export class UserCollectionDetailComponent implements OnInit {
   aggregatedTokenBalances: TokenBalance[] | null = null;
   collectionUsdValue?: number;
   userCollection$?: Observable<UserCollectionSummary | undefined>;
+  tokenTableGroupingIcon$!: Observable<IconProp>;
 
   constructor(private userCollectionService: UserCollectionService,
               private route: ActivatedRoute,
@@ -24,6 +27,12 @@ export class UserCollectionDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.tokenTableGroupingIcon$ = this.store.select(ApplicationState.isGroupTokenTable).pipe(
+      map(isGrouped => {
+        return isGrouped ? 'object-group' : 'object-ungroup';
+      })
+    )
+
     this.route.params
       .subscribe((params: any) => {
           this.id = params.id;
@@ -58,5 +67,9 @@ export class UserCollectionDetailComponent implements OnInit {
 
         this.aggregatedTokenBalances = Array.from(tokens, ([_, value]) => (value));
       })
+  }
+
+  onGroupingChange() {
+    this.store.dispatch(new ToggleGroupTokenTable())
   }
 }
