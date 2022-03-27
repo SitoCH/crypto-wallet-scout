@@ -15,6 +15,7 @@ import ch.grignola.service.scanner.polygon.PolygonScanService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
 import ch.grignola.service.scanner.terra.TerraScanService;
 import ch.grignola.service.token.TokenProvider;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Comparator.comparing;
@@ -32,6 +34,8 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
 
     private static final Logger LOG = Logger.getLogger(AddressBalanceCheckerImpl.class);
 
+    @Inject
+    ManagedExecutor executor;
     @Inject
     BannedContractRepository bannedContractRepository;
     @Inject
@@ -61,7 +65,9 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address, Map<Network, List<BannedContract>> bannedContracts) {
         return getScanServices().stream()
                 .filter(x -> x.accept(address))
-                .flatMap(x -> x.getAddressBalance(address, bannedContracts).stream())
+                .map(x -> executor.supplyAsync(() -> x.getAddressBalance(address, bannedContracts).stream()))
+                .toList().stream()
+                .flatMap(CompletableFuture::join)
                 .toList();
     }
 
@@ -69,7 +75,9 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     public List<TokenBalance> getBalances(List<String> addresses) {
         Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
         List<ScannerTokenBalance> rawBalances = addresses.stream()
-                .flatMap(x -> getBalancesFromScanServices(x, bannedContracts).stream())
+                .map(x -> executor.supplyAsync(() -> getBalancesFromScanServices(x, bannedContracts).stream()))
+                .toList().stream()
+                .flatMap(CompletableFuture::join)
                 .toList();
         return getTokenBalances(rawBalances);
     }
