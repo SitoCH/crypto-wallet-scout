@@ -14,5 +14,6 @@ export class TokenLogoComponent {
   tokenImage?: string;
   @Input()
   tokenName?: string;
-
+  @Input()
+  hideNetwork = false;
 }

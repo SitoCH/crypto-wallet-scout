@@ -1,0 +1,7 @@
+<div class="form-group">
+  <button type="button" class="btn btn-sm"
+          data-toggle="tooltip" data-placement="bottom" title="Group or ungroup tokens table"
+          (click)="onGroupingChange()">
+    <fa-icon [icon]="(tokenTableGroupingIcon$ | async)!"></fa-icon>
+  </button>
+</div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { TokenBalance } from "../../../../generated/client";
 import { AddressBalanceService } from "../../../services/address-balance.service";
@@ -8,7 +8,7 @@ import { AddressBalanceService } from "../../../services/address-balance.service
   templateUrl: './user-collection-address-detail.component.html',
   styleUrls: ['./user-collection-address-detail.component.scss']
 })
-export class UserCollectionAddressDetailComponent {
+export class UserCollectionAddressDetailComponent implements OnInit {
 
   id!: number;
   address!: string;

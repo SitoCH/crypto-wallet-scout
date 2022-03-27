@@ -7,5 +7,5 @@
 </div>
 
 <div *ngIf="!(isGroupTokenTable$ | async)">
-  <app-token-balance-table [title]="'Tokens'" [tokens]="groupedTokens!"></app-token-balance-table>
+  <app-token-balance-table [title]="'Grouped tokens'" [tokens]="groupedTokens!" [hideNetwork]="true"></app-token-balance-table>
 </div>

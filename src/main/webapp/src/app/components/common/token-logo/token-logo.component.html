@@ -1,5 +1,5 @@
 <div *ngIf="tokenImage" class="token-logo">
-  <div class="token-circle token-circle-small">
+  <div class="token-circle token-circle-small" *ngIf="!hideNetwork">
     <img [src]="network | networkImage" alt="network logo" class="token-image-small">
   </div>
   <div class="token-circle token-circle-large">

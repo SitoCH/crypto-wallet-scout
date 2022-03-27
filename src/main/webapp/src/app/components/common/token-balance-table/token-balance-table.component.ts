@@ -13,6 +13,8 @@ export class TokenBalanceTableComponent {
 
   @Input()
   tokens!: TokenBalance[];
+  @Input()
+  hideNetwork = false;
 
   @Input()
   title!: string;

@@ -5,12 +5,7 @@
   </div>
   <div class="col-auto">
     <div class="col-auto">
-      <div class="form-group">
-        <button type="button" class="btn btn-sm"
-                (click)="onGroupingChange()">
-          <fa-icon [icon]="(tokenTableGroupingIcon$ | async)!"></fa-icon>
-        </button>
-      </div>
+      <app-token-grouping-toggle></app-token-grouping-toggle>
     </div>
   </div>
 </div>
