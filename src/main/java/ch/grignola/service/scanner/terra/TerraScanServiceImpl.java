@@ -29,7 +29,7 @@ public class TerraScanServiceImpl implements TerraScanService {
     private static final Logger LOG = Logger.getLogger(TerraScanServiceImpl.class);
 
     @Inject
-    @CacheName("bitquery-cache")
+    @CacheName("terra-cache")
     Cache cache;
 
     @Inject

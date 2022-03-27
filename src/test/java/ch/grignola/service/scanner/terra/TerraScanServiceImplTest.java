@@ -1,7 +1,9 @@
 package ch.grignola.service.scanner.terra;
 
+import ch.grignola.repository.TerraTokenContractRepository;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.terra.model.*;
+import io.quarkus.cache.CacheManager;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -11,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
@@ -28,6 +32,12 @@ class TerraScanServiceImplTest {
     @InjectMock
     @RestClient
     TerraRestClient terraRestClient;
+
+    @Inject
+    CacheManager cacheManager;
+
+    @InjectMock
+    TerraTokenContractRepository terraTokenContractRepository;
 
     @Inject
     TerraScanService terraScanService;
@@ -51,6 +61,11 @@ class TerraScanServiceImplTest {
         contractsResponse.queryResult.balance = 0;
         when(terraRestClient.getContractBalance(anyString(), anyString()))
                 .thenReturn(contractsResponse);
+
+        when(terraTokenContractRepository.streamAll())
+                .thenReturn(Stream.empty());
+
+        cacheManager.getCache("terra-cache").orElseThrow(NoSuchElementException::new).invalidateAll().await().indefinitely();
     }
 
     @Test
@@ -58,6 +73,7 @@ class TerraScanServiceImplTest {
         List<ScannerTokenBalance> balance = terraScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(terraRestClient).getBalances(ADDRESS);
+        verify(terraTokenContractRepository).streamAll();
 
         assertTrue(balance.isEmpty());
     }
@@ -76,6 +92,7 @@ class TerraScanServiceImplTest {
         List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(terraRestClient).getBalances(ADDRESS);
+        verify(terraTokenContractRepository).streamAll();
 
         assertEquals(1, result.size());
         assertEquals(new BigDecimal(10), result.get(0).getNativeValue());

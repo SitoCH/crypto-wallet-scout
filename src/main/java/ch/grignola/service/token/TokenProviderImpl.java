@@ -44,7 +44,7 @@ public class TokenProviderImpl implements TokenProvider {
 
     private final BlockingBucket bucket;
 
-    private TokenProviderImpl() {
+    TokenProviderImpl() {
         bucket = Bucket.builder()
                 .addLimit(classic(8, intervally(8, ofMillis(1500))))
                 .build().asBlocking();
