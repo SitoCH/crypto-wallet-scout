@@ -41,7 +41,7 @@ export class TokenBalanceComponent implements OnChanges {
       let key = tokenBalance.tokenId;
       if (!tokens.has(key)) {
         tokens.set(key, {
-          tokenId: tokenBalance.tokenId,
+          tokenId: tokenBalance.parentTokenId || tokenBalance.tokenId,
           usdValue: tokenBalance.usdValue,
           nativeValue: tokenBalance.nativeValue,
           network: Network.TERRA,
