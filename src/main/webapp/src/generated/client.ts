@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-03-27 17:56:29.
+// Generated using typescript-generator version 2.34.976 on 2022-03-28 21:06:22.
 
 export interface HistoricalAddressBalance {
     snapshots: { [index: string]: number };
