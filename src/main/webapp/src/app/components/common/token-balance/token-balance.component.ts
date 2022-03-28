@@ -38,10 +38,10 @@ export class TokenBalanceComponent implements OnChanges {
   private getGroupedTokens(tokenBalances: TokenBalance[]) {
     let tokens = new Map<string, TokenBalance>();
     tokenBalances.forEach(tokenBalance => {
-      let key = tokenBalance.tokenId;
+      let key = tokenBalance.parentTokenId || tokenBalance.tokenId;
       if (!tokens.has(key)) {
         tokens.set(key, {
-          tokenId: tokenBalance.parentTokenId || tokenBalance.tokenId,
+          tokenId: key,
           usdValue: tokenBalance.usdValue,
           nativeValue: tokenBalance.nativeValue,
           network: Network.TERRA,
