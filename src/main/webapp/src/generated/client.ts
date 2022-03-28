@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-03-28 21:06:22.
+// Generated using typescript-generator version 2.34.976 on 2022-03-28 22:13:23.
 
 export interface HistoricalAddressBalance {
     snapshots: { [index: string]: number };
@@ -44,31 +44,33 @@ export interface HttpClient {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
 }
 
-export class TokenResourceClient {
+export class AsynchronousDispatcherClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /api/token/{id}
-     * Java method: ch.grignola.web.TokenResource.getToken
+     * HTTP GET /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
      */
-    getToken(id: string): RestResponse<TokenResult> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
-    }
-}
-
-export class ConfigurationResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
+    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
     }
 
     /**
-     * HTTP GET /public/api/configuration
-     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
+     * HTTP POST /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
      */
-    getConfiguration(): RestResponse<Configuration> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
+    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP DELETE /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
+     */
+    remove(jobId: string): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
     }
 }
 
@@ -140,33 +142,31 @@ export class AddressBalanceResourceClient {
     }
 }
 
-export class AsynchronousDispatcherClient {
+export class ConfigurationResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
+     * HTTP GET /public/api/configuration
+     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
      */
-    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    getConfiguration(): RestResponse<Configuration> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
+    }
+}
+
+export class TokenResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP POST /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
+     * HTTP GET /api/token/{id}
+     * Java method: ch.grignola.web.TokenResource.getToken
      */
-    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP DELETE /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
-     */
-    remove(jobId: string): RestResponse<void> {
-        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
+    getToken(id: string): RestResponse<TokenResult> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
     }
 }
 
