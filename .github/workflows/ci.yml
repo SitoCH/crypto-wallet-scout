@@ -57,6 +57,6 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: >
         mvn -B package verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-        -Dsonar.coverage.jacoco.reportPath=${project.build.directory}/target/jacoco-reports/jacoco-quarkus.exec
+        -Dsonar.coverage.jacoco.reportPath=/target/jacoco-reports/jacoco-quarkus.exec
         -Dsonar.projectKey=SitoCH_crypto-wallet-scout 
         --file pom.xml
