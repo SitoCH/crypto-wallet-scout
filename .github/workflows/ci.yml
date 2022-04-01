@@ -59,4 +59,5 @@ jobs:
         mvn -B package verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
         -Dsonar.coverage.jacoco.reportPath=/target/jacoco-reports/jacoco-quarkus.exec
         -Dsonar.projectKey=SitoCH_crypto-wallet-scout 
+        -Dsonar.cpd.exclusions=src/main/java/ch/grignola/service/token/model/*.java
         --file pom.xml
