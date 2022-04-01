@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class Ath {
 
@@ -133,6 +134,7 @@ class Ath {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class AthChangePercentage {
 
@@ -261,6 +263,7 @@ class AthChangePercentage {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class AthDate {
 
@@ -389,6 +392,7 @@ class AthDate {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class Atl {
 
@@ -517,6 +521,7 @@ class Atl {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class AtlChangePercentage {
 
@@ -645,6 +650,7 @@ class AtlChangePercentage {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class AtlDate {
 
@@ -1007,6 +1013,7 @@ class FullyDilutedValuation {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class High24h {
 
@@ -1211,6 +1218,7 @@ class Localization {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class Low24h {
 
@@ -1339,6 +1347,7 @@ class Low24h {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class MarketCap {
 
@@ -1467,6 +1476,7 @@ class MarketCap {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class MarketCapChange24hInCurrency {
 
@@ -1595,6 +1605,7 @@ class MarketCapChange24hInCurrency {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class MarketCapChangePercentage24hInCurrency {
 
@@ -1731,6 +1742,7 @@ class Platforms {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PriceChange24hInCurrency {
 
@@ -1859,6 +1871,7 @@ class PriceChange24hInCurrency {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PriceChangePercentage14dInCurrency {
 
@@ -1987,6 +2000,7 @@ class PriceChangePercentage14dInCurrency {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PriceChangePercentage1hInCurrency {
 
@@ -2127,6 +2141,7 @@ class PriceChangePercentage200dInCurrency {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PriceChangePercentage24hInCurrency {
 
@@ -2255,6 +2270,7 @@ class PriceChangePercentage24hInCurrency {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PriceChangePercentage30dInCurrency {
 
@@ -2383,6 +2399,7 @@ class PriceChangePercentage30dInCurrency {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PriceChangePercentage60dInCurrency {
 
@@ -2511,6 +2528,7 @@ class PriceChangePercentage60dInCurrency {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class PriceChangePercentage7dInCurrency {
 
@@ -2702,6 +2720,7 @@ class Ticker {
 
 }
 
+@SuppressWarnings("java:S116")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class TotalVolume {
 

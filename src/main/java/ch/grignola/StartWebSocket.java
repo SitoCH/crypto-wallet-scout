@@ -1,39 +1,35 @@
-package ilove.quark.us;
+package ch.grignola;
+
+import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.websocket.EncodeException;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
-
-import static java.util.Objects.requireNonNull;
 
 @ServerEndpoint("/start-websocket/{name}")
 @ApplicationScoped
 public class StartWebSocket {
 
+    private static final Logger LOG = Logger.getLogger(StartWebSocket.class);
+
     @OnOpen
     public void onOpen(Session session, @PathParam("name") String name) {
-        System.out.println("onOpen> " + name);
+        LOG.info("onOpen> " + name);
     }
 
     @OnClose
     public void onClose(Session session, @PathParam("name") String name) {
-        System.out.println("onClose> " + name);
+        LOG.info("onClose> " + name);
     }
 
     @OnError
     public void onError(Session session, @PathParam("name") String name, Throwable throwable) {
-        System.out.println("onError> " + name + ": " + throwable);
+        LOG.info("onError> " + name + ": " + throwable);
     }
 
     @OnMessage
     public void onMessage(String message, @PathParam("name") String name) {
-        System.out.println("onMessage> " + name + ": " + message);
+        LOG.info("onMessage> " + name + ": " + message);
     }
 }

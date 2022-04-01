@@ -17,7 +17,6 @@ import java.util.List;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -40,7 +39,7 @@ class PolkadotScanServiceImplTest {
         balanceResponse.data.balances = new Balances();
         balanceResponse.data.balances.availableBalance = EMPTY_AMOUNT;
         balanceResponse.data.balances.reservedBalance = EMPTY_AMOUNT;
-        when(polkadotRestClient.getBalance(eq(ADDRESS), eq("Polkadot")))
+        when(polkadotRestClient.getBalance(ADDRESS, "Polkadot"))
                 .thenReturn(balanceResponse);
     }
 
@@ -48,7 +47,7 @@ class PolkadotScanServiceImplTest {
     void testEmptyAddressBalance() {
         List<ScannerTokenBalance> balance = polkadotScanService.getAddressBalance(ADDRESS, emptyMap());
 
-        verify(polkadotRestClient).getBalance(eq(ADDRESS), eq("Polkadot"));
+        verify(polkadotRestClient).getBalance(ADDRESS, "Polkadot");
 
         assertTrue(balance.isEmpty());
     }
@@ -60,12 +59,12 @@ class PolkadotScanServiceImplTest {
         balanceResponse.data.balances = new Balances();
         balanceResponse.data.balances.availableBalance = "0x0000000000000000000000355176b200";
         balanceResponse.data.balances.reservedBalance = EMPTY_AMOUNT;
-        when(polkadotRestClient.getBalance(eq(ADDRESS), eq("Polkadot")))
+        when(polkadotRestClient.getBalance(ADDRESS, "Polkadot"))
                 .thenReturn(balanceResponse);
 
         List<ScannerTokenBalance> balance = polkadotScanService.getAddressBalance(ADDRESS, emptyMap());
 
-        verify(polkadotRestClient).getBalance(eq(ADDRESS), eq("Polkadot"));
+        verify(polkadotRestClient).getBalance(ADDRESS, "Polkadot");
 
         assertEquals(1, balance.size());
         assertEquals(BigDecimal.valueOf(22.9d), balance.get(0).getNativeValue());
