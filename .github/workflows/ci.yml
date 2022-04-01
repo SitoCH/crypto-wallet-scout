@@ -1,13 +1,13 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Continous integration
 
 on:
   push:
     branches: [ master ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   build:
@@ -16,28 +16,35 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
     - name: Set up JDK 17
       uses: actions/setup-java@v2
       with:
         java-version: '17'
         distribution: 'adopt'
         cache: maven
+
     - name: Setup Node.js environment
       uses: actions/setup-node@v2.5.1
       with:
         node-version: '17.x'
+
     - name: Cache SonarCloud packages
       uses: actions/cache@v1
       with:
         path: ~/.sonar/cache
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
+
     - name: Cache Maven packages
       uses: actions/cache@v1
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
+
     - name: Cache NPM packages
       uses: actions/cache@v3
       with:
@@ -45,19 +52,22 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node
+
     - name: Install NPM
       run: npm ci
       working-directory: src/main/webapp/
+
     - name: Build with NPM
       run: npm run build
       working-directory: src/main/webapp/
+
     - name: Build with Maven
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: >
         mvn -B package verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-        -Dsonar.coverage.jacoco.reportPath=/target/jacoco-reports/jacoco-quarkus.exec
+        -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-reports/jacoco.xml
         -Dsonar.projectKey=SitoCH_crypto-wallet-scout 
         -Dsonar.cpd.exclusions=src/main/java/ch/grignola/service/token/model/*.java
         --file pom.xml
