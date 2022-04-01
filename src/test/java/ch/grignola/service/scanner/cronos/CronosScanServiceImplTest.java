@@ -15,7 +15,6 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,7 +37,7 @@ class CronosScanServiceImplTest {
         cronosBalanceResult.result.balance = emptyList();
         cronosBalanceResult.result.bondedBalance = emptyList();
         cronosBalanceResult.result.totalRewards = emptyList();
-        when(cronosRestClient.getBalance(eq(ADDRESS)))
+        when(cronosRestClient.getBalance(ADDRESS))
                 .thenReturn(cronosBalanceResult);
     }
 
@@ -46,7 +45,7 @@ class CronosScanServiceImplTest {
     void getEmptyAddressBalance() {
         List<ScannerTokenBalance> balance = cronosScanService.getAddressBalance(ADDRESS, emptyMap());
 
-        verify(cronosRestClient).getBalance(eq(ADDRESS));
+        verify(cronosRestClient).getBalance(ADDRESS);
 
         assertTrue(balance.isEmpty());
     }
