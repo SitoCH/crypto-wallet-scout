@@ -81,13 +81,8 @@ class TerraScanServiceImplTest {
     @Test
     void getAddressBalance() {
 
-        TerraBalancesResponse balancesResponse = new TerraBalancesResponse();
-        Balance balance = new Balance();
-        balance.amount = "10000000";
-        balance.denom = "uluna";
-        balancesResponse.balances = singletonList(balance);
         when(terraRestClient.getBalances(ADDRESS))
-                .thenReturn(balancesResponse);
+                .thenReturn(getBalancesResponse("10000000"));
 
         List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
 
@@ -96,5 +91,57 @@ class TerraScanServiceImplTest {
 
         assertEquals(1, result.size());
         assertEquals(new BigDecimal(10), result.get(0).getNativeValue());
+    }
+
+    @Test
+    void getFullAddressBalance() {
+
+        when(terraRestClient.getBalances(ADDRESS))
+                .thenReturn(getBalancesResponse("5000000"));
+
+        when(terraRestClient.getStacking(ADDRESS))
+                .thenReturn(getStackingResponse("2000000"));
+
+        when(terraRestClient.getRewards(ADDRESS))
+                .thenReturn(getRewardsResponse("100000"));
+
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+
+        verify(terraRestClient).getBalances(ADDRESS);
+        verify(terraTokenContractRepository).streamAll();
+
+        assertEquals(3, result.size());
+        assertEquals(new BigDecimal("7.1"), result.stream().map(ScannerTokenBalance::getNativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
+    }
+
+    private TerraRewardsResponse getRewardsResponse(String amount) {
+        TerraRewardsResponse response = new TerraRewardsResponse();
+        Rewards rewards = new Rewards();
+        Reward reward = new Reward();
+        reward.amount = amount;
+        reward.denom = "uluna";
+        rewards.reward = singletonList(reward);
+        response.rewards = singletonList(rewards);
+        return response;
+    }
+
+    private TerraStackingResponse getStackingResponse(String amount) {
+        TerraStackingResponse response = new TerraStackingResponse();
+        DelegationResponse delegationResponse = new DelegationResponse();
+        Balance balance = new Balance();
+        balance.amount = amount;
+        balance.denom = "uluna";
+        delegationResponse.balance = balance;
+        response.delegationResponses = singletonList(delegationResponse);
+        return response;
+    }
+
+    private TerraBalancesResponse getBalancesResponse(String amount) {
+        TerraBalancesResponse response = new TerraBalancesResponse();
+        Balance balance = new Balance();
+        balance.amount = amount;
+        balance.denom = "uluna";
+        response.balances = singletonList(balance);
+        return response;
     }
 }
