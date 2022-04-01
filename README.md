@@ -2,6 +2,8 @@
 
 [![Java CI with Maven](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/ci.yml/badge.svg)](https://github.com/SitoCH/crypto-wallet-scout/actions/workflows/ci.yml) ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/sito/crypto-wallet-scout) ![Docker Pulls](https://img.shields.io/docker/pulls/sito/crypto-wallet-scout)
 
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=SitoCH_crypto-wallet-scout&metric=coverage)](https://sonarcloud.io/summary/new_code?id=SitoCH_crypto-wallet-scout) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=SitoCH_crypto-wallet-scout&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=SitoCH_crypto-wallet-scout) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=SitoCH_crypto-wallet-scout&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=SitoCH_crypto-wallet-scout) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=SitoCH_crypto-wallet-scout&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=SitoCH_crypto-wallet-scout)  
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 
