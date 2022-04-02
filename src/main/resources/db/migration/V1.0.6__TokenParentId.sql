@@ -8,4 +8,4 @@ update Token set  parentId = (select Id from (SELECT id FROM Token where symbol 
 
 update Token set  parentId = (select Id from (SELECT id FROM Token where symbol = 'MATIC') as t) WHERE symbol = 'amWMATIC';
 
-update Token set  parentId = (select Id from (SELECT id FROM Token where symbol = 'AAVE') as t)WHERE symbol = 'amAAVE';
+update Token set  parentId = (select Id from (SELECT id FROM Token where symbol = 'AAVE') as t) WHERE symbol = 'amAAVE';
