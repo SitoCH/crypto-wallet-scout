@@ -84,7 +84,9 @@ public class BitqueryClientImpl implements BitqueryClient {
                 "currency { address symbol } value } } }}\"}";
 
         return executeRequest(BitqueryEthereumResponse.class, rawRequest)
-                .map(response -> response.data.ethereum.address.stream().flatMap(x -> x.balances.stream()).toList())
+                .map(response -> response.data.ethereum.address.stream()
+                        .filter(x -> x.balances != null)
+                        .flatMap(x -> x.balances.stream()).toList())
                 .orElse(emptyList());
     }
 
