@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OidcSecurityService } from "angular-auth-oidc-client";
 import { Select, Store } from "@ngxs/store";
-import { ApplicationState } from "./state/application.state";
+import { ApplicationState, ToggleSidebar } from "./state/application.state";
 import { Observable } from "rxjs";
 import { SetAuthentication } from "./state/authentication.state";
 import { GetUserCollections } from "./state/user-collections.state";
@@ -11,9 +11,11 @@ import { GetUserCollections } from "./state/user-collections.state";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   @Select(ApplicationState.isSidebarClosed) isSidebarClosed$!: Observable<boolean>;
+
+  isSidebarClosed = false;
 
   constructor(private oidcSecurityService: OidcSecurityService,
               private store: Store) {
@@ -26,12 +28,21 @@ export class AppComponent {
     });
 
     this.isSidebarClosed$.subscribe(isSidebarClosed => {
+      this.isSidebarClosed = isSidebarClosed;
       const bodyTag = document.body;
       if (isSidebarClosed) {
-        bodyTag.classList.add('collapsed');
-      } else {
         bodyTag.classList.remove('collapsed');
+      } else {
+        bodyTag.classList.add('collapsed');
       }
     });
+  }
+
+  closeSidebarIfNeeded($event: MouseEvent) {
+    if (!this.isSidebarClosed) {
+      this.store.dispatch(new ToggleSidebar());
+      $event.stopPropagation();
+    }
+
   }
 }

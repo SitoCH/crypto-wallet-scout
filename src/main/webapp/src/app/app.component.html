@@ -2,7 +2,9 @@
 
 <app-sidenav></app-sidenav>
 
-<main role="main" class="main-content">
+<main role="main" class="main-content"
+      [class.sidebar-closed]="!isSidebarClosed"
+      (click)="closeSidebarIfNeeded($event)">
   <div class="container-fluid">
     <div class="row justify-content-center">
       <div class="col-12">
