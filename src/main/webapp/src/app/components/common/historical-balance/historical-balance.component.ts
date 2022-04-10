@@ -7,7 +7,8 @@ enum HistoricalChartRange {
   THREE_DAYS = 'THREE_DAYS',
   SEVEN_DAYS = 'SEVEN_DAYS',
   FOURTEEN_DAYS = 'FOURTEEN_DAYS',
-  THIRTY_DAYS = 'THIRTY_DAYS'
+  THIRTY_DAYS = 'THIRTY_DAYS',
+  NINETY_DAYS = 'NINETY_DAYS',
 }
 
 @Component({
@@ -61,7 +62,7 @@ export class HistoricalBalanceComponent implements OnChanges {
     }
   }
 
-  getChartData(lineChartData: { [index: string]: number } | undefined, range: string): ChartConfiguration['data'] {
+  getChartData(lineChartData: { [index: string]: number } | undefined, range: HistoricalChartRange): ChartConfiguration['data'] {
     let daysToConsider = this.getDaysToConsider(range);
     let fromDate = new Date(new Date().getTime() - (daysToConsider * 24 * 60 * 60 * 1000));
 
@@ -88,7 +89,7 @@ export class HistoricalBalanceComponent implements OnChanges {
           fill: 'origin'
         }
       ],
-      labels: sortedKeys.map(x => this.formatLabel(x))
+      labels: sortedKeys.map(x => this.formatLabel(daysToConsider, x))
     };
   }
 
@@ -105,12 +106,15 @@ export class HistoricalBalanceComponent implements OnChanges {
     if (range === HistoricalChartRange.THIRTY_DAYS) {
       return 30;
     }
+    if (range === HistoricalChartRange.NINETY_DAYS) {
+      return 90;
+    }
     return 3;
   }
 
-  private formatLabel(label: string) {
+  private formatLabel(daysToConsider: number, label: string) {
     let date = new Date(label);
-    return formatDate(date, 'HH:mm', this.locale);
+    return formatDate(date, daysToConsider < 8 ? 'HH:mm' : 'MM.dd', this.locale);
   }
 
   onRangeChange(value: HistoricalChartRange) {

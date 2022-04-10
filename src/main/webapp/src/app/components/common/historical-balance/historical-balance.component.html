@@ -30,6 +30,11 @@
                         [class.btn-primary]="(historicalChartRange$ | async) === HistoricalChartRange.THIRTY_DAYS"
                         (click)="onRangeChange(HistoricalChartRange.THIRTY_DAYS)">30d
                 </button>
+                <button type="button" class="btn mb-2"
+                        [class.btn-outline-primary]="(historicalChartRange$ | async) !== HistoricalChartRange.NINETY_DAYS"
+                        [class.btn-primary]="(historicalChartRange$ | async) === HistoricalChartRange.NINETY_DAYS"
+                        (click)="onRangeChange(HistoricalChartRange.NINETY_DAYS)">90d
+                </button>
               </div>
             </div>
           </div>
