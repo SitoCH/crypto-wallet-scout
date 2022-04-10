@@ -1,7 +1,7 @@
 package ch.grignola.web;
 
-import ch.grignola.repository.AddressSnapshotRepository;
 import ch.grignola.service.balance.AddressBalanceChecker;
+import ch.grignola.service.balance.AddressSnapshotService;
 import ch.grignola.service.balance.TokenBalance;
 import ch.grignola.web.model.HistoricalAddressBalance;
 
@@ -11,10 +11,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
 
 @Path("/api/address/balance")
@@ -25,7 +21,7 @@ public class AddressBalanceResource {
     AddressBalanceChecker addressBalanceChecker;
 
     @Inject
-    AddressSnapshotRepository addressSnapshotRepository;
+    AddressSnapshotService addressSnapshotService;
 
     @GET
     @Path("/{address}")
@@ -39,12 +35,7 @@ public class AddressBalanceResource {
     @Transactional
     public HistoricalAddressBalance getHistoricalAddressBalance(@PathParam("address") String address) {
         HistoricalAddressBalance response = new HistoricalAddressBalance();
-        response.snapshots = new HashMap<>();
-        addressSnapshotRepository.findByAddress(address)
-                .forEach(addressSnapshot -> {
-                    OffsetDateTime key = addressSnapshot.getDateTime().truncatedTo(ChronoUnit.HOURS);
-                    response.snapshots.merge(key, addressSnapshot.getUsdValue(), BigDecimal::add);
-                });
+        response.snapshots = addressSnapshotService.getHistoricalAddressBalance(address);
         return response;
     }
 }

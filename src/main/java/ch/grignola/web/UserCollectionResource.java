@@ -3,10 +3,10 @@ package ch.grignola.web;
 import ch.grignola.model.User;
 import ch.grignola.model.UserCollection;
 import ch.grignola.model.UserCollectionAddress;
-import ch.grignola.repository.AddressSnapshotRepository;
 import ch.grignola.repository.UserCollectionRepository;
 import ch.grignola.service.UserService;
 import ch.grignola.service.balance.AddressBalanceChecker;
+import ch.grignola.service.balance.AddressSnapshotService;
 import ch.grignola.service.balance.TokenBalance;
 import ch.grignola.web.model.HistoricalAddressBalance;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,12 +15,7 @@ import org.jboss.logging.Logger;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Path("/api/collection")
 @Produces("application/json")
@@ -36,7 +31,7 @@ public class UserCollectionResource {
     AddressBalanceChecker addressBalanceChecker;
 
     @Inject
-    AddressSnapshotRepository addressSnapshotRepository;
+    AddressSnapshotService addressSnapshotService;
 
     @Inject
     UserService userService;
@@ -56,20 +51,12 @@ public class UserCollectionResource {
         UserCollection userCollection = getUserCollection(collectionId);
 
         HistoricalAddressBalance response = new HistoricalAddressBalance();
-        response.snapshots = new HashMap<>();
-
-        userCollection.getUserCollectionAddresses()
-                .forEach(userCollectionAddresses -> addSnapshot(response.snapshots, userCollectionAddresses));
+        response.snapshots = addressSnapshotService.getHistoricalAddressesBalance(userCollection.getUserCollectionAddresses()
+                .stream()
+                .map(UserCollectionAddress::getAddress)
+                .toList());
 
         return response;
-    }
-
-    private void addSnapshot(Map<OffsetDateTime, BigDecimal> snapshots, UserCollectionAddress userCollectionAddresses) {
-        addressSnapshotRepository.findByAddress(userCollectionAddresses.getAddress())
-                .forEach(addressSnapshot -> {
-                    OffsetDateTime key = addressSnapshot.getDateTime().truncatedTo(ChronoUnit.HOURS);
-                    snapshots.merge(key, addressSnapshot.getUsdValue(), BigDecimal::add);
-                });
     }
 
     private UserCollection getUserCollection(long collectionId) {
