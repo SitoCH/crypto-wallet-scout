@@ -11,7 +11,11 @@ import java.util.List;
 public class AddressSnapshotRepository implements PanacheRepository<AddressSnapshot> {
 
     public void deleteBeforeDateTime(OffsetDateTime discardUntilDateTime) {
-        delete("dateTime < ?", discardUntilDateTime);
+        delete("dateTime < ?1", discardUntilDateTime);
+    }
+
+    public int pruneOldData() {
+        return getEntityManager().createNativeQuery("DELETE a FROM AddressSnapshot a LEFT JOIN ( SELECT address, date(dateTime) dateOnly, MAX(ID) max_ID FROM AddressSnapshot GROUP BY address, date(dateTime) ) b ON a.address = b.address AND Date(a.dateTime) = b.dateonly AND a.id = b.max_ID WHERE b.address IS NULL").executeUpdate();
     }
 
     public List<AddressSnapshot> findByAddress(String address) {

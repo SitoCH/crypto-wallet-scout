@@ -23,5 +23,7 @@ public class CleanAddressSnapshotsJob {
         OffsetDateTime discardUntilDateTime = OffsetDateTime.now().minusDays(90);
         addressSnapshotRepository.deleteBeforeDateTime(discardUntilDateTime);
         LOG.infof("Cleaned old snapshots up to %s", discardUntilDateTime);
+        int affectedRows = addressSnapshotRepository.pruneOldData();
+        LOG.infof("Pruned %s duplicated snapshots for the same day", affectedRows);
     }
 }
