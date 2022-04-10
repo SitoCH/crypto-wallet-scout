@@ -43,7 +43,7 @@ export class UserCollectionDetailComponent implements OnInit {
     this.aggregatedTokenBalances = null;
     this.userCollectionService.getAddressBalance(this.id)
       .then(tokenBalances => {
-        this.collectionUsdValue = 0;
+        this.collectionUsdValue = undefined;
         let tokens = new Map<string, TokenBalance>();
         tokenBalances.forEach(tokenBalance => {
           let key = UserCollectionDetailComponent.makeKey(tokenBalance);

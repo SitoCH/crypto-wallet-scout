@@ -25,7 +25,9 @@ export class UserCollectionHistoricalBalanceComponent implements OnChanges {
       this.historicalBalance$ = this.store.select(UserCollectionsState.getHistoricalAddressBalance(this.collectionId)).pipe(
         map(result => {
           let snapshots = Object.assign({}, result?.snapshots || {});
-          snapshots[new Date().toISOString()] = this.currentUsdValue || 0;
+          if (this.currentUsdValue === undefined) {
+            snapshots[new Date().toISOString()] = this.currentUsdValue || 0;
+          }
           return snapshots;
         }));
     }
