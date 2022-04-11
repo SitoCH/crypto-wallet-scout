@@ -90,7 +90,7 @@ class TerraScanServiceImplTest {
         verify(terraTokenContractRepository).streamAll();
 
         assertEquals(1, result.size());
-        assertEquals(new BigDecimal(10), result.get(0).getNativeValue());
+        assertEquals(new BigDecimal(10), result.get(0).nativeValue());
     }
 
     @Test
@@ -111,7 +111,7 @@ class TerraScanServiceImplTest {
         verify(terraTokenContractRepository).streamAll();
 
         assertEquals(3, result.size());
-        assertEquals(new BigDecimal("7.1"), result.stream().map(ScannerTokenBalance::getNativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
+        assertEquals(new BigDecimal("7.1"), result.stream().map(ScannerTokenBalance::nativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     private TerraRewardsResponse getRewardsResponse(String amount) {

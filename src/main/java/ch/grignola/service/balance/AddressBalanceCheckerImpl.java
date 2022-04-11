@@ -90,7 +90,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
 
     private List<TokenBalance> getTokenBalances(List<ScannerTokenBalance> rawBalances) {
         return rawBalances.stream()
-                .filter(x -> x.getNativeValue().compareTo(ZERO) != 0)
+                .filter(x -> x.nativeValue().compareTo(ZERO) != 0)
                 .map(this::toTokenBalance)
                 .filter(x -> x != null && x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
                 .sorted(comparing(TokenBalance::getTokenId))
@@ -98,12 +98,12 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     }
 
     private TokenBalance toTokenBalance(ScannerTokenBalance balance) {
-        return tokenProvider.getBySymbol(balance.getTokenSymbol())
+        return tokenProvider.getBySymbol(balance.tokenSymbol())
                 .map(tokenDetail -> {
                     LOG.infof("Token %s: 1 USD - %f %s", tokenDetail.getName(), tokenDetail.getUsdValue(), tokenDetail.getSymbol());
-                    Allocation allocation = tokenDetail.getAllocation() != null ? tokenDetail.getAllocation() : balance.getAllocation();
-                    BigDecimal usdValue = balance.getNativeValue().multiply(BigDecimal.valueOf(tokenDetail.getUsdValue()));
-                    return new TokenBalance(balance.getNetwork(), allocation, balance.getNativeValue(), usdValue, tokenDetail.getId(), tokenDetail.getParentId());
+                    Allocation allocation = tokenDetail.getAllocation() != null ? tokenDetail.getAllocation() : balance.allocation();
+                    BigDecimal usdValue = balance.nativeValue().multiply(BigDecimal.valueOf(tokenDetail.getUsdValue()));
+                    return new TokenBalance(balance.network(), allocation, balance.nativeValue(), usdValue, tokenDetail.getId(), tokenDetail.getParentId());
                 })
                 .orElse(null);
     }

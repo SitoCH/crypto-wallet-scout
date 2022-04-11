@@ -39,6 +39,6 @@ class BitcoinScanServiceTest {
         verify(bitqueryClient).getBitcoinBalances("bitcoin", ADDRESS);
 
         assertEquals(1, balance.size());
-        assertEquals(BigDecimal.valueOf(50f), balance.get(0).getNativeValue());
+        assertEquals(BigDecimal.valueOf(50f), balance.get(0).nativeValue());
     }
 }

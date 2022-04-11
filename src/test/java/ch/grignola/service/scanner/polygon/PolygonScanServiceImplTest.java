@@ -71,8 +71,8 @@ class PolygonScanServiceImplTest {
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
         assertEquals(1, addressBalance.size());
-        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).getNativeValue());
-        assertEquals(TST_SYMBOL, addressBalance.get(0).getTokenSymbol());
+        assertEquals(new BigDecimal("45.5"), addressBalance.get(0).nativeValue());
+        assertEquals(TST_SYMBOL, addressBalance.get(0).tokenSymbol());
     }
 
     @Test

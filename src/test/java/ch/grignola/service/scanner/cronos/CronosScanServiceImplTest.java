@@ -61,7 +61,7 @@ class CronosScanServiceImplTest {
         verify(cronosRestClient).getBalance(ADDRESS);
 
         assertEquals(3, result.size());
-        assertEquals(new BigDecimal("7.1"), result.stream().map(ScannerTokenBalance::getNativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
+        assertEquals(new BigDecimal("7.1"), result.stream().map(ScannerTokenBalance::nativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     private CronosBalanceResult getBalanceResponse() {

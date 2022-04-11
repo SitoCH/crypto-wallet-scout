@@ -67,6 +67,6 @@ class PolkadotScanServiceImplTest {
         verify(polkadotRestClient).getBalance(ADDRESS, "Polkadot");
 
         assertEquals(1, balance.size());
-        assertEquals(BigDecimal.valueOf(22.9d), balance.get(0).getNativeValue());
+        assertEquals(BigDecimal.valueOf(22.9d), balance.get(0).nativeValue());
     }
 }
