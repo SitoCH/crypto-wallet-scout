@@ -100,10 +100,10 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     private TokenBalance toTokenBalance(ScannerTokenBalance balance) {
         return tokenProvider.getBySymbol(balance.tokenSymbol())
                 .map(tokenDetail -> {
-                    LOG.infof("Token %s: 1 USD - %f %s", tokenDetail.getName(), tokenDetail.getUsdValue(), tokenDetail.getSymbol());
-                    Allocation allocation = tokenDetail.getAllocation() != null ? tokenDetail.getAllocation() : balance.allocation();
-                    BigDecimal usdValue = balance.nativeValue().multiply(BigDecimal.valueOf(tokenDetail.getUsdValue()));
-                    return new TokenBalance(balance.network(), allocation, balance.nativeValue(), usdValue, tokenDetail.getId(), tokenDetail.getParentId());
+                    LOG.infof("Token %s: 1 USD - %f %s", tokenDetail.name(), tokenDetail.usdValue(), tokenDetail.symbol());
+                    Allocation allocation = tokenDetail.allocation() != null ? tokenDetail.allocation() : balance.allocation();
+                    BigDecimal usdValue = balance.nativeValue().multiply(BigDecimal.valueOf(tokenDetail.usdValue()));
+                    return new TokenBalance(balance.network(), allocation, balance.nativeValue(), usdValue, tokenDetail.id(), tokenDetail.parentId());
                 })
                 .orElse(null);
     }

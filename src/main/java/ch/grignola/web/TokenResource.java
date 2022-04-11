@@ -40,12 +40,12 @@ public class TokenResource {
         private final float priceChange7d;
 
         public TokenResult(TokenDetail tokenDetail) {
-            this.name = tokenDetail.getName();
-            this.image = tokenDetail.getImage();
-            this.symbol = tokenDetail.getSymbol();
-            this.usdValue = tokenDetail.getUsdValue();
-            this.priceChange24h = tokenDetail.getPriceChangePercentage24h();
-            this.priceChange7d = tokenDetail.getPriceChangePercentage7d();
+            this.name = tokenDetail.name();
+            this.image = tokenDetail.image();
+            this.symbol = tokenDetail.symbol();
+            this.usdValue = tokenDetail.usdValue();
+            this.priceChange24h = tokenDetail.priceChangePercentage24h();
+            this.priceChange7d = tokenDetail.priceChangePercentage7d();
         }
     }
 }
