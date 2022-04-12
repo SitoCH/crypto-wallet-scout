@@ -34,7 +34,7 @@ class AvalancheScanServiceImplTest {
     BitqueryClient bitqueryClient;
 
     @Inject
-    AvalancheScanService AvalancheScanService;
+    AvalancheScanService avalancheScanService;
 
     @BeforeEach
     public void setup() {
@@ -45,7 +45,7 @@ class AvalancheScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = AvalancheScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = avalancheScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -64,7 +64,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -89,7 +89,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = AvalancheScanService.getAddressBalance(ADDRESS, singletonMap(Network.AVALANCHE, singletonList(bannedContract)));
+        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS, singletonMap(Network.AVALANCHE, singletonList(bannedContract)));
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 

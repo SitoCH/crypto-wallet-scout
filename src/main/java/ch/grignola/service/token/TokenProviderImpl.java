@@ -28,20 +28,15 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ApplicationScoped
 public class TokenProviderImpl implements TokenProvider {
-
     private static final Logger LOG = Logger.getLogger(TokenProviderImpl.class);
-
     @Inject
     @CacheName("token-provider-cache")
     Cache cache;
-
     @Inject
     TokenRepository tokenRepository;
-
     @Inject
     @RestClient
     CoingeckoRestClient coingeckoRestClient;
-
     private final BlockingBucket bucket;
 
     TokenProviderImpl() {
@@ -141,12 +136,13 @@ public class TokenProviderImpl implements TokenProvider {
 
     @Override
     public void refreshCache() {
-        List<String> ids = tokenRepository.findAll().stream()
+        cache.invalidateAll().await().indefinitely();
+        List<String> ids = tokenRepository.streamAll()
                 .map(Token::getCoinGeckoId)
                 .filter(Objects::nonNull).toList();
         String idsToFetch = String.join(",", ids);
-        cache.invalidateAll().await().indefinitely();
-        getCoingeckoCoinList();
+        List<CoingeckoCoin> coins = getCoingeckoCoinList();
+        LOG.infof("Token cache list refreshed, loaded %s coins", coins.size());
         getCoingeckoCoins(idsToFetch).forEach(x -> {
             cache.get(x.id, key -> x).await().indefinitely();
             LOG.infof("Token cache refreshed for %s", x.name);
