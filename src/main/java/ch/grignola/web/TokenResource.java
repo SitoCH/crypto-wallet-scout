@@ -38,6 +38,10 @@ public class TokenResource {
         private final float priceChange24h;
         @JsonProperty("priceChange7d")
         private final float priceChange7d;
+        @JsonProperty("priceChange30d")
+        private final float priceChange30d;
+        @JsonProperty("priceChange200d")
+        private final float priceChange200d;
 
         public TokenResult(TokenDetail tokenDetail) {
             this.name = tokenDetail.name();
@@ -46,6 +50,8 @@ public class TokenResource {
             this.usdValue = tokenDetail.usdValue();
             this.priceChange24h = tokenDetail.priceChangePercentage24h();
             this.priceChange7d = tokenDetail.priceChangePercentage7d();
+            this.priceChange30d = tokenDetail.priceChangePercentage30d();
+            this.priceChange200d = tokenDetail.priceChangePercentage200d();
         }
     }
 }

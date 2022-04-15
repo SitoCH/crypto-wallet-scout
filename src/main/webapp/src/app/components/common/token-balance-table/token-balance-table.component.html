@@ -42,13 +42,35 @@
                   <div class="my-0 text-muted small">{{tokenBalance.nativeValue | number:'1.2-4' }}</div>
                 </div>
                 <div class="token-column col-4 col-sm-2 text-right">
-                  <strong [class.positive-change]="token.priceChange24h > 0"
-                          [class.negative-change]="token.priceChange24h < 0">{{token.priceChange24h | number:'1.1-1'}}&percnt;
-                    (24h)</strong>
-                  <div class="my-0 small"
-                       [class.positive-change]="token.priceChange7d > 0"
-                       [class.negative-change]="token.priceChange7d < 0">{{token.priceChange7d | number:'1.1-1'}}&percnt;
-                    (7d)
+
+                  <div class="d-flex flex-row-reverse">
+                    <div class="ml-1">
+                      <ng-template #tipContent>
+                        <div>
+                          <span [class.positive-change]="token.priceChange30d > 0"
+                                  [class.negative-change]="token.priceChange30d < 0">{{token.priceChange30d | number:'1.1-1'}}&percnt;
+                            (30d)</span>
+                          <div class="my-0 small">
+                    <span [class.positive-change]="token.priceChange200d > 0"
+                          [class.negative-change]="token.priceChange200d < 0">{{token.priceChange200d | number:'1.1-1'}}&percnt;
+                    (200d)</span>
+                          </div>
+                        </div>
+                      </ng-template>
+                      <fa-icon icon="info-circle" role="button"
+                               [ngbTooltip]="tipContent"></fa-icon>
+                    </div>
+                    <div>
+                      <strong [class.positive-change]="token.priceChange24h > 0"
+                              [class.negative-change]="token.priceChange24h < 0">{{token.priceChange24h | number:'1.1-1'}}&percnt;
+                        (24h)</strong>
+                      <div class="my-0 small">
+                    <span [class.positive-change]="token.priceChange7d > 0"
+                          [class.negative-change]="token.priceChange7d < 0">{{token.priceChange7d | number:'1.1-1'}}&percnt;
+                    (7d)</span>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               </div>

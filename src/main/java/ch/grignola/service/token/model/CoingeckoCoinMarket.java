@@ -63,4 +63,8 @@ public class CoingeckoCoinMarket {
     public float priceChangePercentage24hInCurrency;
     @JsonProperty("price_change_percentage_7d_in_currency")
     public float priceChangePercentage7dInCurrency;
+    @JsonProperty("price_change_percentage_30d_in_currency")
+    public float priceChangePercentage30dInCurrency;
+    @JsonProperty("price_change_percentage_200d_in_currency")
+    public float priceChangePercentage200dInCurrency;
 }

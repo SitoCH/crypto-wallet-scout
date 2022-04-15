@@ -65,7 +65,8 @@ public class TokenProviderImpl implements TokenProvider {
         }
 
         return Optional.of(new TokenDetail(token.getId().toString(), token.getParentId(), token.getName(), coin.image, token.getSymbol(),
-                coin.usdValue, token.getAllocation(), coin.priceChangePercentage24h, coin.priceChangePercentage7d));
+                coin.usdValue, token.getAllocation(), coin.priceChangePercentage24h, coin.priceChangePercentage7d,
+                coin.priceChangePercentage30d, coin.priceChangePercentage200d));
     }
 
     private CachedCoinDetail getCoingeckoCoin(String coinGeckoId) {
@@ -125,7 +126,7 @@ public class TokenProviderImpl implements TokenProvider {
     private List<CachedCoinDetail> getCoingeckoCoins(String coinGeckoIds) {
         try {
             bucket.consume(1);
-            return coingeckoRestClient.markets("usd", coinGeckoIds, "1000", "1", "false", "24h,7d")
+            return coingeckoRestClient.markets("usd", coinGeckoIds, "1000", "1", "false", "24h,7d,30d,200d")
                     .stream().map(CachedCoinDetail::new).toList();
         } catch (InterruptedException e) {
             LOG.warnf("Unable to load coins %s from Coingecko", coinGeckoIds);
@@ -155,7 +156,10 @@ public class TokenProviderImpl implements TokenProvider {
         String image;
         float priceChangePercentage24h;
         float priceChangePercentage7d;
+        float priceChangePercentage30d;
+        float priceChangePercentage200d;
         float usdValue;
+
 
         CachedCoinDetail(CoingeckoCoinDetail coingeckoCoinDetail) {
             this.id = coingeckoCoinDetail.id;
@@ -164,6 +168,8 @@ public class TokenProviderImpl implements TokenProvider {
             this.usdValue = coingeckoCoinDetail.marketData.currentPrice.usd;
             this.priceChangePercentage24h = coingeckoCoinDetail.marketData.priceChange24h;
             this.priceChangePercentage7d = coingeckoCoinDetail.marketData.priceChangePercentage7d;
+            this.priceChangePercentage30d = coingeckoCoinDetail.marketData.priceChangePercentage30d;
+            this.priceChangePercentage200d = coingeckoCoinDetail.marketData.priceChangePercentage200d;
         }
 
         CachedCoinDetail(CoingeckoCoinMarket coingeckoCoinMarket) {
@@ -173,6 +179,8 @@ public class TokenProviderImpl implements TokenProvider {
             this.usdValue = coingeckoCoinMarket.currentPrice;
             this.priceChangePercentage24h = coingeckoCoinMarket.priceChangePercentage24hInCurrency;
             this.priceChangePercentage7d = coingeckoCoinMarket.priceChangePercentage7dInCurrency;
+            this.priceChangePercentage30d = coingeckoCoinMarket.priceChangePercentage30dInCurrency;
+            this.priceChangePercentage200d = coingeckoCoinMarket.priceChangePercentage200dInCurrency;
         }
     }
 }
