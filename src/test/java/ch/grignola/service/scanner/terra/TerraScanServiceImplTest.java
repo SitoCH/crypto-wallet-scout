@@ -1,5 +1,6 @@
 package ch.grignola.service.scanner.terra;
 
+import ch.grignola.model.TerraTokenContract;
 import ch.grignola.repository.TerraTokenContractRepository;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.terra.model.*;
@@ -21,6 +22,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -79,6 +81,23 @@ class TerraScanServiceImplTest {
     }
 
     @Test
+    void getUstAddressBalance() {
+        TerraBalancesResponse balance = getBalancesResponse("10000000");
+        balance.balances.get(0).denom = "uusd";
+        when(terraRestClient.getBalances(ADDRESS))
+                .thenReturn(balance);
+
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+
+        verify(terraRestClient).getBalances(ADDRESS);
+        verify(terraTokenContractRepository).streamAll();
+
+        assertEquals(1, result.size());
+        assertEquals(new BigDecimal(10), result.get(0).nativeValue());
+        assertEquals("UST", result.get(0).tokenSymbol());
+    }
+
+    @Test
     void getAddressBalance() {
 
         when(terraRestClient.getBalances(ADDRESS))
@@ -91,6 +110,7 @@ class TerraScanServiceImplTest {
 
         assertEquals(1, result.size());
         assertEquals(new BigDecimal(10), result.get(0).nativeValue());
+        assertEquals("LUNA", result.get(0).tokenSymbol());
     }
 
     @Test
@@ -143,5 +163,31 @@ class TerraScanServiceImplTest {
         balance.denom = "uluna";
         response.balances = singletonList(balance);
         return response;
+    }
+
+    @Test
+    void getAddressBalanceWithContract() {
+
+        TerraTokenContract terraTokenContract = new TerraTokenContract();
+        terraTokenContract.setContractId("contract-id");
+        terraTokenContract.setDecimals(5L);
+        terraTokenContract.setSymbol("contract-symbol");
+        when(terraTokenContractRepository.streamAll())
+                .thenReturn(Stream.of(terraTokenContract));
+
+        TerraContractBalanceResponse contractBalanceResponse = new TerraContractBalanceResponse();
+        contractBalanceResponse.queryResult = new QueryResult();
+        contractBalanceResponse.queryResult.balance = 10000000;
+        when(terraRestClient.getContractBalance(eq(terraTokenContract.getContractId()), anyString()))
+                .thenReturn(contractBalanceResponse);
+
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+
+        verify(terraRestClient).getBalances(ADDRESS);
+        verify(terraTokenContractRepository).streamAll();
+
+        assertEquals(1, result.size());
+        assertEquals(new BigDecimal(100), result.get(0).nativeValue());
+        assertEquals(terraTokenContract.getSymbol(), result.get(0).tokenSymbol());
     }
 }
