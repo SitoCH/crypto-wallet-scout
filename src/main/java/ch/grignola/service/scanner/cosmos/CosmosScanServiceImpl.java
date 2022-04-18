@@ -39,17 +39,31 @@ public class CosmosScanServiceImpl implements CosmosScanService {
 
         List<ScannerTokenBalance> balances = new ArrayList<>();
 
-        BigDecimal liquidValue = cosmosRestClient.getBalance(address).result.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal liquidValue = cosmosRestClient.getBalance(address).result.stream()
+                .map(x -> new BigDecimal(x.amount))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (liquidValue.compareTo(ZERO) != 0) {
             balances.add(toTokenBalance(address, LIQUID, liquidValue));
         }
 
-        BigDecimal stackedValue = cosmosRestClient.getStackedBalance(address).result.stream().map(x -> new BigDecimal(x.balance.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal stackedValue = cosmosRestClient.getStackedBalance(address).result.stream()
+                .map(x -> new BigDecimal(x.balance.amount))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (stackedValue.compareTo(ZERO) != 0) {
             balances.add(toTokenBalance(address, STACKED, stackedValue));
         }
 
-        BigDecimal unclaimedRewardsValue = cosmosRestClient.getRewardsBalance(address).result.total.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal unboundingValue = cosmosRestClient.getUnboundingBalance(address).result.stream()
+                .flatMap(x -> x.entries.stream())
+                .map(x -> new BigDecimal(x.balance))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (unboundingValue.compareTo(ZERO) != 0) {
+            balances.add(toTokenBalance(address, STACKED, unboundingValue));
+        }
+
+        BigDecimal unclaimedRewardsValue = cosmosRestClient.getRewardsBalance(address).result.total.stream()
+                .map(x -> new BigDecimal(x.amount))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (unclaimedRewardsValue.compareTo(ZERO) != 0) {
             balances.add(toTokenBalance(address, UNCLAIMED_REWARDS, unclaimedRewardsValue));
         }
