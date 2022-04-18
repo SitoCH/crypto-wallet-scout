@@ -9,6 +9,6 @@ public class CosmosBalanceResult {
     @JsonProperty("denom")
     public String denom;
     @JsonProperty("amount")
-    public String amount;
+    public long amount;
 
 }
