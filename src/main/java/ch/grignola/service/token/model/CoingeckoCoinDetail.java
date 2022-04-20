@@ -2,40 +2,9 @@ package ch.grignola.service.token.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.graalvm.nativeimage.Platforms;
 
 import java.util.List;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-class CodeAdditionsDeletions4Weeks {
-
-    @JsonProperty("additions")
-    public Object additions;
-    @JsonProperty("deletions")
-    public Object deletions;
-
-}
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-class CommunityData {
-
-    @JsonProperty("facebook_likes")
-    public Object facebookLikes;
-    @JsonProperty("twitter_followers")
-    public long twitterFollowers;
-    @JsonProperty("reddit_average_posts_48h")
-    public float redditAveragePosts48h;
-    @JsonProperty("reddit_average_comments_48h")
-    public float redditAverageComments48h;
-    @JsonProperty("reddit_subscribers")
-    public long redditSubscribers;
-    @JsonProperty("reddit_accounts_active_48h")
-    public long redditAccountsActive48h;
-    @JsonProperty("telegram_channel_user_count")
-    public Object telegramChannelUserCount;
-
-}
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class ConvertedLast {
 
@@ -63,28 +32,16 @@ public class CoingeckoCoinDetail {
     public Platforms platforms;
     @JsonProperty("block_time_in_minutes")
     public long blockTimeInMinutes;
-    @JsonProperty("hashing_algorithm")
-    public Object hashingAlgorithm;
     @JsonProperty("categories")
     public List<String> categories = null;
-    @JsonProperty("public_notice")
-    public Object publicNotice;
     @JsonProperty("additional_notices")
     public List<String> additionalNotices = null;
     @JsonProperty("image")
     public Image image;
     @JsonProperty("country_origin")
     public String countryOrigin;
-    @JsonProperty("genesis_date")
-    public Object genesisDate;
     @JsonProperty("contract_address")
     public String contractAddress;
-    @JsonProperty("sentiment_votes_up_percentage")
-    public Object sentimentVotesUpPercentage;
-    @JsonProperty("sentiment_votes_down_percentage")
-    public Object sentimentVotesDownPercentage;
-    @JsonProperty("market_cap_rank")
-    public Object marketCapRank;
     @JsonProperty("coingecko_rank")
     public long coingeckoRank;
     @JsonProperty("coingecko_score")
@@ -99,10 +56,6 @@ public class CoingeckoCoinDetail {
     public float publicInterestScore;
     @JsonProperty("market_data")
     public MarketData marketData;
-    @JsonProperty("community_data")
-    public CommunityData communityData;
-    @JsonProperty("status_updates")
-    public List<Object> statusUpdates = null;
     @JsonProperty("last_updated")
     public String lastUpdated;
     @JsonProperty("tickers")
@@ -115,14 +68,6 @@ class ValueByCurrency {
 
     @JsonProperty("usd")
     public float usd;
-
-}
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-class Platforms {
-
-    @JsonProperty("polygon-pos")
-    public String polygonPos;
 
 }
 
