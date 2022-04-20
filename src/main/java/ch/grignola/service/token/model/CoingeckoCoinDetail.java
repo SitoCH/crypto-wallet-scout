@@ -28,8 +28,6 @@ public class CoingeckoCoinDetail {
     public String name;
     @JsonProperty("asset_platform_id")
     public String assetPlatformId;
-    @JsonProperty("platforms")
-    public Platforms platforms;
     @JsonProperty("block_time_in_minutes")
     public long blockTimeInMinutes;
     @JsonProperty("categories")
