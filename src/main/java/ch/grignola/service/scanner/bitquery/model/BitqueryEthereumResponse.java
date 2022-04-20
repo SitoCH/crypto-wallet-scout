@@ -5,6 +5,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
 public class BitqueryEthereumResponse {
-    @JsonProperty("data")
-    public Data data;
+    @JsonProperty("ethereum")
+    public Ethereum ethereum;
 }
