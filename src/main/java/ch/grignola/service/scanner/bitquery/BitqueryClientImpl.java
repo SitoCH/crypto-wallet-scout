@@ -1,16 +1,23 @@
 package ch.grignola.service.scanner.bitquery;
 
 import ch.grignola.service.scanner.bitquery.model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
+import io.smallrye.graphql.client.GraphQLClient;
+import io.smallrye.graphql.client.Response;
+import io.smallrye.graphql.client.core.Document;
+import io.smallrye.graphql.client.core.OperationType;
+import io.smallrye.graphql.client.dynamic.api.DynamicGraphQLClient;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.JsonObject;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,16 +25,30 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
+import static io.smallrye.graphql.client.core.Argument.arg;
+import static io.smallrye.graphql.client.core.Argument.args;
+import static io.smallrye.graphql.client.core.Document.document;
+import static io.smallrye.graphql.client.core.Enum.gqlEnum;
+import static io.smallrye.graphql.client.core.Field.field;
+import static io.smallrye.graphql.client.core.InputObject.inputObject;
+import static io.smallrye.graphql.client.core.InputObjectField.prop;
+import static io.smallrye.graphql.client.core.Operation.operation;
 import static java.time.Duration.ofMinutes;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 @ApplicationScoped
 public class BitqueryClientImpl implements BitqueryClient {
 
     private static final Logger LOG = Logger.getLogger(BitqueryClientImpl.class);
+
+    @Inject
+    @GraphQLClient("bitquery")
+    DynamicGraphQLClient dynamicClient;
 
     @ConfigProperty(name = "bitquery.api.key")
     String apiKey;
@@ -50,17 +71,37 @@ public class BitqueryClientImpl implements BitqueryClient {
     @Override
     public double getBitcoinBalances(String network, String address) {
         String key = network + "-" + address;
-        return cache.get(key, x -> bitcoinBalances(network, address)).await().indefinitely();
+        return cache.get(key, x -> {
+            try {
+                return bitcoinBalances(network, address);
+            } catch (ExecutionException | InterruptedException | JsonProcessingException e) {
+                Thread.currentThread().interrupt();
+                LOG.warnf("Unable to load balance for address %s on %s", network, address);
+                return 0d;
+            }
+        }).await().indefinitely();
     }
 
-    private double bitcoinBalances(String network, String address) {
-        String rawRequest = "{\"query\":\"{  bitcoin(network: " + network + ") { " +
-                "inputs(inputAddress: {is: \\\"" + address + "\\\"}) { value } " +
-                "outputs(outputAddress: {is: \\\"" + address + "\\\"}) { value }  }}\"}";
+    private double bitcoinBalances(String network, String address) throws ExecutionException, InterruptedException, JsonProcessingException {
+        Document bitcoinDocument = document(
+                operation(
+                        field("bitcoin",
+                                args(arg("network", gqlEnum(network))),
+                                field("inputs",
+                                        args(arg("inputAddress", inputObject(prop("is", address)))),
+                                        field("value")
+                                ),
+                                field("outputs",
+                                        args(arg("outputAddress", inputObject(prop("is", address)))),
+                                        field("value")
+                                )
+                        )
+                )
+        );
 
-        return executeRequest(BitqueryBitcoinResponse.class, rawRequest)
-                .map(response -> getTotalBitcoins(response.data.bitcoin))
-                .orElse(0d);
+        JsonObject data = dynamicClient.executeSync(bitcoinDocument).getData();
+        BitqueryBitcoinBalance bitcoinResponse = new ObjectMapper().readValue(data.toString(), BitqueryBitcoinBalance.class);
+        return getTotalBitcoins(bitcoinResponse.bitcoin);
     }
 
     private double getTotalBitcoins(Bitcoin bitcoin) {
