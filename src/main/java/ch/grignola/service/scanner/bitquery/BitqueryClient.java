@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BitqueryClient {
 
-    double getBitcoinBalances(String network, String address);
+    double getBitcoinBalances(String address);
 
     List<BitqueryEthereumBalance> getEthereumBalances(String network, String address);
 

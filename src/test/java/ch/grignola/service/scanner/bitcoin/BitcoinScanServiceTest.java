@@ -28,7 +28,7 @@ class BitcoinScanServiceTest {
 
     @BeforeEach
     public void setup() {
-        when(bitqueryClient.getBitcoinBalances("bitcoin", ADDRESS))
+        when(bitqueryClient.getBitcoinBalances(ADDRESS))
                 .thenReturn(50d);
     }
 
@@ -36,7 +36,7 @@ class BitcoinScanServiceTest {
     void testGetBitcoinBalances() {
         List<ScannerTokenBalance> balance = bitcoinScanService.getAddressBalance(ADDRESS, emptyMap());
 
-        verify(bitqueryClient).getBitcoinBalances("bitcoin", ADDRESS);
+        verify(bitqueryClient).getBitcoinBalances(ADDRESS);
 
         assertEquals(1, balance.size());
         assertEquals(BigDecimal.valueOf(50f), balance.get(0).nativeValue());

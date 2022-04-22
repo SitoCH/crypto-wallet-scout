@@ -34,7 +34,7 @@ public class BitcoinScanService implements ScanService {
     @Override
     public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
         LOG.infof("Getting balance for address %s", address);
-        double balance = bitqueryClient.getBitcoinBalances("bitcoin", address);
+        double balance = bitqueryClient.getBitcoinBalances(address);
         if (balance == 0) {
             return emptyList();
         }

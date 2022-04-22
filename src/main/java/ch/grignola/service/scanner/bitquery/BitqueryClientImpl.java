@@ -53,24 +53,24 @@ public class BitqueryClientImpl implements BitqueryClient {
     }
 
     @Override
-    public double getBitcoinBalances(String network, String address) {
-        String key = network + "-" + address;
+    public double getBitcoinBalances(String address) {
+        String key = "bitcoin-" + address;
         return cache.get(key, x -> {
             try {
-                return bitcoinBalances(network, address);
+                return bitcoinBalances(address);
             } catch (ExecutionException | InterruptedException | JsonProcessingException e) {
                 Thread.currentThread().interrupt();
-                LOG.warnf("Unable to load balance for address %s on %s", network, address);
+                LOG.warnf("Unable to load Bitcoin balance for address %s", address);
                 return 0d;
             }
         }).await().indefinitely();
     }
 
-    private double bitcoinBalances(String network, String address) throws ExecutionException, InterruptedException, JsonProcessingException {
+    private double bitcoinBalances(String address) throws ExecutionException, InterruptedException, JsonProcessingException {
         Document bitcoinDocument = document(
                 operation(
                         field("bitcoin",
-                                args(arg("network", gqlEnum(network))),
+                                args(arg("network", gqlEnum("bitcoin"))),
                                 field("inputs",
                                         args(arg("inputAddress", inputObject(prop("is", address)))),
                                         field(VALUE)
