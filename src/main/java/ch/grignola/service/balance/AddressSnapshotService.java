@@ -13,4 +13,6 @@ public interface AddressSnapshotService {
     Map<OffsetDateTime, BigDecimal> getHistoricalAddressesBalance(List<String> addresses);
 
     Map<LocalDate, BigDecimal> getHistoricalAddressBalanceWithFiatLots(String address);
+
+    Map<LocalDate, BigDecimal> getHistoricalAddressesBalanceWithFiatLots(List<String> addresses);
 }

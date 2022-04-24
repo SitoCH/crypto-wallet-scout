@@ -15,6 +15,8 @@ export class TokenBalanceTableComponent {
   tokens!: TokenBalance[];
   @Input()
   hideNetwork = false;
+  @Input()
+  showGroupingToggle = false;
 
   @Input()
   title!: string;

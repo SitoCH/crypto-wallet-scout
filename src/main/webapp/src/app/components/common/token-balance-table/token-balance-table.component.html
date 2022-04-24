@@ -1,10 +1,12 @@
 <div class="row" *ngIf="tokens && tokens.length > 0">
   <div class="col-md-12 my-4">
     <div class="card shadow">
+      <div class="card-header">
+        <strong class="card-title">{{title || 'Tokens'}}</strong>
+        <app-token-grouping-toggle class="float-right"
+                                   *ngIf="showGroupingToggle"></app-token-grouping-toggle>
+      </div>
       <div class="card-body">
-        <h5 class="card-title">{{title || 'Tokens'}}</h5>
-        <p class="card-text"></p>
-
 
         <div class="list-group list-group-flush my-n3">
           <div class="list-group-item" *ngIf="!tokens">
@@ -48,7 +50,7 @@
                       <ng-template #tipContent>
                         <div>
                           <span [class.positive-change]="token.priceChange30d > 0"
-                                  [class.negative-change]="token.priceChange30d < 0">{{token.priceChange30d | number:'1.1-1'}}&percnt;
+                                [class.negative-change]="token.priceChange30d < 0">{{token.priceChange30d | number:'1.1-1'}}&percnt;
                             (30d)</span>
                           <div class="my-0 small">
                     <span [class.positive-change]="token.priceChange200d > 0"

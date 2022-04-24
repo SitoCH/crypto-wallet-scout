@@ -108,6 +108,31 @@ class AddressSnapshotServiceImplTest {
     }
 
     @Test
+    void getHistoricalAddressesBalanceWithFiatLots() {
+        AddressSnapshot snapshot = getAddressSnapshot();
+        when(addressSnapshotRepository.findLastDailySnapshotByAddress(ADDRESS))
+                .thenReturn(singletonList(snapshot));
+
+        AddressFiatLot lot = new AddressFiatLot();
+        lot.setUsdValue(BigDecimal.valueOf(200));
+        lot.setAddress(ADDRESS);
+        lot.setDateTime(OffsetDateTime.of(2022, 4, 24, 8, 0, 0, 0, ZoneOffset.UTC));
+        when(addressFiatLotRepository.findByAddress(ADDRESS))
+                .thenReturn(singletonList(lot));
+
+        Map<LocalDate, BigDecimal> result = addressSnapshotService.getHistoricalAddressesBalanceWithFiatLots(singletonList(ADDRESS));
+
+        verify(addressSnapshotRepository, never()).findByAddress(ADDRESS);
+        verify(addressSnapshotRepository).findLastDailySnapshotByAddress(ADDRESS);
+        verify(addressFiatLotRepository).findByAddress(ADDRESS);
+
+        assertEquals(1, result.size());
+        Optional<Map.Entry<LocalDate, BigDecimal>> item = result.entrySet().stream().findFirst();
+        assertTrue(item.isPresent());
+        assertEquals(BigDecimal.valueOf(300), item.get().getValue());
+    }
+
+    @Test
     void getHistoricalAddressBalanceWithMultipleFiatLots() {
         AddressSnapshot snapshot = getAddressSnapshot();
         when(addressSnapshotRepository.findLastDailySnapshotByAddress(ADDRESS))

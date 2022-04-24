@@ -1,5 +1,5 @@
 <div *ngIf="isGroupTokenTable$ | async">
-  <app-token-balance-table [title]="'Liquid'" [tokens]="liquidTokens!"></app-token-balance-table>
+  <app-token-balance-table [title]="'Liquid'" [tokens]="liquidTokens!" [showGroupingToggle]="true"></app-token-balance-table>
 
   <app-token-balance-table [title]="'Stacked'" [tokens]="stackedTokens!"></app-token-balance-table>
 
@@ -7,5 +7,6 @@
 </div>
 
 <div *ngIf="!(isGroupTokenTable$ | async)">
-  <app-token-balance-table [title]="'Grouped tokens'" [tokens]="groupedTokens!" [hideNetwork]="true"></app-token-balance-table>
+  <app-token-balance-table [title]="'Grouped tokens'" [tokens]="groupedTokens!"
+                           [hideNetwork]="true" [showGroupingToggle]="true"></app-token-balance-table>
 </div>

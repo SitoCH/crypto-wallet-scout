@@ -46,10 +46,25 @@ public class AddressSnapshotServiceImpl implements AddressSnapshotService {
                 });
     }
 
+    public Map<LocalDate, BigDecimal> getHistoricalAddressesBalanceWithFiatLots(List<String> addresses) {
+        Map<LocalDate, BigDecimal> snapshots = new HashMap<>();
+
+        addresses.forEach(address -> addSnapshotsWithLots(address, snapshots));
+
+        return snapshots;
+    }
+
     public Map<LocalDate, BigDecimal> getHistoricalAddressBalanceWithFiatLots(String address) {
+        Map<LocalDate, BigDecimal> snapshots = new HashMap<>();
+
+        addSnapshotsWithLots(address, snapshots);
+
+        return snapshots;
+    }
+
+    private void addSnapshotsWithLots(String address, Map<LocalDate, BigDecimal> snapshots) {
         List<AddressFiatLot> lots = addressFiatLotRepository.findByAddress(address);
 
-        Map<LocalDate, BigDecimal> snapshots = new HashMap<>();
         addressSnapshotRepository.findLastDailySnapshotByAddress(address)
                 .forEach(addressSnapshot -> {
                     LocalDate key = addressSnapshot.getDateTime().toLocalDate();
@@ -60,7 +75,5 @@ public class AddressSnapshotServiceImpl implements AddressSnapshotService {
                             .reduce(ZERO, BigDecimal::add);
                     snapshots.merge(key, usdValue.subtract(previousLots), BigDecimal::add);
                 });
-
-        return snapshots;
     }
 }

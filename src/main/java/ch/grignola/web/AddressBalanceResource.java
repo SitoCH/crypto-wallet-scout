@@ -41,7 +41,7 @@ public class AddressBalanceResource {
     }
 
     @GET
-    @Path("{address}/balance/history/with-lots")
+    @Path("{address}/balance-with-lots/history")
     @Transactional
     public HistoricalAddressBalanceWithLots getHistoricalAddressBalanceWithLots(@PathParam("address") String address) {
         HistoricalAddressBalanceWithLots response = new HistoricalAddressBalanceWithLots();
