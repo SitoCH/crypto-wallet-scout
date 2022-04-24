@@ -25,4 +25,12 @@ public class AddressSnapshotRepository implements PanacheRepository<AddressSnaps
         return list("address", address);
     }
 
+    @SuppressWarnings("java:S1905")
+    public List<AddressSnapshot> findLastDailySnapshotByAddress(String address) {
+        Query query = getEntityManager().createNativeQuery("SELECT a.* FROM AddressSnapshot a LEFT JOIN ( SELECT address, date(dateTime) dateOnly, MAX(ID) max_ID FROM AddressSnapshot GROUP BY address, date(dateTime) ) b ON a.address = b.address AND Date(a.dateTime) = b.dateonly AND a.id = b.max_ID WHERE a.address = ?1 AND b.max_ID = a.id",
+                AddressSnapshot.class);
+        query.setParameter(1, address);
+        return (List<AddressSnapshot>) query.getResultList();
+    }
+
 }

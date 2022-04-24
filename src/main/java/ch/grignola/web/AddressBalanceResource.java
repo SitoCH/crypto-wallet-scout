@@ -4,6 +4,7 @@ import ch.grignola.service.balance.AddressBalanceChecker;
 import ch.grignola.service.balance.AddressSnapshotService;
 import ch.grignola.service.balance.TokenBalance;
 import ch.grignola.web.model.HistoricalAddressBalance;
+import ch.grignola.web.model.HistoricalAddressBalanceWithLots;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -36,6 +37,15 @@ public class AddressBalanceResource {
     public HistoricalAddressBalance getHistoricalAddressBalance(@PathParam("address") String address) {
         HistoricalAddressBalance response = new HistoricalAddressBalance();
         response.snapshots = addressSnapshotService.getHistoricalAddressBalance(address);
+        return response;
+    }
+
+    @GET
+    @Path("{address}/balance/history/with-lots")
+    @Transactional
+    public HistoricalAddressBalanceWithLots getHistoricalAddressBalanceWithLots(@PathParam("address") String address) {
+        HistoricalAddressBalanceWithLots response = new HistoricalAddressBalanceWithLots();
+        response.snapshots = addressSnapshotService.getHistoricalAddressBalanceWithFiatLots(address);
         return response;
     }
 }
