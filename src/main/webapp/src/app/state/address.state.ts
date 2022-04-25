@@ -7,12 +7,12 @@ import { AddressBalanceService } from "../services/address-balance.service";
 export class GetHistoricalBalance {
   static readonly type = '[Address] GetHistoricalBalance';
 
-  constructor(public address: string) {
+  constructor(public address: string, public includeLots: boolean) {
   }
 }
 
 export interface AddressSummaryModel {
-  historicalBalances: { address: string, balance: HistoricalAddressBalance }[];
+  historicalBalances: { address: string, balance: HistoricalAddressBalance, lotsIncluded: boolean }[];
 }
 
 @State<AddressSummaryModel>({
@@ -29,27 +29,29 @@ export class AddressState {
 
   static getHistoricalAddressBalance(address: string) {
     return createSelector([AddressState], (state: AddressSummaryModel) => {
-      return state.historicalBalances.find(entry => entry.address === address)?.balance;
+      return state.historicalBalances.find(entry => entry.address === address);
     });
   }
 
   @Action(GetHistoricalBalance)
   getHistoricalBalance(ctx: StateContext<AddressSummaryModel>, action: GetHistoricalBalance) {
-    return this.addressBalanceService.getHistoricalAddressBalance(action.address).then(result => {
-      ctx.setState(
-        patch({
-          historicalBalances: removeItem<{ address: string, balance: HistoricalAddressBalance }>(entry => entry?.address === action.address)
-        })
-      );
-      ctx.setState(
-        patch({
-          historicalBalances: append([{
-            address: action.address,
-            balance: result
-          }])
-        })
-      );
-    });
+    return (action.includeLots ? this.addressBalanceService.getHistoricalAddressBalanceWithLots(action.address) : this.addressBalanceService.getHistoricalAddressBalance(action.address))
+      .then(result => {
+        ctx.setState(
+          patch({
+            historicalBalances: removeItem<{ address: string, balance: HistoricalAddressBalance }>(entry => entry?.address === action.address)
+          })
+        );
+        ctx.setState(
+          patch({
+            historicalBalances: append([{
+              address: action.address,
+              balance: result,
+              lotsIncluded: action.includeLots
+            }])
+          })
+        );
+      });
   }
 
 }

@@ -2,6 +2,8 @@ import { Component, Inject, Input, LOCALE_ID, OnChanges, SimpleChanges } from '@
 import { ChartConfiguration } from "chart.js";
 import { formatDate } from "@angular/common";
 import { BehaviorSubject, combineLatest, map, Observable } from "rxjs";
+import { ToggleIncludeLotsInHistoricalBalances } from "../../../state/application.state";
+import { Store } from "@ngxs/store";
 
 enum HistoricalChartRange {
   THREE_DAYS = 'THREE_DAYS',
@@ -50,7 +52,8 @@ export class HistoricalBalanceComponent implements OnChanges {
     }
   };
 
-  constructor(@Inject(LOCALE_ID) private locale: string) {
+  constructor(private store: Store,
+              @Inject(LOCALE_ID) private locale: string) {
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -119,5 +122,9 @@ export class HistoricalBalanceComponent implements OnChanges {
 
   onRangeChange(value: HistoricalChartRange) {
     this.historicalChartRange$.next(value);
+  }
+
+  onIncludeLotsChange() {
+    this.store.dispatch(new ToggleIncludeLotsInHistoricalBalances());
   }
 }

@@ -9,9 +9,14 @@ export class ToggleGroupTokenTable {
   static readonly type = '[Application] ToggleGroupTokenTable';
 }
 
+export class ToggleIncludeLotsInHistoricalBalances {
+  static readonly type = '[Application] ToggleIncludeLotsInHistoricalBalances';
+}
+
 export class ApplicationStateModel {
   isSidebarClosed = false;
   groupTokenTable = false;
+  includeLotsInHistoricalBalances = false;
 }
 
 @State<ApplicationStateModel>({
@@ -47,6 +52,22 @@ export class ApplicationState {
     ctx.setState({
       ...state,
       groupTokenTable: !state.groupTokenTable
+    });
+
+    return state;
+  }
+
+  @Selector()
+  static includeLotsInHistoricalBalances(state: ApplicationStateModel) {
+    return state.includeLotsInHistoricalBalances;
+  }
+
+  @Action(ToggleIncludeLotsInHistoricalBalances)
+  toggle(ctx: StateContext<ApplicationStateModel>) {
+    const state = ctx.getState();
+    ctx.setState({
+      ...state,
+      includeLotsInHistoricalBalances: !state.includeLotsInHistoricalBalances
     });
 
     return state;

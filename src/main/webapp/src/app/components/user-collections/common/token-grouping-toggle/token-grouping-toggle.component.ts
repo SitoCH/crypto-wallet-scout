@@ -25,6 +25,6 @@ export class TokenGroupingToggleComponent implements OnInit {
   }
 
   onGroupingChange() {
-    this.store.dispatch(new ToggleGroupTokenTable())
+    this.store.dispatch(new ToggleGroupTokenTable());
   }
 }
