@@ -6,7 +6,7 @@ import { Network } from "../../../../generated/client";
 })
 export class NetworkImagePipe implements PipeTransform {
 
-  transform(network: Network, ...args: unknown[]): unknown {
+  transform(network: Network): unknown {
     switch (network) {
       case Network.POLYGON:
         return 'assets/images/network/Polygon.png';
@@ -24,6 +24,8 @@ export class NetworkImagePipe implements PipeTransform {
         return 'assets/images/network/Bitcoin.png';
       case Network.POLKADOT:
         return 'assets/images/network/Polkadot.png';
+      case Network.OPTIMISM:
+        return 'assets/images/network/Optimism.png';
     }
 
     return null;

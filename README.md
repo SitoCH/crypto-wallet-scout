@@ -24,6 +24,7 @@ QUARKUS_OIDC_CREDENTIALS_SECRET=
 
 # External API
 BITQUERY_API_KEY=
+OPTIMISTIC_API_KEY=
 ```
 
 ## Running the application in dev mode
