@@ -3,12 +3,12 @@ package ch.grignola.service.scanner.terra.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Balance {
+import java.util.List;
 
-    @JsonProperty("denom")
-    public String denom;
-    @JsonProperty("amount")
-    public long amount;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class UnbondingResponse {
+
+    @JsonProperty("entries")
+    public List<Entry> entries = null;
 
 }

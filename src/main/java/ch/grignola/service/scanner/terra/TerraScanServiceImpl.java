@@ -60,6 +60,16 @@ public class TerraScanServiceImpl implements TerraScanService {
                     .toList());
         }
 
+        TerraUnbondingResponse unbondingResponse = terraRestClient.getUnbonding(address);
+        if (unbondingResponse.unbondingResponses != null) {
+            balances.addAll(unbondingResponse.unbondingResponses.stream()
+                    .filter(x -> x.entries != null)
+                    .flatMap(x -> x.entries.stream())
+                    .map(x -> toTokenBalance(address, STACKED, new BigDecimal(x.balance), "uluna"))
+                    .filter(Objects::nonNull)
+                    .toList());
+        }
+
         TerraStackingResponse stackingResponse = terraRestClient.getStacking(address);
         if (stackingResponse.delegationResponses != null) {
             balances.addAll(stackingResponse.delegationResponses.stream()

@@ -49,6 +49,10 @@ class TerraScanServiceImplTest {
         when(terraRestClient.getBalances(ADDRESS))
                 .thenReturn(balancesResponse);
 
+        TerraUnbondingResponse unbondingResponse = new TerraUnbondingResponse();
+        when(terraRestClient.getUnbonding(ADDRESS))
+                .thenReturn(unbondingResponse);
+
         TerraStackingResponse stackingResponse = new TerraStackingResponse();
         when(terraRestClient.getStacking(ADDRESS))
                 .thenReturn(stackingResponse);
@@ -87,7 +91,7 @@ class TerraScanServiceImplTest {
 
     @Test
     void getUstAddressBalance() {
-        TerraBalancesResponse balance = getBalancesResponse("10000000");
+        TerraBalancesResponse balance = getBalancesResponse(10000000);
         balance.balances.get(0).denom = "uusd";
         when(terraRestClient.getBalances(ADDRESS))
                 .thenReturn(balance);
@@ -106,7 +110,7 @@ class TerraScanServiceImplTest {
     void getAddressBalance() {
 
         when(terraRestClient.getBalances(ADDRESS))
-                .thenReturn(getBalancesResponse("10000000"));
+                .thenReturn(getBalancesResponse(10000000));
 
         List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
 
@@ -122,24 +126,27 @@ class TerraScanServiceImplTest {
     void getFullAddressBalance() {
 
         when(terraRestClient.getBalances(ADDRESS))
-                .thenReturn(getBalancesResponse("5000000"));
+                .thenReturn(getBalancesResponse(5000000));
 
         when(terraRestClient.getStacking(ADDRESS))
-                .thenReturn(getStackingResponse("2000000"));
+                .thenReturn(getStackingResponse(2000000));
+
+        when(terraRestClient.getUnbonding(ADDRESS))
+                .thenReturn(getUnbondingResponse(2000000));
 
         when(terraRestClient.getRewards(ADDRESS))
-                .thenReturn(getRewardsResponse("100000"));
+                .thenReturn(getRewardsResponse(100000));
 
         List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
 
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).streamAll();
 
-        assertEquals(3, result.size());
-        assertEquals(new BigDecimal("7.1"), result.stream().map(ScannerTokenBalance::nativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
+        assertEquals(4, result.size());
+        assertEquals(new BigDecimal("9.1"), result.stream().map(ScannerTokenBalance::nativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
-    private TerraRewardsResponse getRewardsResponse(String amount) {
+    private TerraRewardsResponse getRewardsResponse(long amount) {
         TerraRewardsResponse response = new TerraRewardsResponse();
         Rewards rewards = new Rewards();
         Reward reward = new Reward();
@@ -150,7 +157,17 @@ class TerraScanServiceImplTest {
         return response;
     }
 
-    private TerraStackingResponse getStackingResponse(String amount) {
+    private TerraUnbondingResponse getUnbondingResponse(long amount) {
+        TerraUnbondingResponse response = new TerraUnbondingResponse();
+        UnbondingResponse unbondingResponse = new UnbondingResponse();
+        Entry entry = new Entry();
+        entry.balance = amount;
+        unbondingResponse.entries = singletonList(entry);
+        response.unbondingResponses = singletonList(unbondingResponse);
+        return response;
+    }
+
+    private TerraStackingResponse getStackingResponse(long amount) {
         TerraStackingResponse response = new TerraStackingResponse();
         DelegationResponse delegationResponse = new DelegationResponse();
         Balance balance = new Balance();
@@ -161,7 +178,7 @@ class TerraScanServiceImplTest {
         return response;
     }
 
-    private TerraBalancesResponse getBalancesResponse(String amount) {
+    private TerraBalancesResponse getBalancesResponse(long amount) {
         TerraBalancesResponse response = new TerraBalancesResponse();
         Balance balance = new Balance();
         balance.amount = amount;
