@@ -8,7 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @RegisterProvider(RestClientResponseFilter.class)
-@RegisterRestClient(baseUri = "https://phoenix-fcd.terra.dev")
+@RegisterRestClient(baseUri = "https://phoenix-lcd.terra.dev")
 public interface TerraRestClient extends TerraCommonRestClient {
 
 }

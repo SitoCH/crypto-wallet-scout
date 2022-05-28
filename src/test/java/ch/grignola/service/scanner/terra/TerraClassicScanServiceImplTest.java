@@ -105,7 +105,7 @@ class TerraClassicScanServiceImplTest {
 
         assertEquals(1, result.size());
         assertEquals(new BigDecimal(10), result.get(0).nativeValue());
-        assertEquals("UST", result.get(0).tokenSymbol());
+        assertEquals("USTC", result.get(0).tokenSymbol());
     }
 
     @Test
@@ -121,7 +121,7 @@ class TerraClassicScanServiceImplTest {
 
         assertEquals(1, result.size());
         assertEquals(new BigDecimal(10), result.get(0).nativeValue());
-        assertEquals("LUNA", result.get(0).tokenSymbol());
+        assertEquals("LUNC", result.get(0).tokenSymbol());
     }
 
     @Test

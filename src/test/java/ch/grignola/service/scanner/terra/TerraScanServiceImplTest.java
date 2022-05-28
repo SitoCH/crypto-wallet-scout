@@ -102,9 +102,7 @@ class TerraScanServiceImplTest {
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).streamAll();
 
-        assertEquals(1, result.size());
-        assertEquals(new BigDecimal(10), result.get(0).nativeValue());
-        assertEquals("UST", result.get(0).tokenSymbol());
+        assertEquals(0, result.size());
     }
 
     @Test

@@ -9,7 +9,7 @@ public class Reward {
     @JsonProperty("denom")
     public String denom;
     @JsonProperty("amount")
-    public long amount;
+    public double amount;
 
 }
 
