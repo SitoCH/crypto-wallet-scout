@@ -14,6 +14,7 @@ import ch.grignola.service.scanner.optimism.OptimismScanService;
 import ch.grignola.service.scanner.polkadot.PolkadotScanService;
 import ch.grignola.service.scanner.polygon.PolygonScanService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
+import ch.grignola.service.scanner.terra.TerraClassicScanService;
 import ch.grignola.service.scanner.terra.TerraScanService;
 import ch.grignola.service.token.TokenProvider;
 import org.eclipse.microprofile.context.ManagedExecutor;
@@ -48,6 +49,8 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     @Inject
     TerraScanService terraScanService;
     @Inject
+    TerraClassicScanService terraClassicScanService;
+    @Inject
     SolanaScanService solanaScanService;
     @Inject
     CronosScanService cronosScanService;
@@ -61,8 +64,9 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     OptimismScanService optimismScanService;
 
     private List<ScanService> getScanServices() {
-        return List.of(polygonScanService, avalancheScanService, terraScanService, cronosScanService, solanaScanService,
-                cosmosScanService, bitcoinScanService, polkadotScanService, optimismScanService);
+        return List.of(polygonScanService, avalancheScanService, terraScanService, terraClassicScanService,
+                cronosScanService, solanaScanService, cosmosScanService, bitcoinScanService, polkadotScanService,
+                optimismScanService);
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address, Map<Network, List<BannedContract>> bannedContracts) {

@@ -3,6 +3,7 @@ package ch.grignola.service.scanner.terra;
 import ch.grignola.model.TerraTokenContract;
 import ch.grignola.repository.TerraTokenContractRepository;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
+import ch.grignola.service.scanner.terra.client.TerraClassicRestClient;
 import ch.grignola.service.scanner.terra.client.TerraRestClient;
 import ch.grignola.service.scanner.terra.model.*;
 import io.quarkus.cache.CacheManager;
@@ -27,13 +28,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-class TerraScanServiceImplTest {
+class TerraClassicScanServiceImplTest {
 
     private static final String ADDRESS = "terra000000000000000000000000000000000000000";
 
     @InjectMock
     @RestClient
-    TerraRestClient terraRestClient;
+    TerraClassicRestClient terraRestClient;
 
     @Inject
     CacheManager cacheManager;
@@ -42,7 +43,7 @@ class TerraScanServiceImplTest {
     TerraTokenContractRepository terraTokenContractRepository;
 
     @Inject
-    TerraScanService terraScanService;
+    TerraClassicScanService terraScanService;
 
     @BeforeEach
     public void setup() {
@@ -71,7 +72,7 @@ class TerraScanServiceImplTest {
         when(terraTokenContractRepository.streamAll())
                 .thenReturn(Stream.empty());
 
-        cacheManager.getCache("terra-cache").orElseThrow(NoSuchElementException::new).invalidateAll().await().indefinitely();
+        cacheManager.getCache("terra-classic-cache").orElseThrow(NoSuchElementException::new).invalidateAll().await().indefinitely();
     }
 
     @Test

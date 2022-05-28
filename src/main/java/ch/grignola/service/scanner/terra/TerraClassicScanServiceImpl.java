@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.terra;
 
+import ch.grignola.service.scanner.terra.client.TerraClassicRestClient;
 import ch.grignola.service.scanner.terra.client.TerraCommonRestClient;
-import ch.grignola.service.scanner.terra.client.TerraRestClient;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -10,15 +10,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class TerraScanServiceImpl extends AbstractTerraScanService implements TerraScanService {
-
+public class TerraClassicScanServiceImpl extends AbstractTerraScanService implements TerraClassicScanService {
     @Inject
-    @CacheName("terra-cache")
+    @CacheName("terra-classic-cache")
     Cache cache;
 
     @Inject
     @RestClient
-    TerraRestClient terraRestClient;
+    TerraClassicRestClient terraRestClient;
 
     @Override
     protected Cache getCache() {

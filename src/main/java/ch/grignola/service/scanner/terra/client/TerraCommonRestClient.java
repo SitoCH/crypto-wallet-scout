@@ -1,21 +1,13 @@
-package ch.grignola.service.scanner.terra;
+package ch.grignola.service.scanner.terra.client;
 
 import ch.grignola.service.scanner.terra.model.*;
-import ch.grignola.utils.RestClientResponseFilter;
-import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-@ApplicationScoped
-@RegisterProvider(RestClientResponseFilter.class)
-@RegisterRestClient(baseUri = "https://fcd.terra.dev")
-public interface TerraRestClient {
-
+public interface TerraCommonRestClient {
     @GET
     @Path("/cosmos/distribution/v1beta1/delegators/{address}/rewards")
     TerraRewardsResponse getRewards(@PathParam("address") String address);
@@ -36,5 +28,4 @@ public interface TerraRestClient {
     @Path("/terra/wasm/v1beta1/contracts/{contract}/store")
     TerraContractBalanceResponse getContractBalance(@PathParam("contract") String contract,
                                                     @QueryParam("query_msg") String queryMsg);
-
 }
