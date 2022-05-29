@@ -11,9 +11,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.cache.Cache;
 import org.jboss.logging.Logger;
-import org.jboss.resteasy.client.exception.ResteasyWebApplicationException;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.*;
@@ -109,7 +109,7 @@ public abstract class AbstractTerraScanService {
         } catch (JsonProcessingException e) {
             LOG.warnf("Unable to parse balance response for %s on contract %s", address, contract, e);
             return null;
-        } catch (ResteasyWebApplicationException e) {
+        } catch (WebApplicationException e) {
             LOG.warnf("Unable to request balance for %s on contract %s", address, contract, e);
             return null;
         }
