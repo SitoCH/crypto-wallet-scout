@@ -20,7 +20,7 @@ public class CleanAddressSnapshotsJob {
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     void cleanOldSnapshots() {
-        OffsetDateTime discardUntilDateTime = OffsetDateTime.now().minusDays(90);
+        OffsetDateTime discardUntilDateTime = OffsetDateTime.now().minusDays(365);
         addressSnapshotRepository.deleteBeforeDateTime(discardUntilDateTime);
         LOG.infof("Cleaned old snapshots up to %s", discardUntilDateTime);
         OffsetDateTime pruneBeforeDateTime = OffsetDateTime.now().minusDays(7);
