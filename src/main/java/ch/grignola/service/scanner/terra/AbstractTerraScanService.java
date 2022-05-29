@@ -82,7 +82,7 @@ public abstract class AbstractTerraScanService {
         }
 
 
-        balances.addAll(terraTokenContractRepository.streamAll()
+        balances.addAll(terraTokenContractRepository.findByNetwork(getNetwork())
                 .map(x -> getBalanceFromContract(address, x.getContractId(), x.getDecimals(), x.getSymbol()))
                 .filter(Objects::nonNull)
                 .toList());
