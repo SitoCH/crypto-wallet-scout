@@ -1,11 +1,9 @@
 package ch.grignola.service.token;
 
+import ch.grignola.model.Network;
 import ch.grignola.model.Token;
 import ch.grignola.repository.TokenRepository;
-import ch.grignola.service.token.model.CoingeckoCoin;
-import ch.grignola.service.token.model.CoingeckoCoinDetail;
-import ch.grignola.service.token.model.CoingeckoCoinMarket;
-import ch.grignola.service.token.model.TokenDetail;
+import ch.grignola.service.token.model.*;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
 import io.quarkus.cache.Cache;
@@ -15,17 +13,21 @@ import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static ch.grignola.model.Network.*;
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
 import static java.lang.String.join;
 import static java.time.Duration.ofMillis;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ApplicationScoped
@@ -148,6 +150,35 @@ public class TokenProviderImpl implements TokenProvider {
             refreshedTokens.add(x.name);
         });
         LOG.infof("Token cache refreshed for %s", join(", ", refreshedTokens));
+    }
+
+    private Optional<String> getPlatformId(Network network) {
+        if (network == POLYGON) {
+            return of("polygon-pos");
+        }
+
+        if (network == AVALANCHE) {
+            return of("avalanche");
+        }
+
+        if (network == OPTIMISM) {
+            return of("optimistic-ethereum");
+        }
+
+        return empty();
+    }
+
+    public Optional<CoingeckoContract> getContract(Network network, String contractAddress) {
+        try {
+            bucket.consume(1);
+            return getPlatformId(network)
+                    .map(platformId -> coingeckoRestClient.getContract(platformId, contractAddress));
+        } catch (WebApplicationException e) {
+            return empty();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return empty();
+        }
     }
 
     private static class CachedCoinDetail {

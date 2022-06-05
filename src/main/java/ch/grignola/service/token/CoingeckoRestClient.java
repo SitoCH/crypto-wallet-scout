@@ -1,9 +1,6 @@
 package ch.grignola.service.token;
 
-import ch.grignola.service.token.model.CoingeckoCoin;
-import ch.grignola.service.token.model.CoingeckoCoinDetail;
-import ch.grignola.service.token.model.CoingeckoCoinMarket;
-import ch.grignola.service.token.model.CoingeckoCoinTicker;
+import ch.grignola.service.token.model.*;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -37,5 +34,10 @@ public interface CoingeckoRestClient {
     @GET
     @Path("/{id}/tickers")
     CoingeckoCoinTicker getTicker(@PathParam("id") String id);
+
+    @GET
+    @Path("/{platformId}/contract/{contractAddress}")
+    CoingeckoContract getContract(@PathParam("platformId") String platformId,
+                                  @PathParam("contractAddress") String contractAddress);
 
 }

@@ -14,4 +14,8 @@ public class ContractVerificationStatusRepository implements PanacheRepository<C
         return list("network", network);
     }
 
+    public List<ContractVerificationStatus> findByStatus(ContractVerificationStatus.Status status) {
+        return list("status", status);
+    }
+
 }
