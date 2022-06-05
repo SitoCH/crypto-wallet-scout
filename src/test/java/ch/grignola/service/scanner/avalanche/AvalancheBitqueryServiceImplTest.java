@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-class AvalancheScanServiceImplTest {
+class AvalancheBitqueryServiceImplTest {
 
     private static final String ADDRESS = "0x1234";
     private static final String TST_SYMBOL = "TST";
@@ -40,7 +40,7 @@ class AvalancheScanServiceImplTest {
     ContractVerificationStatusRepository contractVerificationStatusRepository;
 
     @Inject
-    AvalancheScanService avalancheScanService;
+    AvalancheBitqueryService avalancheBitqueryService;
 
     @BeforeEach
     public void setup() {
@@ -51,7 +51,7 @@ class AvalancheScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = avalancheScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> balance = avalancheBitqueryService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -70,7 +70,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = avalancheBitqueryService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -99,7 +99,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = avalancheBitqueryService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
         verify(contractVerificationStatusRepository).findByNetwork(AVALANCHE);

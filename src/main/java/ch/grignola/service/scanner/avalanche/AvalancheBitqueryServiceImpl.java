@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner.polygon;
+package ch.grignola.service.scanner.avalanche;
 
 import ch.grignola.service.scanner.bitquery.AbstractEthereumBitqueryScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
@@ -7,17 +7,17 @@ import io.micrometer.core.annotation.Timed;
 import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
 
-import static ch.grignola.model.Network.POLYGON;
+import static ch.grignola.model.Network.AVALANCHE;
 
 @ApplicationScoped
-public class PolygonScanServiceImpl extends AbstractEthereumBitqueryScanService implements PolygonScanService {
+public class AvalancheBitqueryServiceImpl extends AbstractEthereumBitqueryScanService implements AvalancheBitqueryService {
 
-    public PolygonScanServiceImpl() {
-        super(POLYGON);
+    public AvalancheBitqueryServiceImpl() {
+        super(AVALANCHE);
     }
 
     @Override
-    @Timed(value = "addressBalance", extraTags = {"network", "POLYGON"})
+    @Timed(value = "addressBalance", extraTags = {"network", "AVALANCHE"})
     public List<ScannerTokenBalance> getAddressBalance(String address) {
         return internalGetAddressBalance(address);
     }

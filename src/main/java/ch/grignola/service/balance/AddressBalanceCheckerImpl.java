@@ -1,7 +1,7 @@
 package ch.grignola.service.balance;
 
 import ch.grignola.model.Allocation;
-import ch.grignola.service.scanner.avalanche.AvalancheScanService;
+import ch.grignola.service.scanner.avalanche.AvalancheEtherscanService;
 import ch.grignola.service.scanner.bitcoin.BitcoinScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
@@ -9,7 +9,7 @@ import ch.grignola.service.scanner.cosmos.CosmosScanService;
 import ch.grignola.service.scanner.cronos.CronosScanService;
 import ch.grignola.service.scanner.optimism.OptimismScanService;
 import ch.grignola.service.scanner.polkadot.PolkadotScanService;
-import ch.grignola.service.scanner.polygon.PolygonScanService;
+import ch.grignola.service.scanner.polygon.PolygonEtherscanService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
 import ch.grignola.service.scanner.terra.TerraClassicScanService;
 import ch.grignola.service.scanner.terra.TerraScanService;
@@ -34,9 +34,9 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     @Inject
     TokenProvider tokenProvider;
     @Inject
-    PolygonScanService polygonScanService;
+    PolygonEtherscanService polygonService;
     @Inject
-    AvalancheScanService avalancheScanService;
+    AvalancheEtherscanService avalancheService;
     @Inject
     TerraScanService terraScanService;
     @Inject
@@ -55,7 +55,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     OptimismScanService optimismScanService;
 
     private List<ScanService> getScanServices() {
-        return List.of(polygonScanService, avalancheScanService, terraScanService, terraClassicScanService,
+        return List.of(polygonService, avalancheService, terraScanService, terraClassicScanService,
                 cronosScanService, solanaScanService, cosmosScanService, bitcoinScanService, polkadotScanService,
                 optimismScanService);
     }

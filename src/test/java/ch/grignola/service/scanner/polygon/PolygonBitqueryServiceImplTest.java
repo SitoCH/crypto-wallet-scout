@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-class PolygonScanServiceImplTest {
+class PolygonBitqueryServiceImplTest {
 
     private static final String ADDRESS = "0x1234";
     private static final String TST_SYMBOL = "TST";
@@ -40,7 +40,7 @@ class PolygonScanServiceImplTest {
     ContractVerificationStatusRepository contractVerificationStatusRepository;
 
     @Inject
-    PolygonScanService polygonScanService;
+    PolygonBitqueryService polygonBitqueryService;
 
 
     @BeforeEach
@@ -53,7 +53,7 @@ class PolygonScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = polygonScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> balance = polygonBitqueryService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -72,7 +72,7 @@ class PolygonScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = polygonBitqueryService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -100,7 +100,7 @@ class PolygonScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = polygonBitqueryService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
         verify(contractVerificationStatusRepository).findByNetwork(POLYGON);

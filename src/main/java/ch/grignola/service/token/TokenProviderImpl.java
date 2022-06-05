@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static ch.grignola.model.Network.*;
+import static ch.grignola.model.Network.OPTIMISM;
+import static ch.grignola.model.Network.POLYGON;
 import static ch.grignola.service.token.TokenContractStatus.*;
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
@@ -159,10 +160,6 @@ public class TokenProviderImpl implements TokenProvider {
     private Optional<String> getPlatformId(Network network) {
         if (network == POLYGON) {
             return of("polygon-pos");
-        }
-
-        if (network == AVALANCHE) {
-            return of("avalanche");
         }
 
         if (network == OPTIMISM) {

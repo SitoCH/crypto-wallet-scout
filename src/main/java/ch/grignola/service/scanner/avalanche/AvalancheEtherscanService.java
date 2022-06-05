@@ -5,6 +5,6 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 
 import java.util.List;
 
-public interface AvalancheScanService extends ScanService {
+public interface AvalancheEtherscanService extends ScanService {
     List<ScannerTokenBalance> getAddressBalance(String address);
 }
