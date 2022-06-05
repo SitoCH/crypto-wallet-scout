@@ -84,10 +84,6 @@ public class TokenProviderImpl implements TokenProvider {
     }
 
     private Optional<TokenDetail> getInfoFromCoingecko(Token token) {
-        if (token.isExcludeFromBalance()) {
-            return Optional.empty();
-        }
-
         List<CoingeckoCoin> coins = getCoingeckoCoinList();
         return coins.stream()
                 .filter(x -> isNotBlank(token.getCoinGeckoId()) && x.id.equalsIgnoreCase(token.getCoinGeckoId()))

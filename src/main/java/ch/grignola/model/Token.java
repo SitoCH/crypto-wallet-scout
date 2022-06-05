@@ -10,7 +10,6 @@ public class Token {
     private String symbol;
     private String coinGeckoId;
     private String parentId;
-    private boolean excludeFromBalance;
     private Allocation allocation;
 
     @Id
@@ -56,14 +55,6 @@ public class Token {
         this.parentId = parentId;
     }
 
-    public boolean isExcludeFromBalance() {
-        return excludeFromBalance;
-    }
-
-    public void setExcludeFromBalance(boolean excludeFromBalance) {
-        this.excludeFromBalance = excludeFromBalance;
-    }
-
     @Enumerated(EnumType.STRING)
     public Allocation getAllocation() {
         return allocation;
@@ -82,11 +73,11 @@ public class Token {
             return false;
         }
         Token token = (Token) o;
-        return excludeFromBalance == token.excludeFromBalance && Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId) && Objects.equals(parentId, token.parentId) && allocation == token.allocation;
+        return Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId) && Objects.equals(parentId, token.parentId) && allocation == token.allocation;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, symbol, coinGeckoId, parentId, excludeFromBalance, allocation);
+        return Objects.hash(id, name, symbol, coinGeckoId, parentId, allocation);
     }
 }
