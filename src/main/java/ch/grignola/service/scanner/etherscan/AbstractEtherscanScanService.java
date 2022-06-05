@@ -58,8 +58,7 @@ public abstract class AbstractEtherscanScanService implements ScanService {
         return true;
     }
 
-    @Override
-    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
+    protected List<ScannerTokenBalance> internalGetAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
         return cache.get(network + "-" + address, x -> getBalancesFromEtherscan(address, bannedContracts)).await().indefinitely();
     }
 

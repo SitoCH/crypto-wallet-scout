@@ -38,8 +38,7 @@ public abstract class AbstractEthereumBitqueryScanService implements ScanService
         return address.startsWith("0x") && address.length() == 42;
     }
 
-    @Override
-    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
+    protected List<ScannerTokenBalance> internalGetAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
         LOG.infof("Getting %s balance for address %s", network, address);
         Set<String> filteredBannedContracts = bannedContracts.getOrDefault(network, emptyList()).stream()
                 .map(BannedContract::getContractId)
