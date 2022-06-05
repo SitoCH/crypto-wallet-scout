@@ -9,7 +9,7 @@ import ch.grignola.service.scanner.cosmos.CosmosScanService;
 import ch.grignola.service.scanner.cronos.CronosScanService;
 import ch.grignola.service.scanner.optimism.OptimismScanService;
 import ch.grignola.service.scanner.polkadot.PolkadotScanService;
-import ch.grignola.service.scanner.polygon.PolygonEtherscanService;
+import ch.grignola.service.scanner.polygon.PolygonBitqueryService;
 import ch.grignola.service.scanner.solana.SolanaScanService;
 import ch.grignola.service.scanner.terra.TerraClassicScanService;
 import ch.grignola.service.scanner.terra.TerraScanService;
@@ -34,7 +34,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     @Inject
     TokenProvider tokenProvider;
     @Inject
-    PolygonEtherscanService polygonService;
+    PolygonBitqueryService polygonService;
     @Inject
     AvalancheEtherscanService avalancheService;
     @Inject
