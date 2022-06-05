@@ -65,6 +65,6 @@ public class ContractVerificationStatus {
     }
 
     public enum Status {
-        BANNED, VERIFIED, UNKNOWN
+        BANNED, NOT_FOUND, VERIFIED, UNKNOWN
     }
 }

@@ -1,7 +1,6 @@
 package ch.grignola.service.token;
 
 import ch.grignola.model.Network;
-import ch.grignola.service.token.model.CoingeckoContract;
 import ch.grignola.service.token.model.TokenDetail;
 
 import java.util.Optional;
@@ -14,5 +13,5 @@ public interface TokenProvider {
 
     void refreshCache();
 
-    Optional<CoingeckoContract> getContract(Network network, String contractAddress);
+    TokenContract getContract(Network network, String contractAddress);
 }

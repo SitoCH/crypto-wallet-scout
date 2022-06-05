@@ -3,7 +3,10 @@ package ch.grignola.service.token;
 import ch.grignola.model.Network;
 import ch.grignola.model.Token;
 import ch.grignola.repository.TokenRepository;
-import ch.grignola.service.token.model.*;
+import ch.grignola.service.token.model.CoingeckoCoin;
+import ch.grignola.service.token.model.CoingeckoCoinDetail;
+import ch.grignola.service.token.model.CoingeckoCoinMarket;
+import ch.grignola.service.token.model.TokenDetail;
 import io.github.bucket4j.BlockingBucket;
 import io.github.bucket4j.Bucket;
 import io.quarkus.cache.Cache;
@@ -20,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static ch.grignola.model.Network.*;
+import static ch.grignola.service.token.TokenContractStatus.*;
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
 import static java.lang.String.join;
@@ -168,16 +172,18 @@ public class TokenProviderImpl implements TokenProvider {
         return empty();
     }
 
-    public Optional<CoingeckoContract> getContract(Network network, String contractAddress) {
+    public TokenContract getContract(Network network, String contractAddress) {
         try {
             bucket.consume(1);
             return getPlatformId(network)
-                    .map(platformId -> coingeckoRestClient.getContract(platformId, contractAddress));
+                    .map(platformId -> coingeckoRestClient.getContract(platformId, contractAddress))
+                    .map(contract -> new TokenContract(contract.name, contract.liquidityScore == 0 ? BANNED : VERIFIED))
+                    .orElse(new TokenContract("", PLATFORM_NOT_FOUND));
         } catch (WebApplicationException e) {
-            return empty();
+            return new TokenContract("", CONTRACT_NOT_FOUND);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return empty();
+            return new TokenContract("", PLATFORM_NOT_FOUND);
         }
     }
 

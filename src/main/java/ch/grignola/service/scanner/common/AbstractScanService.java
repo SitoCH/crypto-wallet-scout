@@ -9,8 +9,7 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 
-import static ch.grignola.model.ContractVerificationStatus.Status.BANNED;
-import static ch.grignola.model.ContractVerificationStatus.Status.UNKNOWN;
+import static ch.grignola.model.ContractVerificationStatus.Status.*;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public abstract class AbstractScanService {
@@ -38,7 +37,7 @@ public abstract class AbstractScanService {
                 .map(ContractVerificationStatus::getContractId)
                 .collect(toUnmodifiableSet());
         Set<String> bannedContracts = contracts.stream()
-                .filter(x -> x.getStatus() == BANNED)
+                .filter(x -> x.getStatus() == BANNED || x.getStatus() == NOT_FOUND)
                 .map(ContractVerificationStatus::getContractId)
                 .collect(toUnmodifiableSet());
 
