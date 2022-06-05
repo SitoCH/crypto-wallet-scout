@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -45,7 +44,7 @@ class PolkadotScanServiceImplTest {
 
     @Test
     void testEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = polkadotScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = polkadotScanService.getAddressBalance(ADDRESS);
 
         verify(polkadotRestClient).getBalance(ADDRESS, "Polkadot");
 
@@ -62,7 +61,7 @@ class PolkadotScanServiceImplTest {
         when(polkadotRestClient.getBalance(ADDRESS, "Polkadot"))
                 .thenReturn(balanceResponse);
 
-        List<ScannerTokenBalance> balance = polkadotScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = polkadotScanService.getAddressBalance(ADDRESS);
 
         verify(polkadotRestClient).getBalance(ADDRESS, "Polkadot");
 

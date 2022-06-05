@@ -1,9 +1,6 @@
 package ch.grignola.service.balance;
 
 import ch.grignola.model.Allocation;
-import ch.grignola.model.BannedContract;
-import ch.grignola.model.Network;
-import ch.grignola.repository.BannedContractRepository;
 import ch.grignola.service.scanner.avalanche.AvalancheScanService;
 import ch.grignola.service.scanner.bitcoin.BitcoinScanService;
 import ch.grignola.service.scanner.common.ScanService;
@@ -17,15 +14,13 @@ import ch.grignola.service.scanner.solana.SolanaScanService;
 import ch.grignola.service.scanner.terra.TerraClassicScanService;
 import ch.grignola.service.scanner.terra.TerraScanService;
 import ch.grignola.service.token.TokenProvider;
-import org.eclipse.microprofile.context.ManagedExecutor;
 import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Comparator.comparing;
@@ -36,10 +31,6 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
 
     private static final Logger LOG = Logger.getLogger(AddressBalanceCheckerImpl.class);
 
-    @Inject
-    ManagedExecutor executor;
-    @Inject
-    BannedContractRepository bannedContractRepository;
     @Inject
     TokenProvider tokenProvider;
     @Inject
@@ -69,30 +60,26 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
                 optimismScanService);
     }
 
-    private List<ScannerTokenBalance> getBalancesFromScanServices(String address, Map<Network, List<BannedContract>> bannedContracts) {
+    private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
         return getScanServices().stream()
                 .filter(x -> x.accept(address))
-                .map(x -> executor.supplyAsync(() -> x.getAddressBalance(address, bannedContracts).stream()))
-                .toList().stream()
-                .flatMap(CompletableFuture::join)
+                .flatMap(x -> x.getAddressBalance(address).stream())
                 .toList();
     }
 
     @Override
+    @Transactional
     public List<TokenBalance> getBalances(List<String> addresses) {
-        Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
         List<ScannerTokenBalance> rawBalances = addresses.stream()
-                .map(x -> executor.supplyAsync(() -> getBalancesFromScanServices(x, bannedContracts).stream()))
-                .toList().stream()
-                .flatMap(CompletableFuture::join)
+                .flatMap(x -> getBalancesFromScanServices(x).stream())
                 .toList();
         return getTokenBalances(rawBalances);
     }
 
     @Override
+    @Transactional
     public List<TokenBalance> getBalance(String address) {
-        Map<Network, List<BannedContract>> bannedContracts = bannedContractRepository.findAllByNetwork();
-        return getTokenBalances(getBalancesFromScanServices(address, bannedContracts));
+        return getTokenBalances(getBalancesFromScanServices(address));
     }
 
     private List<TokenBalance> getTokenBalances(List<ScannerTokenBalance> rawBalances) {

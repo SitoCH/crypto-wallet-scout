@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.avalanche;
 
-import ch.grignola.model.BannedContract;
-import ch.grignola.model.Network;
+import ch.grignola.model.ContractVerificationStatus;
+import ch.grignola.repository.ContractVerificationStatusRepository;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
 import ch.grignola.service.scanner.bitquery.model.BitqueryEthereumBalance;
 import ch.grignola.service.scanner.bitquery.model.Currency;
@@ -15,7 +15,10 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.*;
+import static ch.grignola.model.ContractVerificationStatus.Status.BANNED;
+import static ch.grignola.model.Network.AVALANCHE;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,6 +36,9 @@ class AvalancheScanServiceImplTest {
     @InjectMock
     BitqueryClient bitqueryClient;
 
+    @InjectMock
+    ContractVerificationStatusRepository contractVerificationStatusRepository;
+
     @Inject
     AvalancheScanService avalancheScanService;
 
@@ -45,7 +51,7 @@ class AvalancheScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = avalancheScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = avalancheScanService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -64,7 +70,7 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -76,8 +82,12 @@ class AvalancheScanServiceImplTest {
     @Test
     void getSimpleAddressBalanceWithBannedContract() {
 
-        BannedContract bannedContract = new BannedContract();
-        bannedContract.setContractId(TST_TKN_ADDRESS);
+        ContractVerificationStatus contractVerificationStatus = new ContractVerificationStatus();
+        contractVerificationStatus.setContractId(TST_TKN_ADDRESS);
+        contractVerificationStatus.setNetwork(AVALANCHE);
+        contractVerificationStatus.setStatus(BANNED);
+        when(contractVerificationStatusRepository.findByNetwork(AVALANCHE))
+                .thenReturn(singletonList(contractVerificationStatus));
 
 
         BitqueryEthereumBalance balance = new BitqueryEthereumBalance();
@@ -89,9 +99,10 @@ class AvalancheScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS, singletonMap(Network.AVALANCHE, singletonList(bannedContract)));
+        List<ScannerTokenBalance> addressBalance = avalancheScanService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
+        verify(contractVerificationStatusRepository).findByNetwork(AVALANCHE);
 
         assertTrue(addressBalance.isEmpty());
     }

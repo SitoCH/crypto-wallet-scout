@@ -12,7 +12,8 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -43,7 +44,7 @@ class CronosScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = cronosScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = cronosScanService.getAddressBalance(ADDRESS);
 
         verify(cronosRestClient).getBalance(ADDRESS);
 
@@ -56,7 +57,7 @@ class CronosScanServiceImplTest {
         when(cronosRestClient.getBalance(ADDRESS))
                 .thenReturn(getBalanceResponse());
 
-        List<ScannerTokenBalance> result = cronosScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> result = cronosScanService.getAddressBalance(ADDRESS);
 
         verify(cronosRestClient).getBalance(ADDRESS);
 

@@ -12,7 +12,8 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -56,7 +57,7 @@ class CosmosScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = cosmosScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = cosmosScanService.getAddressBalance(ADDRESS);
 
         verify(cosmosRestClient).getBalance(ADDRESS);
 
@@ -73,7 +74,7 @@ class CosmosScanServiceImplTest {
         when(cosmosRestClient.getBalance(ADDRESS))
                 .thenReturn(balance);
 
-        List<ScannerTokenBalance> result = cosmosScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> result = cosmosScanService.getAddressBalance(ADDRESS);
 
         verify(cosmosRestClient).getBalance(ADDRESS);
 

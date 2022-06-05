@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,7 +42,7 @@ class SolanaScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = solanaScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = solanaScanService.getAddressBalance(ADDRESS);
 
         verify(solanaRestClient).getNativeBalance(ADDRESS);
 

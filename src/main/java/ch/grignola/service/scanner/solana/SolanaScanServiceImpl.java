@@ -1,7 +1,5 @@
 package ch.grignola.service.scanner.solana;
 
-import ch.grignola.model.BannedContract;
-import ch.grignola.model.Network;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.solana.model.SolanaNativeBalance;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -13,7 +11,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static ch.grignola.model.Allocation.LIQUID;
 import static ch.grignola.model.Network.SOLANA;
@@ -36,7 +33,7 @@ public class SolanaScanServiceImpl implements SolanaScanService {
     }
 
     @Override
-    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
+    public List<ScannerTokenBalance> getAddressBalance(String address) {
 
         SolanaNativeBalance nativeBalance = solanaRestClient.getNativeBalance(address);
 

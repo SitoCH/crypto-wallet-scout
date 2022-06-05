@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.polygon;
 
-import ch.grignola.model.BannedContract;
-import ch.grignola.model.Network;
+import ch.grignola.model.ContractVerificationStatus;
+import ch.grignola.repository.ContractVerificationStatusRepository;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
 import ch.grignola.service.scanner.bitquery.model.BitqueryEthereumBalance;
 import ch.grignola.service.scanner.bitquery.model.Currency;
@@ -15,7 +15,10 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.*;
+import static ch.grignola.model.ContractVerificationStatus.Status.BANNED;
+import static ch.grignola.model.Network.POLYGON;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,6 +36,9 @@ class PolygonScanServiceImplTest {
     @InjectMock
     BitqueryClient bitqueryClient;
 
+    @InjectMock
+    ContractVerificationStatusRepository contractVerificationStatusRepository;
+
     @Inject
     PolygonScanService polygonScanService;
 
@@ -47,7 +53,7 @@ class PolygonScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = polygonScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = polygonScanService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -66,7 +72,7 @@ class PolygonScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
 
@@ -78,8 +84,12 @@ class PolygonScanServiceImplTest {
     @Test
     void getSimpleAddressBalanceWithBannedContract() {
 
-        BannedContract bannedContract = new BannedContract();
-        bannedContract.setContractId(TST_TKN_ADDRESS);
+        ContractVerificationStatus contractVerificationStatus = new ContractVerificationStatus();
+        contractVerificationStatus.setContractId(TST_TKN_ADDRESS);
+        contractVerificationStatus.setNetwork(POLYGON);
+        contractVerificationStatus.setStatus(BANNED);
+        when(contractVerificationStatusRepository.findByNetwork(POLYGON))
+                .thenReturn(singletonList(contractVerificationStatus));
 
         BitqueryEthereumBalance balance = new BitqueryEthereumBalance();
         balance.currency = new Currency();
@@ -90,9 +100,10 @@ class PolygonScanServiceImplTest {
         when(bitqueryClient.getEthereumBalances(any(), eq(ADDRESS)))
                 .thenReturn(singletonList(balance));
 
-        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS, singletonMap(Network.POLYGON, singletonList(bannedContract)));
+        List<ScannerTokenBalance> addressBalance = polygonScanService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getEthereumBalances(any(), eq(ADDRESS));
+        verify(contractVerificationStatusRepository).findByNetwork(POLYGON);
 
         assertTrue(addressBalance.isEmpty());
     }

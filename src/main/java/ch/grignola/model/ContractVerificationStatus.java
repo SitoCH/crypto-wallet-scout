@@ -4,10 +4,11 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class BannedContract {
+public class ContractVerificationStatus {
     private Long id;
     private Network network;
     private String contractId;
+    private Status status;
 
 
     @Id
@@ -37,6 +38,15 @@ public class BannedContract {
         this.contractId = contractId;
     }
 
+    @Enumerated(EnumType.STRING)
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -45,12 +55,16 @@ public class BannedContract {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        BannedContract that = (BannedContract) o;
-        return Objects.equals(id, that.id) && network == that.network && Objects.equals(contractId, that.contractId);
+        ContractVerificationStatus that = (ContractVerificationStatus) o;
+        return Objects.equals(id, that.id) && network == that.network && Objects.equals(contractId, that.contractId) && status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, network, contractId);
+        return Objects.hash(id, network, contractId, status);
+    }
+
+    public enum Status {
+        BANNED, VERIFIED, UNKNOWN
     }
 }

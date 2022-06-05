@@ -1,7 +1,5 @@
 package ch.grignola.service.scanner.optimism;
 
-import ch.grignola.model.BannedContract;
-import ch.grignola.model.Network;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.etherscan.AbstractEtherscanScanService;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenBalanceResult;
@@ -14,7 +12,6 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 
 import static ch.grignola.model.Network.OPTIMISM;
 import static io.github.bucket4j.Bandwidth.classic;
@@ -39,8 +36,8 @@ public class OptimismScanServiceImpl extends AbstractEtherscanScanService implem
 
     @Override
     @Timed(value = "addressBalance", extraTags = {"network", "OPTIMISM"})
-    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
-        return internalGetAddressBalance(address, bannedContracts);
+    public List<ScannerTokenBalance> getAddressBalance(String address) {
+        return internalGetAddressBalance(address);
     }
 
     @Override

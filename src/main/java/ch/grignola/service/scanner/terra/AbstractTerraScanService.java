@@ -1,7 +1,6 @@
 package ch.grignola.service.scanner.terra;
 
 import ch.grignola.model.Allocation;
-import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.repository.TerraTokenContractRepository;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
@@ -16,7 +15,10 @@ import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
 
 import static ch.grignola.model.Allocation.*;
 import static org.apache.commons.lang3.StringUtils.rightPad;
@@ -39,7 +41,7 @@ public abstract class AbstractTerraScanService {
     }
 
     @SuppressWarnings("java:S1172")
-    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
+    public List<ScannerTokenBalance> getAddressBalance(String address) {
         return getCache().get(address, x -> getBalances(address)).await().indefinitely();
     }
 

@@ -15,12 +15,14 @@ import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import static io.github.bucket4j.Bandwidth.classic;
 import static io.github.bucket4j.Refill.intervally;
+import static java.lang.String.join;
 import static java.time.Duration.ofMillis;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
@@ -29,6 +31,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @ApplicationScoped
 public class TokenProviderImpl implements TokenProvider {
     private static final Logger LOG = Logger.getLogger(TokenProviderImpl.class);
+    private final BlockingBucket bucket;
     @Inject
     @CacheName("token-provider-cache")
     Cache cache;
@@ -37,7 +40,6 @@ public class TokenProviderImpl implements TokenProvider {
     @Inject
     @RestClient
     CoingeckoRestClient coingeckoRestClient;
-    private final BlockingBucket bucket;
 
     TokenProviderImpl() {
         bucket = Bucket.builder()
@@ -137,13 +139,15 @@ public class TokenProviderImpl implements TokenProvider {
         List<String> ids = tokenRepository.streamAll()
                 .map(Token::getCoinGeckoId)
                 .filter(Objects::nonNull).toList();
-        String idsToFetch = String.join(",", ids);
+        String idsToFetch = join(",", ids);
         List<CoingeckoCoin> coins = getCoingeckoCoinList();
         LOG.infof("Token cache list refreshed, loaded %s coins", coins.size());
+        List<String> refreshedTokens = new ArrayList<>();
         getCoingeckoCoins(idsToFetch).forEach(x -> {
             cache.get(x.id, key -> x).await().indefinitely();
-            LOG.infof("Token cache refreshed for %s", x.name);
+            refreshedTokens.add(x.name);
         });
+        LOG.infof("Token cache refreshed for %s", join(", ", refreshedTokens));
     }
 
     private static class CachedCoinDetail {

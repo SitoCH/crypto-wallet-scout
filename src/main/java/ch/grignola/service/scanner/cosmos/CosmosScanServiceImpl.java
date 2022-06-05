@@ -1,7 +1,6 @@
 package ch.grignola.service.scanner.cosmos;
 
 import ch.grignola.model.Allocation;
-import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -13,7 +12,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static ch.grignola.model.Allocation.*;
 import static java.math.BigDecimal.ZERO;
@@ -34,7 +32,7 @@ public class CosmosScanServiceImpl implements CosmosScanService {
     }
 
     @Override
-    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
+    public List<ScannerTokenBalance> getAddressBalance(String address) {
         LOG.infof("Getting Cosmos balance for address %s", address);
 
         List<ScannerTokenBalance> balances = new ArrayList<>();

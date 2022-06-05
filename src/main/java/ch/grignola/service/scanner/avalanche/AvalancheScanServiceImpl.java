@@ -1,15 +1,11 @@
 package ch.grignola.service.scanner.avalanche;
 
-import ch.grignola.model.BannedContract;
-import ch.grignola.model.Network;
 import ch.grignola.service.scanner.bitquery.AbstractEthereumBitqueryScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import io.micrometer.core.annotation.Timed;
 
 import javax.enterprise.context.ApplicationScoped;
-
 import java.util.List;
-import java.util.Map;
 
 import static ch.grignola.model.Network.AVALANCHE;
 
@@ -22,7 +18,7 @@ public class AvalancheScanServiceImpl extends AbstractEthereumBitqueryScanServic
 
     @Override
     @Timed(value = "addressBalance", extraTags = {"network", "AVALANCHE"})
-    public List<ScannerTokenBalance> getAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
-        return internalGetAddressBalance(address, bannedContracts);
+    public List<ScannerTokenBalance> getAddressBalance(String address) {
+        return internalGetAddressBalance(address);
     }
 }

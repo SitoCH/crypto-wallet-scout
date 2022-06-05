@@ -1,7 +1,7 @@
 package ch.grignola.service.scanner.etherscan;
 
-import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
+import ch.grignola.service.scanner.common.AbstractScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenBalanceResult;
@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -25,11 +24,10 @@ import static ch.grignola.model.Allocation.LIQUID;
 import static java.lang.Integer.parseInt;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.apache.commons.lang3.StringUtils.rightPad;
 
 
-public abstract class AbstractEtherscanScanService implements ScanService {
+public abstract class AbstractEtherscanScanService extends AbstractScanService implements ScanService {
     private static final Logger LOG = Logger.getLogger(AbstractEtherscanScanService.class);
 
     protected final BlockingBucket bucket;
@@ -58,22 +56,20 @@ public abstract class AbstractEtherscanScanService implements ScanService {
         return true;
     }
 
-    protected List<ScannerTokenBalance> internalGetAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
-        return cache.get(network + "-" + address, x -> getBalancesFromEtherscan(address, bannedContracts)).await().indefinitely();
+    protected List<ScannerTokenBalance> internalGetAddressBalance(String address) {
+        return cache.get(network + "-" + address, x -> getBalancesFromEtherscan(address)).await().indefinitely();
     }
 
-    private List<ScannerTokenBalance> getBalancesFromEtherscan(String address, Map<Network, List<BannedContract>> bannedContracts) {
+    private List<ScannerTokenBalance> getBalancesFromEtherscan(String address) {
         try {
-            Set<String> filteredBannedContracts = bannedContracts.getOrDefault(network, emptyList()).stream()
-                    .map(BannedContract::getContractId)
-                    .collect(toUnmodifiableSet());
-
+            ContractStatus contractStatus = getContractStatus(network);
             Stream<ScannerTokenBalance> networkTokenBalance = Stream.of(getNetworkTokenBalanceAsTokenBalance(address));
             Stream<ScannerTokenBalance> tokenBalances = getTokenEvents(address).stream()
-                    .filter(x -> filterBannedContracts(filteredBannedContracts, address, x))
+                    .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
                     .filter(new DistinctByKey<EthereumTokenEventResult>(x -> x.contractAddress)::filterByKey)
                     .map(x -> {
                         try {
+                            checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress);
                             return toAddressBalance(address, x, getTokenBalance(address, x.contractAddress));
                         } catch (InterruptedException e) {
                             LOG.error("BlockingBucket exception", e);

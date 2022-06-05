@@ -1,11 +1,9 @@
 package ch.grignola.service.scanner.terra;
 
-import ch.grignola.model.Network;
 import ch.grignola.model.TerraTokenContract;
 import ch.grignola.repository.TerraTokenContractRepository;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.terra.client.TerraClassicRestClient;
-import ch.grignola.service.scanner.terra.client.TerraRestClient;
 import ch.grignola.service.scanner.terra.model.*;
 import io.quarkus.cache.CacheManager;
 import io.quarkus.test.junit.QuarkusTest;
@@ -21,7 +19,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static ch.grignola.model.Network.TERRA_CLASSIC;
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -84,7 +81,7 @@ class TerraClassicScanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = terraScanService.getAddressBalance(ADDRESS);
 
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).findByNetwork(any());
@@ -99,7 +96,7 @@ class TerraClassicScanServiceImplTest {
         when(terraRestClient.getBalances(ADDRESS))
                 .thenReturn(balance);
 
-        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS);
 
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).findByNetwork(any());
@@ -115,7 +112,7 @@ class TerraClassicScanServiceImplTest {
         when(terraRestClient.getBalances(ADDRESS))
                 .thenReturn(getBalancesResponse(10000000));
 
-        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS);
 
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).findByNetwork(any());
@@ -140,7 +137,7 @@ class TerraClassicScanServiceImplTest {
         when(terraRestClient.getRewards(ADDRESS))
                 .thenReturn(getRewardsResponse(100000));
 
-        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS);
 
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).findByNetwork(any());
@@ -211,7 +208,7 @@ class TerraClassicScanServiceImplTest {
         when(terraRestClient.getContractBalance(eq(terraTokenContract.getContractId()), anyString()))
                 .thenReturn(contractBalanceResponse);
 
-        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS);
 
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).findByNetwork(any());
@@ -234,7 +231,7 @@ class TerraClassicScanServiceImplTest {
         when(terraRestClient.getContractBalance(eq(terraTokenContract.getContractId()), anyString()))
                 .thenReturn(contractBalanceResponse);
 
-        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> result = terraScanService.getAddressBalance(ADDRESS);
 
         verify(terraRestClient).getBalances(ADDRESS);
         verify(terraTokenContractRepository).findByNetwork(any());

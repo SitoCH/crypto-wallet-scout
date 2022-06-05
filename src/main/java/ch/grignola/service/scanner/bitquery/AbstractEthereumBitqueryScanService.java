@@ -1,8 +1,8 @@
 package ch.grignola.service.scanner.bitquery;
 
-import ch.grignola.model.BannedContract;
 import ch.grignola.model.Network;
 import ch.grignola.service.scanner.bitquery.model.BitqueryEthereumBalance;
+import ch.grignola.service.scanner.common.AbstractScanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import org.jboss.logging.Logger;
@@ -11,21 +11,17 @@ import javax.inject.Inject;
 import javax.ws.rs.NotSupportedException;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static ch.grignola.model.Allocation.LIQUID;
 import static ch.grignola.model.Network.AVALANCHE;
 import static ch.grignola.model.Network.POLYGON;
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toUnmodifiableSet;
 
-public abstract class AbstractEthereumBitqueryScanService implements ScanService {
+public abstract class AbstractEthereumBitqueryScanService extends AbstractScanService implements ScanService {
 
     private static final Logger LOG = Logger.getLogger(AbstractEthereumBitqueryScanService.class);
 
     private final Network network;
-
     @Inject
     BitqueryClient bitqueryClient;
 
@@ -38,15 +34,16 @@ public abstract class AbstractEthereumBitqueryScanService implements ScanService
         return address.startsWith("0x") && address.length() == 42;
     }
 
-    protected List<ScannerTokenBalance> internalGetAddressBalance(String address, Map<Network, List<BannedContract>> bannedContracts) {
-        LOG.infof("Getting %s balance for address %s", network, address);
-        Set<String> filteredBannedContracts = bannedContracts.getOrDefault(network, emptyList()).stream()
-                .map(BannedContract::getContractId)
-                .collect(toUnmodifiableSet());
 
+    protected List<ScannerTokenBalance> internalGetAddressBalance(String address) {
+        LOG.infof("Getting %s balance for address %s", network, address);
+        ContractStatus contractStatus = getContractStatus(network);
         return bitqueryClient.getEthereumBalances(getBitqueryNetwork(network), address).stream()
-                .filter(x -> filterBannedContracts(filteredBannedContracts, address, x))
-                .map(x -> toAddressBalance(address, x))
+                .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
+                .map(x -> {
+                    checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.currency.address);
+                    return toAddressBalance(address, x);
+                })
                 .toList();
     }
 

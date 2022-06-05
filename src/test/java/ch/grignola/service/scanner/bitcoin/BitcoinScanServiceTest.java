@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,7 +33,7 @@ class BitcoinScanServiceTest {
 
     @Test
     void testGetBitcoinBalances() {
-        List<ScannerTokenBalance> balance = bitcoinScanService.getAddressBalance(ADDRESS, emptyMap());
+        List<ScannerTokenBalance> balance = bitcoinScanService.getAddressBalance(ADDRESS);
 
         verify(bitqueryClient).getBitcoinBalances(ADDRESS);
 
