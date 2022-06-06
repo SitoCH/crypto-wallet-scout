@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-06-06 07:09:55.
+// Generated using typescript-generator version 2.34.976 on 2022-06-06 21:56:24.
 
 export interface HistoricalAddressBalance {
     snapshots: { [index: string]: number };
@@ -48,36 +48,6 @@ export interface TokenBalance {
 export interface HttpClient {
 
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
-}
-
-export class AsynchronousDispatcherClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
-     */
-    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP POST /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
-     */
-    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP DELETE /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
-     */
-    remove(jobId: string): RestResponse<void> {
-        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
-    }
 }
 
 export class UserCollectionResourceClient {
@@ -134,31 +104,33 @@ export class UserCollectionResourceClient {
     }
 }
 
-export class ConfigurationResourceClient {
+export class AsynchronousDispatcherClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /public/api/configuration
-     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
+     * HTTP GET /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
      */
-    getConfiguration(): RestResponse<Configuration> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
-    }
-}
-
-export class TokenResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
+    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
     }
 
     /**
-     * HTTP GET /api/token/{id}
-     * Java method: ch.grignola.web.TokenResource.getToken
+     * HTTP POST /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
      */
-    getToken(id: string): RestResponse<TokenResult> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
+    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP DELETE /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
+     */
+    remove(jobId: string): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
     }
 }
 
@@ -189,6 +161,34 @@ export class AddressBalanceResourceClient {
      */
     getHistoricalAddressBalance(address: string): RestResponse<HistoricalAddressBalance> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}/balance/history` });
+    }
+}
+
+export class TokenResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/token/{id}
+     * Java method: ch.grignola.web.TokenResource.getToken
+     */
+    getToken(id: string): RestResponse<TokenResult> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
+    }
+}
+
+export class ConfigurationResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /public/api/configuration
+     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
+     */
+    getConfiguration(): RestResponse<Configuration> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
     }
 }
 
