@@ -3,6 +3,8 @@ package ch.grignola.service.scanner.bitcoin;
 import ch.grignola.service.scanner.bitquery.BitqueryClient;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
+import io.quarkus.cache.Cache;
+import io.quarkus.cache.CacheName;
 import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,6 +25,10 @@ public class BitcoinScanService implements ScanService {
     @Inject
     BitqueryClient bitqueryClient;
 
+    @Inject
+    @CacheName("bitcoin-cache")
+    Cache cache;
+
     @Override
     public boolean accept(String address) {
         return address.startsWith("bc") && address.length() == 42;
@@ -31,7 +37,7 @@ public class BitcoinScanService implements ScanService {
     @Override
     public List<ScannerTokenBalance> getAddressBalance(String address) {
         LOG.infof("Getting balance for address %s", address);
-        double balance = bitqueryClient.getBitcoinBalances(address);
+        double balance = cache.get(address, x -> bitqueryClient.getBitcoinBalances(address)).await().indefinitely();
         if (balance == 0) {
             return emptyList();
         }

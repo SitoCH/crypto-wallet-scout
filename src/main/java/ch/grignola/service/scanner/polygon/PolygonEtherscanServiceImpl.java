@@ -4,7 +4,8 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.etherscan.AbstractEtherscanScanService;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenEventResult;
-import io.github.bucket4j.Bucket;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.micrometer.core.annotation.Timed;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -14,9 +15,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static ch.grignola.model.Network.POLYGON;
-import static io.github.bucket4j.Bandwidth.classic;
-import static io.github.bucket4j.Refill.intervally;
-import static java.time.Duration.ofMillis;
+import static java.time.Duration.*;
 
 @ApplicationScoped
 public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService implements PolygonEtherscanService {
@@ -29,9 +28,11 @@ public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService im
     String apiKey;
 
     public PolygonEtherscanServiceImpl() {
-        super(POLYGON, Bucket.builder()
-                .addLimit(classic(4, intervally(4, ofMillis(1000))).withInitialTokens(0))
-                .build().asBlocking());
+        super(POLYGON, RateLimiter.of("PolygonEtherscanService", RateLimiterConfig.custom()
+                .timeoutDuration(ofSeconds(30))
+                .limitRefreshPeriod(ofMillis(2000))
+                .limitForPeriod(5)
+                .build()));
     }
 
     @Override
@@ -41,20 +42,20 @@ public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService im
     }
 
     @Override
-    protected EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress) throws InterruptedException {
-        bucket.consume(1);
+    protected EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress) {
+        rateLimiter.acquirePermission();
         return restClient.getTokenBalance(apiKey, "tokenbalance", address, contractAddress);
     }
 
     @Override
-    protected List<EthereumTokenEventResult> getTokenEvents(String address) throws InterruptedException {
-        bucket.consume(1);
+    protected List<EthereumTokenEventResult> getTokenEvents(String address) {
+        rateLimiter.acquirePermission();
         return restClient.getTokenEvents(apiKey, "tokentx", address).result;
     }
 
     @Override
-    protected NetworkTokenBalance getNetworkTokenBalance(String address) throws InterruptedException {
-        bucket.consume(1);
+    protected NetworkTokenBalance getNetworkTokenBalance(String address) {
+        rateLimiter.acquirePermission();
         EthereumTokenBalanceResult balance = restClient.getBalance(apiKey, "balance", address);
         return new NetworkTokenBalance(balance.result, "MATIC", 18);
     }

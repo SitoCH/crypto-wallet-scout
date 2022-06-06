@@ -7,8 +7,8 @@ import ch.grignola.service.token.model.CoingeckoCoin;
 import ch.grignola.service.token.model.CoingeckoCoinDetail;
 import ch.grignola.service.token.model.CoingeckoCoinMarket;
 import ch.grignola.service.token.model.TokenDetail;
-import io.github.bucket4j.BlockingBucket;
-import io.github.bucket4j.Bucket;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -25,11 +25,9 @@ import java.util.Optional;
 import static ch.grignola.model.Network.OPTIMISM;
 import static ch.grignola.model.Network.POLYGON;
 import static ch.grignola.service.token.TokenContractStatus.*;
-import static io.github.bucket4j.Bandwidth.classic;
-import static io.github.bucket4j.Refill.intervally;
 import static java.lang.String.join;
 import static java.time.Duration.ofMillis;
-import static java.util.Collections.emptyList;
+import static java.time.Duration.ofSeconds;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -38,7 +36,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @ApplicationScoped
 public class TokenProviderImpl implements TokenProvider {
     private static final Logger LOG = Logger.getLogger(TokenProviderImpl.class);
-    private final BlockingBucket bucket;
+    private final RateLimiter rateLimiter;
     @Inject
     @CacheName("token-provider-cache")
     Cache cache;
@@ -49,9 +47,11 @@ public class TokenProviderImpl implements TokenProvider {
     CoingeckoRestClient coingeckoRestClient;
 
     TokenProviderImpl() {
-        bucket = Bucket.builder()
-                .addLimit(classic(8, intervally(8, ofMillis(1500))))
-                .build().asBlocking();
+        rateLimiter = RateLimiter.of("TokenProvider", RateLimiterConfig.custom()
+                .timeoutDuration(ofSeconds(10))
+                .limitRefreshPeriod(ofMillis(1500))
+                .limitForPeriod(8)
+                .build());
     }
 
     private Token createNewToken(String symbol) {
@@ -80,15 +80,9 @@ public class TokenProviderImpl implements TokenProvider {
 
     private CachedCoinDetail getCoingeckoCoin(String coinGeckoId) {
         return cache.get(coinGeckoId, key -> {
-            try {
-                bucket.consume(1);
-                LOG.infof("Load %s from Coingecko", key);
-                return new CachedCoinDetail(coingeckoRestClient.get(key));
-            } catch (InterruptedException e) {
-                LOG.warnf("Unable to load coin %s from Coingecko", coinGeckoId);
-                Thread.currentThread().interrupt();
-                return null;
-            }
+            rateLimiter.acquirePermission();
+            LOG.infof("Load %s from Coingecko", key);
+            return new CachedCoinDetail(coingeckoRestClient.get(key));
         }).await().indefinitely();
     }
 
@@ -106,15 +100,9 @@ public class TokenProviderImpl implements TokenProvider {
 
     private List<CoingeckoCoin> getCoingeckoCoinList() {
         return cache.get("full-coins-list", key -> {
-            try {
-                LOG.info("Load coins list from Coingecko");
-                bucket.consume(1);
-                return coingeckoRestClient.getCoins();
-            } catch (InterruptedException e) {
-                LOG.warnf("Unable to load coins from Coingecko");
-                Thread.currentThread().interrupt();
-                return null;
-            }
+            LOG.info("Load coins list from Coingecko");
+            rateLimiter.acquirePermission();
+            return coingeckoRestClient.getCoins();
         }).await().indefinitely();
     }
 
@@ -129,15 +117,9 @@ public class TokenProviderImpl implements TokenProvider {
     }
 
     private List<CachedCoinDetail> getCoingeckoCoins(String coinGeckoIds) {
-        try {
-            bucket.consume(1);
-            return coingeckoRestClient.markets("usd", coinGeckoIds, "1000", "1", "false", "24h,7d,30d,200d")
-                    .stream().map(CachedCoinDetail::new).toList();
-        } catch (InterruptedException e) {
-            LOG.warnf("Unable to load coins %s from Coingecko", coinGeckoIds);
-            Thread.currentThread().interrupt();
-            return emptyList();
-        }
+        rateLimiter.acquirePermission();
+        return coingeckoRestClient.markets("usd", coinGeckoIds, "1000", "1", "false", "24h,7d,30d,200d")
+                .stream().map(CachedCoinDetail::new).toList();
     }
 
     @Override
@@ -171,16 +153,13 @@ public class TokenProviderImpl implements TokenProvider {
 
     public TokenContract getContract(Network network, String contractAddress) {
         try {
-            bucket.consume(1);
+            rateLimiter.acquirePermission();
             return getPlatformId(network)
                     .map(platformId -> coingeckoRestClient.getContract(platformId, contractAddress))
                     .map(contract -> new TokenContract(contract.name, contract.liquidityScore == 0 ? BANNED : VERIFIED))
                     .orElse(new TokenContract("", PLATFORM_NOT_FOUND));
         } catch (WebApplicationException e) {
             return new TokenContract("", CONTRACT_NOT_FOUND);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            return new TokenContract("", PLATFORM_NOT_FOUND);
         }
     }
 

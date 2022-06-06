@@ -7,7 +7,7 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenEventResult;
 import ch.grignola.utils.DistinctByKey;
-import io.github.bucket4j.BlockingBucket;
+import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import org.jboss.logging.Logger;
@@ -22,15 +22,13 @@ import java.util.stream.Stream;
 
 import static ch.grignola.model.Allocation.LIQUID;
 import static java.lang.Integer.parseInt;
-import static java.math.BigDecimal.ZERO;
-import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.rightPad;
 
 
 public abstract class AbstractEtherscanScanService extends AbstractScanService implements ScanService {
     private static final Logger LOG = Logger.getLogger(AbstractEtherscanScanService.class);
 
-    protected final BlockingBucket bucket;
+    protected final RateLimiter rateLimiter;
 
     private final Network network;
 
@@ -38,9 +36,9 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
     @CacheName("etherscan-cache")
     Cache cache;
 
-    protected AbstractEtherscanScanService(Network network, BlockingBucket bucket) {
+    protected AbstractEtherscanScanService(Network network, RateLimiter rateLimiter) {
         this.network = network;
-        this.bucket = bucket;
+        this.rateLimiter = rateLimiter;
     }
 
     @Override
@@ -61,30 +59,18 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
     }
 
     private List<ScannerTokenBalance> getBalancesFromEtherscan(String address) {
-        try {
-            ContractStatus contractStatus = getContractStatus(network);
-            Stream<ScannerTokenBalance> networkTokenBalance = Stream.of(getNetworkTokenBalanceAsTokenBalance(address));
-            Stream<ScannerTokenBalance> tokenBalances = getTokenEvents(address).stream()
-                    .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
-                    .filter(new DistinctByKey<EthereumTokenEventResult>(x -> x.contractAddress)::filterByKey)
-                    .map(x -> {
-                        try {
-                            checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress);
-                            return toAddressBalance(address, x, getTokenBalance(address, x.contractAddress));
-                        } catch (InterruptedException e) {
-                            LOG.error("BlockingBucket exception", e);
-                            Thread.currentThread().interrupt();
-                            return new ScannerTokenBalance(network, LIQUID, ZERO, "ERR");
-                        }
-                    });
-            return Stream.concat(networkTokenBalance, tokenBalances)
-                    .filter(x -> x.nativeValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
-                    .toList();
-        } catch (InterruptedException e) {
-            LOG.error("BlockingBucket exception", e);
-            Thread.currentThread().interrupt();
-            return emptyList();
-        }
+        ContractStatus contractStatus = getContractStatus(network);
+        Stream<ScannerTokenBalance> networkTokenBalance = Stream.of(getNetworkTokenBalanceAsTokenBalance(address));
+        Stream<ScannerTokenBalance> tokenBalances = getTokenEvents(address).stream()
+                .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
+                .filter(new DistinctByKey<EthereumTokenEventResult>(x -> x.contractAddress)::filterByKey)
+                .map(x -> {
+                    checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress);
+                    return toAddressBalance(address, x, getTokenBalance(address, x.contractAddress));
+                });
+        return Stream.concat(networkTokenBalance, tokenBalances)
+                .filter(x -> x.nativeValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
+                .toList();
     }
 
     private ScannerTokenBalance toAddressBalance(String address, EthereumTokenEventResult tokenEvent, EthereumTokenBalanceResult tokenBalance) {
@@ -93,17 +79,17 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
         return new ScannerTokenBalance(network, LIQUID, nativeValue, tokenEvent.tokenSymbol);
     }
 
-    protected abstract EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress) throws InterruptedException;
+    protected abstract EthereumTokenBalanceResult getTokenBalance(String address, String contractAddress);
 
-    protected abstract List<EthereumTokenEventResult> getTokenEvents(String address) throws InterruptedException;
+    protected abstract List<EthereumTokenEventResult> getTokenEvents(String address);
 
-    private ScannerTokenBalance getNetworkTokenBalanceAsTokenBalance(String address) throws InterruptedException {
+    private ScannerTokenBalance getNetworkTokenBalanceAsTokenBalance(String address) {
         NetworkTokenBalance balance = getNetworkTokenBalance(address);
         BigDecimal nativeValue = new BigDecimal(balance.nativeValue).divide(new BigDecimal(rightPad("1", balance.tokenDecimals + 1, '0')), MathContext.DECIMAL64);
         return new ScannerTokenBalance(network, LIQUID, nativeValue, balance.tokenSymbol);
     }
 
-    protected abstract NetworkTokenBalance getNetworkTokenBalance(String address) throws InterruptedException;
+    protected abstract NetworkTokenBalance getNetworkTokenBalance(String address);
 
     public record NetworkTokenBalance(BigInteger nativeValue, String tokenSymbol, int tokenDecimals) {
 

@@ -3,8 +3,8 @@ package ch.grignola.service.scanner.bitquery;
 import ch.grignola.service.scanner.bitquery.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bucket4j.BlockingBucket;
-import io.github.bucket4j.Bucket;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import io.smallrye.graphql.client.GraphQLClient;
@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static io.github.bucket4j.Bandwidth.classic;
-import static io.github.bucket4j.Refill.intervally;
 import static io.smallrye.graphql.client.core.Argument.arg;
 import static io.smallrye.graphql.client.core.Argument.args;
 import static io.smallrye.graphql.client.core.Document.document;
@@ -29,7 +27,7 @@ import static io.smallrye.graphql.client.core.Field.field;
 import static io.smallrye.graphql.client.core.InputObject.inputObject;
 import static io.smallrye.graphql.client.core.InputObjectField.prop;
 import static io.smallrye.graphql.client.core.Operation.operation;
-import static java.time.Duration.ofMinutes;
+import static java.time.Duration.*;
 
 @ApplicationScoped
 public class BitqueryClientImpl implements BitqueryClient {
@@ -38,7 +36,7 @@ public class BitqueryClientImpl implements BitqueryClient {
     private static final String ADDRESS = "address";
     private static final String VALUE = "value";
 
-    private final BlockingBucket bucket;
+    private final RateLimiter rateLimiter;
     @Inject
     @GraphQLClient("bitquery")
     DynamicGraphQLClient dynamicClient;
@@ -47,9 +45,11 @@ public class BitqueryClientImpl implements BitqueryClient {
     Cache cache;
 
     public BitqueryClientImpl() {
-        bucket = Bucket.builder()
-                .addLimit(classic(10, intervally(10, ofMinutes(1))))
-                .build().asBlocking();
+        rateLimiter = RateLimiter.of("BitqueryClient", RateLimiterConfig.custom()
+                .timeoutDuration(ofSeconds(10))
+                .limitRefreshPeriod(ofMinutes(1))
+                .limitForPeriod(10)
+                .build());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class BitqueryClientImpl implements BitqueryClient {
         );
 
         JsonObject data = dynamicClient.executeSync(bitcoinDocument).getData();
-        bucket.consume(1);
+        rateLimiter.acquirePermission();
         BitqueryBitcoinBalance bitcoinResponse = new ObjectMapper().readValue(data.toString(), BitqueryBitcoinBalance.class);
         return getTotalBitcoins(bitcoinResponse.bitcoin);
     }
@@ -132,7 +132,7 @@ public class BitqueryClientImpl implements BitqueryClient {
         );
 
         JsonObject data = dynamicClient.executeSync(ethereumDocument).getData();
-        bucket.consume(1);
+        rateLimiter.acquirePermission();
         BitqueryEthereumResponse ethereumBalance = new ObjectMapper().readValue(data.toString(), BitqueryEthereumResponse.class);
         return ethereumBalance.ethereum.address.stream()
                 .filter(x -> x.balances != null)
