@@ -30,7 +30,7 @@ public class AvalancheEtherscanServiceImpl extends AbstractEtherscanScanService 
 
     public AvalancheEtherscanServiceImpl() {
         super(AVALANCHE, Bucket.builder()
-                .addLimit(classic(4, intervally(4, ofMillis(1000))).withInitialTokens(0))
+                .addLimit(classic(2, intervally(2, ofMillis(1000))).withInitialTokens(0))
                 .build().asBlocking());
     }
 
