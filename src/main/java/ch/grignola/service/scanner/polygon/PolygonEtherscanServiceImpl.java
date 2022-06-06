@@ -30,8 +30,8 @@ public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService im
     public PolygonEtherscanServiceImpl() {
         super(POLYGON, RateLimiter.of("PolygonEtherscanService", RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(30))
-                .limitRefreshPeriod(ofMillis(2000))
-                .limitForPeriod(5)
+                .limitRefreshPeriod(ofMillis(1750))
+                .limitForPeriod(4)
                 .build()));
     }
 
