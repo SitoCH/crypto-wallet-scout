@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import io.smallrye.graphql.client.GraphQLClient;
@@ -27,7 +28,8 @@ import static io.smallrye.graphql.client.core.Field.field;
 import static io.smallrye.graphql.client.core.InputObject.inputObject;
 import static io.smallrye.graphql.client.core.InputObjectField.prop;
 import static io.smallrye.graphql.client.core.Operation.operation;
-import static java.time.Duration.*;
+import static java.time.Duration.ofMinutes;
+import static java.time.Duration.ofSeconds;
 
 @ApplicationScoped
 public class BitqueryClientImpl implements BitqueryClient {
@@ -45,11 +47,11 @@ public class BitqueryClientImpl implements BitqueryClient {
     Cache cache;
 
     public BitqueryClientImpl() {
-        rateLimiter = RateLimiter.of("BitqueryClient", RateLimiterConfig.custom()
+        rateLimiter = RateLimiterRegistry.of(RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(10))
                 .limitRefreshPeriod(ofMinutes(1))
                 .limitForPeriod(10)
-                .build());
+                .build()).rateLimiter("BitqueryClient");
     }
 
     @Override

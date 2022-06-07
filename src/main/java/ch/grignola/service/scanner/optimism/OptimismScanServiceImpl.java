@@ -4,8 +4,8 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.etherscan.AbstractEtherscanScanService;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenEventResult;
-import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.micrometer.core.annotation.Timed;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -15,7 +15,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static ch.grignola.model.Network.OPTIMISM;
-import static java.time.Duration.*;
+import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofSeconds;
 
 @ApplicationScoped
 public class OptimismScanServiceImpl extends AbstractEtherscanScanService implements OptimismScanService {
@@ -28,11 +29,11 @@ public class OptimismScanServiceImpl extends AbstractEtherscanScanService implem
     String apiKey;
 
     public OptimismScanServiceImpl() {
-        super(OPTIMISM, RateLimiter.of("OptimismScanService", RateLimiterConfig.custom()
+        super(OPTIMISM, RateLimiterRegistry.of(RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(30))
-                .limitRefreshPeriod(ofMillis(1750))
+                .limitRefreshPeriod(ofMillis(1250))
                 .limitForPeriod(4)
-                .build()));
+                .build()).rateLimiter("OptimismScanService"));
     }
 
     @Override

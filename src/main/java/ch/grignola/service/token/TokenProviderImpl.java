@@ -9,6 +9,7 @@ import ch.grignola.service.token.model.CoingeckoCoinMarket;
 import ch.grignola.service.token.model.TokenDetail;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -47,11 +48,11 @@ public class TokenProviderImpl implements TokenProvider {
     CoingeckoRestClient coingeckoRestClient;
 
     TokenProviderImpl() {
-        rateLimiter = RateLimiter.of("TokenProvider", RateLimiterConfig.custom()
+        rateLimiter = RateLimiterRegistry.of(RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(10))
                 .limitRefreshPeriod(ofMillis(1500))
                 .limitForPeriod(8)
-                .build());
+                .build()).rateLimiter("TokenProvider");
     }
 
     private Token createNewToken(String symbol) {
