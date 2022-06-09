@@ -5,11 +5,28 @@
   </div>
 </div>
 
-<app-token-balance-overview [tokens]="addressBalance!"></app-token-balance-overview>
+<div class="row" *ngIf="hasError; else noError">
+  <div class="col-md-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="alert alert-warning" role="alert">
+          <fa-icon icon="exclamation-triangle"></fa-icon>
+          Failed to load balance
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<app-address-historical-balance [address]="address"
-                                [currentUsdValue]="currentUsdValue"></app-address-historical-balance>
+<ng-template #noError>
+  <app-token-balance-overview [tokens]="addressBalance!"></app-token-balance-overview>
 
-<app-token-balance-charts [tokens]="addressBalance!"></app-token-balance-charts>
+  <app-address-historical-balance [address]="address"
+                                  [currentUsdValue]="currentUsdValue"></app-address-historical-balance>
 
-<app-token-balance [tokens]="addressBalance!"></app-token-balance>
+  <app-token-balance-charts [tokens]="addressBalance!"></app-token-balance-charts>
+
+  <app-token-balance [tokens]="addressBalance!"></app-token-balance>
+</ng-template>
+
+

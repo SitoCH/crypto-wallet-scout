@@ -6,5 +6,5 @@ public interface AddressBalanceChecker {
 
     List<TokenBalance> getBalance(String address);
 
-    List<TokenBalance> getBalances(List<String> addresses);
+    TokenBalances getBalances(List<String> addresses);
 }

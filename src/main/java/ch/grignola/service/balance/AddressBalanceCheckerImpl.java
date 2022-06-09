@@ -20,7 +20,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Comparator.comparing;
@@ -69,11 +71,20 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
 
     @Override
     @Transactional
-    public List<TokenBalance> getBalances(List<String> addresses) {
+    public TokenBalances getBalances(List<String> addresses) {
+        List<TokenBalances.TokenBalanceError> errors = new ArrayList<>();
         List<ScannerTokenBalance> rawBalances = addresses.stream()
-                .flatMap(x -> getBalancesFromScanServices(x).stream())
+                .flatMap(address -> {
+                    try {
+                        return getBalancesFromScanServices(address).stream();
+                    } catch (Exception ex) {
+                        LOG.errorf(ex, "Error on balance check for address %s", address);
+                        errors.add(new TokenBalances.TokenBalanceError(address, ex.getMessage()));
+                        return Stream.empty();
+                    }
+                })
                 .toList();
-        return getTokenBalances(rawBalances);
+        return new TokenBalances(getTokenBalances(rawBalances), errors);
     }
 
     @Override

@@ -15,6 +15,7 @@ export class UserCollectionAddressDetailComponent implements OnInit {
 
   addressBalance: TokenBalance[] | null = null;
   currentUsdValue: number | undefined = undefined;
+  hasError = false;
 
   constructor(private addressService: AddressBalanceService,
               private route: ActivatedRoute) {
@@ -30,13 +31,17 @@ export class UserCollectionAddressDetailComponent implements OnInit {
   }
 
   private loadBalance() {
+    this.hasError = false;
     this.addressBalance = null;
     this.addressService.getAddressBalance(this.address)
       .then(tokenBalances => {
-        this.addressBalance = tokenBalances;
-        this.currentUsdValue = tokenBalances
-          .map(x => x.usdValue)
-          .reduce((a, b) => a + b);
-      })
+          this.addressBalance = tokenBalances;
+          this.currentUsdValue = tokenBalances
+            .map(x => x.usdValue)
+            .reduce((a, b) => a + b);
+        },
+        () => {
+          this.hasError = true;
+        });
   }
 }

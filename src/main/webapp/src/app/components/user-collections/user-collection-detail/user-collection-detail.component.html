@@ -5,6 +5,19 @@
   </div>
 </div>
 
+<div class="row" *ngIf="errors.length > 0">
+  <div class="col-md-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <div class="alert alert-warning" role="alert" *ngFor="let error of errors">
+          <fa-icon icon="exclamation-triangle"></fa-icon> Failed to load balance for address {{error.address}}
+          : {{error.error}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <app-token-balance-overview [tokens]="aggregatedTokenBalances!"></app-token-balance-overview>
 
 <app-user-collection-historical-balance [collectionId]="id"
