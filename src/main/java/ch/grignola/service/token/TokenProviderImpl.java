@@ -27,7 +27,7 @@ import static ch.grignola.model.Network.OPTIMISM;
 import static ch.grignola.model.Network.POLYGON;
 import static ch.grignola.service.token.TokenContractStatus.*;
 import static java.lang.String.join;
-import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofMinutes;
 import static java.time.Duration.ofSeconds;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
@@ -50,8 +50,8 @@ public class TokenProviderImpl implements TokenProvider {
     TokenProviderImpl() {
         rateLimiter = RateLimiterRegistry.of(RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(10))
-                .limitRefreshPeriod(ofMillis(1500))
-                .limitForPeriod(8)
+                .limitRefreshPeriod(ofMinutes(1))
+                .limitForPeriod(50)
                 .build()).rateLimiter("TokenProvider");
     }
 

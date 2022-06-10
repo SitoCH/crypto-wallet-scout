@@ -5,8 +5,8 @@ import ch.grignola.service.scanner.solana.model.SolanaNativeBalance;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import static ch.grignola.model.Network.SOLANA;
 import static java.math.BigDecimal.ZERO;
 import static org.apache.commons.lang3.StringUtils.rightPad;
 
-@ApplicationScoped
+@Singleton
 public class SolanaScanServiceImpl implements SolanaScanService {
 
     private static final Logger LOG = Logger.getLogger(SolanaScanServiceImpl.class);

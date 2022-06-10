@@ -6,8 +6,8 @@ import ch.grignola.service.scanner.polkadot.common.PolkadotBalanceResponse;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import static ch.grignola.model.Allocation.STACKED;
 import static ch.grignola.model.Network.POLKADOT;
 import static java.math.BigDecimal.ZERO;
 
-@ApplicationScoped
+@Singleton
 public class PolkadotScanServiceImpl implements PolkadotScanService {
 
     private static final Logger LOG = Logger.getLogger(PolkadotScanServiceImpl.class);

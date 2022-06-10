@@ -10,15 +10,15 @@ import io.micrometer.core.annotation.Timed;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 import static ch.grignola.model.Network.POLYGON;
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
 
-@ApplicationScoped
+@Singleton
 public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService implements PolygonEtherscanService {
 
     @Inject
@@ -31,7 +31,7 @@ public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService im
     public PolygonEtherscanServiceImpl() {
         super(POLYGON, RateLimiterRegistry.of(RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(30))
-                .limitRefreshPeriod(ofMillis(1500))
+                .limitRefreshPeriod(ofMillis(1750))
                 .limitForPeriod(4)
                 .build()).rateLimiter("PolygonEtherscanService"));
     }

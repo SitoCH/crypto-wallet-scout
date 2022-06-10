@@ -7,8 +7,8 @@ import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheName;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import static ch.grignola.model.Network.BITCOIN;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
-@ApplicationScoped
+@Singleton
 public class BitcoinScanService implements ScanService {
 
     private static final Logger LOG = Logger.getLogger(BitcoinScanService.class);

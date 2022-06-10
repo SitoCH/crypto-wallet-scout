@@ -8,10 +8,10 @@ import io.quarkus.cache.CacheName;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@ApplicationScoped
+@Singleton
 public class TerraClassicScanServiceImpl extends AbstractTerraScanService implements TerraClassicScanService {
 
     private static final Logger LOG = Logger.getLogger(TerraClassicScanServiceImpl.class);

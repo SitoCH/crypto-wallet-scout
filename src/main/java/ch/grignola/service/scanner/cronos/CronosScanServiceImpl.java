@@ -7,8 +7,8 @@ import ch.grignola.service.scanner.cronos.model.CronosBalanceResult;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.List;
 import static ch.grignola.model.Allocation.*;
 import static java.math.BigDecimal.ZERO;
 
-@ApplicationScoped
+@Singleton
 public class CronosScanServiceImpl implements CronosScanService {
 
     private static final Logger LOG = Logger.getLogger(CronosScanServiceImpl.class);

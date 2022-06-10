@@ -10,15 +10,15 @@ import io.micrometer.core.annotation.Timed;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.List;
 
 import static ch.grignola.model.Network.OPTIMISM;
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
 
-@ApplicationScoped
+@Singleton
 public class OptimismScanServiceImpl extends AbstractEtherscanScanService implements OptimismScanService {
 
     @Inject
@@ -31,7 +31,7 @@ public class OptimismScanServiceImpl extends AbstractEtherscanScanService implem
     public OptimismScanServiceImpl() {
         super(OPTIMISM, RateLimiterRegistry.of(RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(30))
-                .limitRefreshPeriod(ofMillis(1500))
+                .limitRefreshPeriod(ofMillis(1750))
                 .limitForPeriod(4)
                 .build()).rateLimiter("OptimismScanService"));
     }
