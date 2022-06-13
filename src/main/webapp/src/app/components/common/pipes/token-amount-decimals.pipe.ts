@@ -11,6 +11,10 @@ export class TokenAmountDecimalsPipe implements PipeTransform {
 
   transform(value: number, tokenUsdValue: number): unknown {
     if (tokenUsdValue > 10000) {
+      return this.decimalPipe.transform(value, '1.8-8');
+    }
+
+    if (tokenUsdValue > 1000) {
       return this.decimalPipe.transform(value, '1.6-6');
     }
 
