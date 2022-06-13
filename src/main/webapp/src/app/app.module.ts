@@ -41,9 +41,12 @@ import {
 import {
   AddressHistoricalBalanceComponent
 } from "./components/user-collections/common/address-historical-balance/address-historical-balance.component";
-import { TokenUsdValuePipe } from './components/common/pipes/token-usd-value.pipe';
+import { TokenUsdDecimalsPipe } from './components/common/pipes/token-usd-decimals.pipe';
 import { DecimalPipe } from "@angular/common";
-import { TokenGroupingToggleComponent } from './components/user-collections/common/token-grouping-toggle/token-grouping-toggle.component';
+import {
+  TokenGroupingToggleComponent
+} from './components/user-collections/common/token-grouping-toggle/token-grouping-toggle.component';
+import { TokenAmountDecimalsPipe } from './components/common/pipes/token-amount-decimals.pipe';
 
 @NgModule({
   declarations: [
@@ -64,8 +67,9 @@ import { TokenGroupingToggleComponent } from './components/user-collections/comm
     HistoricalBalanceComponent,
     AddressHistoricalBalanceComponent,
     TokenBalanceChartsComponent,
-    TokenUsdValuePipe,
-    TokenGroupingToggleComponent
+    TokenUsdDecimalsPipe,
+    TokenGroupingToggleComponent,
+    TokenAmountDecimalsPipe
   ],
   imports: [
     BrowserModule,

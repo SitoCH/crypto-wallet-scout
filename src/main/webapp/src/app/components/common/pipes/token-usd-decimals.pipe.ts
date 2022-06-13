@@ -2,14 +2,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DecimalPipe } from "@angular/common";
 
 @Pipe({
-  name: 'tokenUsdValue'
+  name: 'tokenUsdDecimals'
 })
-export class TokenUsdValuePipe implements PipeTransform {
+export class TokenUsdDecimalsPipe implements PipeTransform {
 
   constructor(private decimalPipe: DecimalPipe) {
   }
 
-  transform(value: number, ...args: unknown[]): unknown {
+  transform(value: number): unknown {
     if (value > 0 && value < 0.99) {
       return this.decimalPipe.transform(value, '1.4-4');
     }
