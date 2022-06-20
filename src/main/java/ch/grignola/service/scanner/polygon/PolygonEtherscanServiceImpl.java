@@ -4,8 +4,8 @@ import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.etherscan.AbstractEtherscanScanService;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenBalanceResult;
 import ch.grignola.service.scanner.etherscan.model.EthereumTokenEventResult;
+import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
-import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import io.micrometer.core.annotation.Timed;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -29,11 +29,11 @@ public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService im
     String apiKey;
 
     public PolygonEtherscanServiceImpl() {
-        super(POLYGON, RateLimiterRegistry.of(RateLimiterConfig.custom()
+        super(POLYGON, RateLimiter.of("PolygonEtherscanService", RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(30))
                 .limitRefreshPeriod(ofMillis(2000))
-                .limitForPeriod(4)
-                .build()).rateLimiter("PolygonEtherscanService"));
+                .limitForPeriod(5)
+                .build()));
     }
 
     @Override
