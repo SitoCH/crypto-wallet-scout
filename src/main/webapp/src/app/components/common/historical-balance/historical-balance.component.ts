@@ -1,17 +1,14 @@
 import { Component, Inject, Input, LOCALE_ID, OnChanges, SimpleChanges } from '@angular/core';
 import { ChartConfiguration } from "chart.js";
 import { formatDate } from "@angular/common";
-import { BehaviorSubject, combineLatest, map, Observable } from "rxjs";
-import { ToggleIncludeLotsInHistoricalBalances } from "../../../state/application.state";
-import { Store } from "@ngxs/store";
-
-enum HistoricalChartRange {
-  THREE_DAYS = 'THREE_DAYS',
-  SEVEN_DAYS = 'SEVEN_DAYS',
-  FOURTEEN_DAYS = 'FOURTEEN_DAYS',
-  THIRTY_DAYS = 'THIRTY_DAYS',
-  NINETY_DAYS = 'NINETY_DAYS',
-}
+import { combineLatest, map, Observable } from "rxjs";
+import {
+  ApplicationState,
+  HistoricalChartRange,
+  SetHistoricalBalancesRange,
+  ToggleIncludeLotsInHistoricalBalances
+} from "../../../state/application.state";
+import { Select, Store } from "@ngxs/store";
 
 @Component({
   selector: 'app-historical-balance',
@@ -25,7 +22,8 @@ export class HistoricalBalanceComponent implements OnChanges {
   @Input()
   balances$?: Observable<{ [index: string]: number }>;
 
-  historicalChartRange$ = new BehaviorSubject(HistoricalChartRange.SEVEN_DAYS);
+  @Select(ApplicationState.getHistoricalBalancesRange)
+  historicalChartRange$!: Observable<HistoricalChartRange>;
 
   lineChartData$?: Observable<ChartConfiguration['data']>;
 
@@ -121,7 +119,7 @@ export class HistoricalBalanceComponent implements OnChanges {
   }
 
   onRangeChange(value: HistoricalChartRange) {
-    this.historicalChartRange$.next(value);
+    this.store.dispatch(new SetHistoricalBalancesRange(value));
   }
 
   onIncludeLotsChange() {

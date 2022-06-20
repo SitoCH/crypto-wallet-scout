@@ -13,9 +13,8 @@ import { GetUserCollections } from "./state/user-collections.state";
 })
 export class AppComponent implements OnInit {
 
-  @Select(ApplicationState.isSidebarClosed) isSidebarClosed$!: Observable<boolean>;
-
-  isSidebarClosed = false;
+  @Select(ApplicationState.isSidebarClosed)
+  isSidebarClosed$!: Observable<boolean>;
 
   constructor(private oidcSecurityService: OidcSecurityService,
               private store: Store) {
@@ -28,7 +27,6 @@ export class AppComponent implements OnInit {
     });
 
     this.isSidebarClosed$.subscribe(isSidebarClosed => {
-      this.isSidebarClosed = isSidebarClosed;
       const bodyTag = document.body;
       if (isSidebarClosed) {
         bodyTag.classList.remove('collapsed');
@@ -39,7 +37,8 @@ export class AppComponent implements OnInit {
   }
 
   closeSidebarIfNeeded($event: MouseEvent) {
-    if (!this.isSidebarClosed) {
+
+    if (!this.store.selectSnapshot(ApplicationState.isSidebarClosed)) {
       this.store.dispatch(new ToggleSidebar());
       $event.stopPropagation();
     }
