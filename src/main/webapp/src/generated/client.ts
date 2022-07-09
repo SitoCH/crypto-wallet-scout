@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-07-09 11:53:27.
+// Generated using typescript-generator version 2.34.976 on 2022-07-09 17:13:43.
 
 export interface HistoricalAddressBalance {
     snapshots: { [index: string]: number };
@@ -58,6 +58,74 @@ export interface TokenBalanceError {
 export interface HttpClient {
 
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
+}
+
+export class TokenResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/token/{id}
+     * Java method: ch.grignola.web.TokenResource.getToken
+     */
+    getToken(id: string): RestResponse<TokenResult> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
+    }
+}
+
+export class UserCollectionResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/collection
+     * Java method: ch.grignola.web.UserCollectionResource.getUserCollections
+     */
+    getUserCollections(): RestResponse<UserCollectionSummary[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection` });
+    }
+
+    /**
+     * HTTP POST /api/collection
+     * Java method: ch.grignola.web.UserCollectionResource.newUserCollection
+     */
+    newUserCollection(newUserCollection: NewUserCollection): RestResponse<UserCollectionSummary> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/collection`, data: newUserCollection });
+    }
+
+    /**
+     * HTTP POST /api/collection/{collectionId}/add/{address}
+     * Java method: ch.grignola.web.UserCollectionResource.addAddress
+     */
+    addAddress(collectionId: number, address: string): RestResponse<void> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`api/collection/${collectionId}/add/${address}` });
+    }
+
+    /**
+     * HTTP GET /api/collection/{collectionId}/balance
+     * Java method: ch.grignola.web.UserCollectionResource.getAddressBalance
+     */
+    getAddressBalance(collectionId: number): RestResponse<TokenBalances> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance` });
+    }
+
+    /**
+     * HTTP GET /api/collection/{collectionId}/balance-with-lots/history
+     * Java method: ch.grignola.web.UserCollectionResource.getHistoricalCollectionBalanceWithLots
+     */
+    getHistoricalCollectionBalanceWithLots(collectionId: number): RestResponse<HistoricalAddressBalanceWithLots> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance-with-lots/history` });
+    }
+
+    /**
+     * HTTP GET /api/collection/{collectionId}/balance/history
+     * Java method: ch.grignola.web.UserCollectionResource.getHistoricalCollectionBalance
+     */
+    getHistoricalCollectionBalance(collectionId: number): RestResponse<HistoricalAddressBalance> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance/history` });
+    }
 }
 
 export class ConfigurationResourceClient {
@@ -131,74 +199,6 @@ export class AsynchronousDispatcherClient {
      */
     remove(jobId: string): RestResponse<void> {
         return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
-    }
-}
-
-export class UserCollectionResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/collection
-     * Java method: ch.grignola.web.UserCollectionResource.getUserCollections
-     */
-    getUserCollections(): RestResponse<UserCollectionSummary[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection` });
-    }
-
-    /**
-     * HTTP POST /api/collection
-     * Java method: ch.grignola.web.UserCollectionResource.newUserCollection
-     */
-    newUserCollection(newUserCollection: NewUserCollection): RestResponse<UserCollectionSummary> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/collection`, data: newUserCollection });
-    }
-
-    /**
-     * HTTP POST /api/collection/{collectionId}/add/{address}
-     * Java method: ch.grignola.web.UserCollectionResource.addAddress
-     */
-    addAddress(collectionId: number, address: string): RestResponse<void> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`api/collection/${collectionId}/add/${address}` });
-    }
-
-    /**
-     * HTTP GET /api/collection/{collectionId}/balance
-     * Java method: ch.grignola.web.UserCollectionResource.getAddressBalance
-     */
-    getAddressBalance(collectionId: number): RestResponse<TokenBalances> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance` });
-    }
-
-    /**
-     * HTTP GET /api/collection/{collectionId}/balance-with-lots/history
-     * Java method: ch.grignola.web.UserCollectionResource.getHistoricalCollectionBalanceWithLots
-     */
-    getHistoricalCollectionBalanceWithLots(collectionId: number): RestResponse<HistoricalAddressBalanceWithLots> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance-with-lots/history` });
-    }
-
-    /**
-     * HTTP GET /api/collection/{collectionId}/balance/history
-     * Java method: ch.grignola.web.UserCollectionResource.getHistoricalCollectionBalance
-     */
-    getHistoricalCollectionBalance(collectionId: number): RestResponse<HistoricalAddressBalance> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance/history` });
-    }
-}
-
-export class TokenResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/token/{id}
-     * Java method: ch.grignola.web.TokenResource.getToken
-     */
-    getToken(id: string): RestResponse<TokenResult> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
     }
 }
 
