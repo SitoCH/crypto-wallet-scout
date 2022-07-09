@@ -39,6 +39,7 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
     protected AbstractEtherscanScanService(Network network, RateLimiter rateLimiter) {
         this.network = network;
         this.rateLimiter = rateLimiter;
+        this.rateLimiter.drainPermissions();
     }
 
     @Override

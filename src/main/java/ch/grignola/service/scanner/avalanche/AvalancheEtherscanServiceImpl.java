@@ -30,9 +30,9 @@ public class AvalancheEtherscanServiceImpl extends AbstractEtherscanScanService 
 
     public AvalancheEtherscanServiceImpl() {
         super(AVALANCHE, RateLimiter.of("AvalancheEtherscanService", RateLimiterConfig.custom()
-                .timeoutDuration(ofSeconds(30))
-                .limitRefreshPeriod(ofMillis(3000))
-                .limitForPeriod(5)
+                .timeoutDuration(ofSeconds(15))
+                .limitRefreshPeriod(ofMillis(500))
+                .limitForPeriod(2)
                 .build()));
     }
 
