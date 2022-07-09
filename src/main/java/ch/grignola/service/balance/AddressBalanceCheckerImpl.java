@@ -4,6 +4,7 @@ import ch.grignola.model.Allocation;
 import ch.grignola.service.scanner.avalanche.AvalancheEtherscanService;
 import ch.grignola.service.scanner.bitcoin.BitcoinScanService;
 import ch.grignola.service.scanner.common.ScanService;
+import ch.grignola.service.scanner.common.ScanServiceException;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.cosmos.CosmosScanService;
 import ch.grignola.service.scanner.cronos.CronosScanService;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static java.math.BigDecimal.ZERO;
 import static java.util.Comparator.comparing;
 
@@ -65,7 +67,13 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
         return getScanServices().stream()
                 .filter(x -> x.accept(address))
-                .flatMap(x -> x.getAddressBalance(address).stream())
+                .flatMap(x -> {
+                    try {
+                        return x.getAddressBalance(address).stream();
+                    } catch (Exception ex) {
+                        throw new ScanServiceException(format("%s: %s", x.getClass().getTypeName(), ex.getMessage()));
+                    }
+                })
                 .toList();
     }
 
