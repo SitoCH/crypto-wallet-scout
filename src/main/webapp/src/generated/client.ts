@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-06-20 22:07:17.
+// Generated using typescript-generator version 2.34.976 on 2022-07-09 11:53:27.
 
 export interface HistoricalAddressBalance {
     snapshots: { [index: string]: number };
@@ -60,47 +60,17 @@ export interface HttpClient {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
 }
 
-export class AsynchronousDispatcherClient {
+export class ConfigurationResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
+     * HTTP GET /public/api/configuration
+     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
      */
-    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP POST /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
-     */
-    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP DELETE /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
-     */
-    remove(jobId: string): RestResponse<void> {
-        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
-    }
-}
-
-export class TokenResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/token/{id}
-     * Java method: ch.grignola.web.TokenResource.getToken
-     */
-    getToken(id: string): RestResponse<TokenResult> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
+    getConfiguration(): RestResponse<Configuration> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
     }
 }
 
@@ -131,6 +101,36 @@ export class AddressBalanceResourceClient {
      */
     getHistoricalAddressBalance(address: string): RestResponse<HistoricalAddressBalance> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}/balance/history` });
+    }
+}
+
+export class AsynchronousDispatcherClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
+     */
+    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP POST /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
+     */
+    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP DELETE /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
+     */
+    remove(jobId: string): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
     }
 }
 
@@ -188,17 +188,17 @@ export class UserCollectionResourceClient {
     }
 }
 
-export class ConfigurationResourceClient {
+export class TokenResourceClient {
 
     constructor(protected httpClient: HttpClient) {
     }
 
     /**
-     * HTTP GET /public/api/configuration
-     * Java method: ch.grignola.web.ConfigurationResource.getConfiguration
+     * HTTP GET /api/token/{id}
+     * Java method: ch.grignola.web.TokenResource.getToken
      */
-    getConfiguration(): RestResponse<Configuration> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
+    getToken(id: string): RestResponse<TokenResult> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/token/${id}` });
     }
 }
 
