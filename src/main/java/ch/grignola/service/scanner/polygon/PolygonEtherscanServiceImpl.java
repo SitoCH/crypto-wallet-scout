@@ -15,7 +15,6 @@ import javax.inject.Singleton;
 import java.util.List;
 
 import static ch.grignola.model.Network.POLYGON;
-import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
 
 @Singleton
@@ -31,7 +30,7 @@ public class PolygonEtherscanServiceImpl extends AbstractEtherscanScanService im
     public PolygonEtherscanServiceImpl() {
         super(POLYGON, RateLimiter.of("PolygonEtherscanService", RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(15))
-                .limitRefreshPeriod(ofMillis(500))
+                .limitRefreshPeriod(ofSeconds(1))
                 .limitForPeriod(2)
                 .build()));
     }
