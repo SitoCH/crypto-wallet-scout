@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { TokenBalance } from "../../../../generated/client";
 import { AddressBalanceService } from "../../../services/address-balance.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-user-collection-address-detail',
@@ -15,7 +16,7 @@ export class UserCollectionAddressDetailComponent implements OnInit {
 
   addressBalance: TokenBalance[] | null = null;
   currentUsdValue: number | undefined = undefined;
-  hasError = false;
+  error = null;
 
   constructor(private addressService: AddressBalanceService,
               private route: ActivatedRoute) {
@@ -31,7 +32,7 @@ export class UserCollectionAddressDetailComponent implements OnInit {
   }
 
   private loadBalance() {
-    this.hasError = false;
+    this.error = null;
     this.addressBalance = null;
     this.addressService.getAddressBalance(this.address)
       .then(tokenBalances => {
@@ -40,8 +41,8 @@ export class UserCollectionAddressDetailComponent implements OnInit {
             .map(x => x.usdValue)
             .reduce((a, b) => a + b);
         },
-        () => {
-          this.hasError = true;
+        (response: HttpErrorResponse) => {
+          this.error = response.error.details;
         });
   }
 }
