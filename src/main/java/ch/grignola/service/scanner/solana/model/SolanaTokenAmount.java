@@ -10,9 +10,5 @@ public class SolanaTokenAmount {
     public String amount;
     @JsonProperty("decimals")
     public int decimals;
-    @JsonProperty("uiAmount")
-    public float uiAmount;
-    @JsonProperty("uiAmountString")
-    public String uiAmountString;
 
 }
