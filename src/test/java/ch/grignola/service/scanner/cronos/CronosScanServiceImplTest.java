@@ -37,6 +37,7 @@ class CronosScanServiceImplTest {
         cronosBalanceResult.result = new Result();
         cronosBalanceResult.result.balance = emptyList();
         cronosBalanceResult.result.bondedBalance = emptyList();
+        cronosBalanceResult.result.unbondingBalance = emptyList();
         cronosBalanceResult.result.totalRewards = emptyList();
         when(cronosRestClient.getBalance(ADDRESS))
                 .thenReturn(cronosBalanceResult);
@@ -61,8 +62,8 @@ class CronosScanServiceImplTest {
 
         verify(cronosRestClient).getBalance(ADDRESS);
 
-        assertEquals(3, result.size());
-        assertEquals(new BigDecimal("7.1"), result.stream().map(ScannerTokenBalance::nativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
+        assertEquals(4, result.size());
+        assertEquals(new BigDecimal("8.1"), result.stream().map(ScannerTokenBalance::nativeValue).reduce(BigDecimal.ZERO, BigDecimal::add));
     }
 
     private CronosBalanceResult getBalanceResponse() {
@@ -74,6 +75,9 @@ class CronosScanServiceImplTest {
         BondedBalance bondedBalance = new BondedBalance();
         bondedBalance.amount = "200000000";
         result.result.bondedBalance = singletonList(bondedBalance);
+        BondedBalance unbondingBalance = new BondedBalance();
+        unbondingBalance.amount = "100000000";
+        result.result.unbondingBalance = singletonList(unbondingBalance);
         TotalReward reward = new TotalReward();
         reward.amount = "10000000";
         result.result.totalRewards = singletonList(reward);
