@@ -15,6 +15,7 @@ import javax.inject.Singleton;
 import java.util.List;
 
 import static ch.grignola.model.Network.AVALANCHE;
+import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
 
 @Singleton
@@ -30,8 +31,8 @@ public class AvalancheEtherscanServiceImpl extends AbstractEtherscanScanService 
     public AvalancheEtherscanServiceImpl() {
         super(AVALANCHE, RateLimiter.of("AvalancheEtherscanService", RateLimiterConfig.custom()
                 .timeoutDuration(ofSeconds(15))
-                .limitRefreshPeriod(ofSeconds(1))
-                .limitForPeriod(2)
+                .limitRefreshPeriod(ofMillis(300))
+                .limitForPeriod(1)
                 .build()));
     }
 
