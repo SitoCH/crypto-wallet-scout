@@ -21,7 +21,7 @@ public class Result {
     @JsonProperty("redelegatingBalance")
     public List<Object> redelegatingBalance = null;
     @JsonProperty("unbondingBalance")
-    public List<Object> unbondingBalance = null;
+    public List<BondedBalance> unbondingBalance = null;
     @JsonProperty("totalRewards")
     public List<TotalReward> totalRewards = null;
     @JsonProperty("commissions")

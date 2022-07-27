@@ -47,6 +47,11 @@ public class CronosScanServiceImpl implements CronosScanService {
             balances.add(toTokenBalance(address, STACKED, stackedValue));
         }
 
+        BigDecimal unbondingValue = result.result.unbondingBalance.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (unbondingValue.compareTo(ZERO) != 0) {
+            balances.add(toTokenBalance(address, STACKED, unbondingValue));
+        }
+
         BigDecimal unclaimedRewardsValue = result.result.totalRewards.stream().map(x -> new BigDecimal(x.amount)).reduce(BigDecimal.ZERO, BigDecimal::add);
         if (unclaimedRewardsValue.compareTo(ZERO) != 0) {
             balances.add(toTokenBalance(address, UNCLAIMED_REWARDS, unclaimedRewardsValue));
