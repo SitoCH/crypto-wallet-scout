@@ -8,11 +8,6 @@
               <h5 class="card-title">History</h5>
             </div>
             <div class="col-auto">
-              <button type="button" class="btn mb-2 btn-secondary mr-2"
-                      (click)="onIncludeLotsChange()">
-                <fa-icon icon="money-bill"></fa-icon>
-              </button>
-
               <div class="btn-group" role="group">
                 <button type="button" class="btn mb-2"
                         [class.btn-outline-primary]="(historicalChartRange$ | async) !== HistoricalChartRange.THREE_DAYS"

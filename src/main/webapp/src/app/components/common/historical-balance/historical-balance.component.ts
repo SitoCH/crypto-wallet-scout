@@ -2,12 +2,7 @@ import { Component, Inject, Input, LOCALE_ID, OnChanges, SimpleChanges } from '@
 import { ChartConfiguration } from "chart.js";
 import { formatDate } from "@angular/common";
 import { combineLatest, map, Observable } from "rxjs";
-import {
-  ApplicationState,
-  HistoricalChartRange,
-  SetHistoricalBalancesRange,
-  ToggleIncludeLotsInHistoricalBalances
-} from "../../../state/application.state";
+import { ApplicationState, HistoricalChartRange, SetHistoricalBalancesRange } from "../../../state/application.state";
 import { Select, Store } from "@ngxs/store";
 
 @Component({
@@ -122,7 +117,4 @@ export class HistoricalBalanceComponent implements OnChanges {
     this.store.dispatch(new SetHistoricalBalancesRange(value));
   }
 
-  onIncludeLotsChange() {
-    this.store.dispatch(new ToggleIncludeLotsInHistoricalBalances());
-  }
 }

@@ -24,14 +24,9 @@ export class SetHistoricalBalancesRange {
   }
 }
 
-export class ToggleIncludeLotsInHistoricalBalances {
-  static readonly type = '[Application] ToggleIncludeLotsInHistoricalBalances';
-}
-
 export class ApplicationStateModel {
   isSidebarClosed!: boolean;
   groupTokenTable!: boolean;
-  includeLotsInHistoricalBalances!: boolean;
   historicalBalancesRange!: HistoricalChartRange;
 }
 
@@ -40,7 +35,6 @@ export class ApplicationStateModel {
   defaults: {
     isSidebarClosed: true,
     groupTokenTable: false,
-    includeLotsInHistoricalBalances: false,
     historicalBalancesRange: HistoricalChartRange.SEVEN_DAYS
   }
 })
@@ -95,19 +89,4 @@ export class ApplicationState {
     return state;
   }
 
-  @Selector()
-  static includeLotsInHistoricalBalances(state: ApplicationStateModel) {
-    return state.includeLotsInHistoricalBalances;
-  }
-
-  @Action(ToggleIncludeLotsInHistoricalBalances)
-  toggle(ctx: StateContext<ApplicationStateModel>) {
-    const state = ctx.getState();
-    ctx.setState({
-      ...state,
-      includeLotsInHistoricalBalances: !state.includeLotsInHistoricalBalances
-    });
-
-    return state;
-  }
 }

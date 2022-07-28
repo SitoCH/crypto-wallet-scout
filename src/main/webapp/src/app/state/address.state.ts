@@ -7,12 +7,12 @@ import { AddressBalanceService } from "../services/address-balance.service";
 export class GetHistoricalBalance {
   static readonly type = '[Address] GetHistoricalBalance';
 
-  constructor(public address: string, public includeLots: boolean) {
+  constructor(public address: string) {
   }
 }
 
 export interface AddressSummaryModel {
-  historicalBalances: { address: string, balance: HistoricalAddressBalance, lotsIncluded: boolean }[];
+  historicalBalances: { address: string, balance: HistoricalAddressBalance }[];
 }
 
 @State<AddressSummaryModel>({
@@ -35,7 +35,7 @@ export class AddressState {
 
   @Action(GetHistoricalBalance)
   getHistoricalBalance(ctx: StateContext<AddressSummaryModel>, action: GetHistoricalBalance) {
-    return (action.includeLots ? this.addressBalanceService.getHistoricalAddressBalanceWithLots(action.address) : this.addressBalanceService.getHistoricalAddressBalance(action.address))
+    return this.addressBalanceService.getHistoricalAddressBalance(action.address)
       .then(result => {
         ctx.setState(
           patch({
@@ -46,8 +46,7 @@ export class AddressState {
           patch({
             historicalBalances: append([{
               address: action.address,
-              balance: result,
-              lotsIncluded: action.includeLots
+              balance: result
             }])
           })
         );
