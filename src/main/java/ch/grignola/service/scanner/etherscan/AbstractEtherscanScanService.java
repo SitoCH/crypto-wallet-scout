@@ -63,8 +63,8 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
         ContractStatus contractStatus = getContractStatus(network);
         Stream<ScannerTokenBalance> networkTokenBalance = Stream.of(getNetworkTokenBalanceAsTokenBalance(address));
         Stream<ScannerTokenBalance> tokenBalances = getTokenEvents(address).stream()
-                .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
                 .filter(new DistinctByKey<EthereumTokenEventResult>(x -> x.contractAddress)::filterByKey)
+                .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
                 .map(x -> {
                     checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress);
                     return toAddressBalance(address, x, getTokenBalance(address, x.contractAddress));
