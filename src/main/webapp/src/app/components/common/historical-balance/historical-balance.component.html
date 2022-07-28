@@ -39,7 +39,7 @@
           </div>
         </div>
         <p class="card-text"></p>
-        <div style="height: 150px" *ngIf="(lineChartData$ | async)!.datasets.length > 0; else nodata">
+        <div style="height: 150px" *ngIf="lineChartData$ && (lineChartData$ | async)!.datasets.length > 0; else nodata">
           <canvas baseChart
                   [data]="(lineChartData$ | async)!"
                   [options]="lineChartOptions"
