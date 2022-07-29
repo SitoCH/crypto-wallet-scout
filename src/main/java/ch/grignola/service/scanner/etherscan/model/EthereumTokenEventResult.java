@@ -8,7 +8,7 @@ public class EthereumTokenEventResult {
     @JsonProperty("blockNumber")
     public String blockNumber;
     @JsonProperty("timeStamp")
-    public String timeStamp;
+    public long timeStamp;
     @JsonProperty("hash")
     public String hash;
     @JsonProperty("nonce")
