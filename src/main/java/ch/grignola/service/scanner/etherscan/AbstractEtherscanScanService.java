@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static ch.grignola.model.Allocation.LIQUID;
-import static java.lang.Integer.parseInt;
 import static java.time.OffsetDateTime.ofInstant;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Comparator.comparing;
@@ -100,7 +99,7 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
                         checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress);
                         EthereumTokenBalanceResult tokenBalance = getTokenBalance(address, x.contractAddress);
                         LOG.infof("Token balance for address %s on %s based on event for symbol %s (%s): %s", address, network, x.tokenSymbol, x.contractAddress, tokenBalance.result);
-                        BigDecimal nativeValue = new BigDecimal(tokenBalance.result).divide((new BigDecimal(rightPad("1", parseInt(x.tokenDecimal) + 1, '0'))), MathContext.DECIMAL64);
+                        BigDecimal nativeValue = new BigDecimal(tokenBalance.result).divide((new BigDecimal(rightPad("1", x.tokenDecimal + 1, '0'))), MathContext.DECIMAL64);
                         saveCurrentNativeValue(address, lastEtherscanDateTime, x.tokenSymbol, nativeValue);
                         return new ScannerTokenBalance(network, LIQUID, nativeValue, x.tokenSymbol);
                     });
