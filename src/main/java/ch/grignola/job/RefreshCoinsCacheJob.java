@@ -17,7 +17,7 @@ public class RefreshCoinsCacheJob {
     TokenProvider tokenProvider;
 
     @Transactional
-    @Scheduled(every = "15m")
+    @Scheduled(every = "5m")
     void refreshCoinsCache() {
         tokenProvider.refreshCache();
         LOG.infof("Refreshed token cache");
