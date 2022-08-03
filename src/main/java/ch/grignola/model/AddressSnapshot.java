@@ -1,9 +1,6 @@
 package ch.grignola.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -33,6 +30,7 @@ public class AddressSnapshot {
         this.dateTime = dateTime;
     }
 
+    @Column(precision = 30, scale = 10)
     public BigDecimal getUsdValue() {
         return usdValue;
     }

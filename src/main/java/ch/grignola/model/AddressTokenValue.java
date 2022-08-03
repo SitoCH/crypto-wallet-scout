@@ -58,6 +58,7 @@ public class AddressTokenValue {
         this.tokenSymbol = tokenSymbol;
     }
 
+    @Column(precision = 30, scale = 10)
     public BigDecimal getNativeValue() {
         return nativeValue;
     }
