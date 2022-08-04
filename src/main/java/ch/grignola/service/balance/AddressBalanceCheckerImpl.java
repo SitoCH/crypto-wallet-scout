@@ -1,6 +1,7 @@
 package ch.grignola.service.balance;
 
 import ch.grignola.model.Allocation;
+import ch.grignola.service.scanner.aave.AaveScanService;
 import ch.grignola.service.scanner.avalanche.AvalancheEtherscanService;
 import ch.grignola.service.scanner.bitcoin.BitcoinScanService;
 import ch.grignola.service.scanner.common.ScanService;
@@ -27,6 +28,7 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 import static java.math.BigDecimal.ZERO;
+import static java.math.BigDecimal.valueOf;
 import static java.util.Comparator.comparing;
 
 
@@ -57,11 +59,13 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     PolkadotScanService polkadotScanService;
     @Inject
     OptimismScanService optimismScanService;
+    @Inject
+    AaveScanService aaveScanService;
 
     private List<ScanService> getScanServices() {
         return List.of(polygonService, avalancheService, terraScanService, terraClassicScanService,
                 cronosScanService, solanaScanService, cosmosScanService, bitcoinScanService, polkadotScanService,
-                optimismScanService);
+                optimismScanService, aaveScanService);
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {
@@ -105,7 +109,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
         return rawBalances.stream()
                 .filter(x -> x.nativeValue().compareTo(ZERO) != 0)
                 .map(this::toTokenBalance)
-                .filter(x -> x != null && x.getUsdValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
+                .filter(x -> x != null && (x.getUsdValue().compareTo(valueOf(0.01)) > 0 || x.getUsdValue().compareTo(valueOf(0.01)) < 0))
                 .sorted(comparing(TokenBalance::getTokenId))
                 .toList();
     }
@@ -115,7 +119,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
                 .map(tokenDetail -> {
                     LOG.infof("Token %s: 1 USD - %f %s", tokenDetail.name(), tokenDetail.usdValue(), tokenDetail.symbol());
                     Allocation allocation = tokenDetail.allocation() != null ? tokenDetail.allocation() : balance.allocation();
-                    BigDecimal usdValue = balance.nativeValue().multiply(BigDecimal.valueOf(tokenDetail.usdValue()));
+                    BigDecimal usdValue = balance.nativeValue().multiply(valueOf(tokenDetail.usdValue()));
                     return new TokenBalance(balance.network(), allocation, balance.nativeValue(), usdValue, tokenDetail.id(), tokenDetail.parentId());
                 })
                 .orElse(null);
