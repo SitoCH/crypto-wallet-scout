@@ -40,8 +40,9 @@
                 </div>
 
                 <div class="token-column col-3 col-sm-4 text-right">
-                  <strong>${{tokenBalance.usdValue | number:'1.2-2' }}</strong>
-                  <div class="my-0 text-muted small">{{tokenBalance.nativeValue | tokenAmountDecimals:token.usdValue }}</div>
+                  <strong>{{tokenBalance.usdValue | currency:'USD':'$' }}</strong>
+                  <div
+                    class="my-0 text-muted small">{{tokenBalance.nativeValue | tokenAmountDecimals:token.usdValue }}</div>
                 </div>
                 <div class="token-column col-4 col-sm-2 text-right">
 
