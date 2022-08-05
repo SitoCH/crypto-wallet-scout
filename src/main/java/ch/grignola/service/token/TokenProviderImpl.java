@@ -26,7 +26,8 @@ import static ch.grignola.model.Network.OPTIMISM;
 import static ch.grignola.model.Network.POLYGON;
 import static ch.grignola.service.token.TokenContractStatus.*;
 import static java.lang.String.join;
-import static java.time.Duration.*;
+import static java.time.Duration.ofMinutes;
+import static java.time.Duration.ofSeconds;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -73,7 +74,7 @@ public class TokenProviderImpl implements TokenProvider {
         }
 
         return Optional.of(new TokenDetail(token.getId().toString(), token.getParentId(), token.getName(), coin.image, token.getSymbol(),
-                coin.usdValue, token.getAllocation(), coin.priceChangePercentage24h, coin.priceChangePercentage7d,
+                coin.usdValue, coin.priceChangePercentage24h, coin.priceChangePercentage7d,
                 coin.priceChangePercentage30d, coin.priceChangePercentage200d));
     }
 

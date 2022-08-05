@@ -1,6 +1,5 @@
 package ch.grignola.service.balance;
 
-import ch.grignola.model.Allocation;
 import ch.grignola.service.scanner.aave.AaveScanService;
 import ch.grignola.service.scanner.avalanche.AvalancheEtherscanService;
 import ch.grignola.service.scanner.bitcoin.BitcoinScanService;
@@ -118,9 +117,8 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
         return tokenProvider.getBySymbol(balance.tokenSymbol())
                 .map(tokenDetail -> {
                     LOG.infof("Token %s: 1 USD - %f %s", tokenDetail.name(), tokenDetail.usdValue(), tokenDetail.symbol());
-                    Allocation allocation = tokenDetail.allocation() != null ? tokenDetail.allocation() : balance.allocation();
                     BigDecimal usdValue = balance.nativeValue().multiply(valueOf(tokenDetail.usdValue()));
-                    return new TokenBalance(balance.network(), allocation, balance.nativeValue(), usdValue, tokenDetail.id(), tokenDetail.parentId());
+                    return new TokenBalance(balance.network(), balance.allocation(), balance.nativeValue(), usdValue, tokenDetail.id(), tokenDetail.parentId());
                 })
                 .orElse(null);
     }

@@ -10,7 +10,6 @@ public class Token {
     private String symbol;
     private String coinGeckoId;
     private String parentId;
-    private Allocation allocation;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,15 +54,6 @@ public class Token {
         this.parentId = parentId;
     }
 
-    @Enumerated(EnumType.STRING)
-    public Allocation getAllocation() {
-        return allocation;
-    }
-
-    public void setAllocation(Allocation allocation) {
-        this.allocation = allocation;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -73,11 +63,11 @@ public class Token {
             return false;
         }
         Token token = (Token) o;
-        return Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId) && Objects.equals(parentId, token.parentId) && allocation == token.allocation;
+        return Objects.equals(id, token.id) && Objects.equals(name, token.name) && Objects.equals(symbol, token.symbol) && Objects.equals(coinGeckoId, token.coinGeckoId) && Objects.equals(parentId, token.parentId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, symbol, coinGeckoId, parentId, allocation);
+        return Objects.hash(id, name, symbol, coinGeckoId, parentId);
     }
 }

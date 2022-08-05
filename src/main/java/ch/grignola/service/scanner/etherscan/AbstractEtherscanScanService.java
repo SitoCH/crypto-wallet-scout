@@ -28,6 +28,7 @@ import static ch.grignola.model.Allocation.LIQUID;
 import static java.time.OffsetDateTime.ofInstant;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Comparator.comparing;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.rightPad;
 
 
@@ -56,9 +57,14 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
         return address.startsWith("0x") && address.length() == 42;
     }
 
-    private boolean filterBannedContracts(Set<String> bannedContracts, String address, EthereumTokenEventResult balance) {
+    private boolean filterContracts(Set<String> bannedContracts, String address, EthereumTokenEventResult balance) {
         if (bannedContracts.contains(balance.contractAddress)) {
             LOG.infof("Found banned contract for address %s on %s: %s (%s)", address, network, balance.tokenSymbol, balance.contractAddress);
+            return false;
+        }
+
+        if (containsIgnoreCase(balance.tokenName, "AAVE")) {
+            LOG.infof("Found AAVE token for address %s on %s: %s (%s)", address, network, balance.tokenSymbol, balance.contractAddress);
             return false;
         }
         return true;
@@ -94,7 +100,7 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
             addressTokenValueRepository.delete(network, address);
             return tokenEvents.stream()
                     .filter(new DistinctByKey<EthereumTokenEventResult>(x -> x.contractAddress)::filterByKey)
-                    .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
+                    .filter(x -> filterContracts(contractStatus.bannedContracts(), address, x))
                     .map(x -> {
                         checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress);
                         EthereumTokenBalanceResult tokenBalance = getTokenBalance(address, x.contractAddress);
