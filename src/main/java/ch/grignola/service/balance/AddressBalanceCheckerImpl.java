@@ -108,7 +108,7 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
         return rawBalances.stream()
                 .filter(x -> x.nativeValue().compareTo(ZERO) != 0)
                 .map(this::toTokenBalance)
-                .filter(x -> x != null && (x.getUsdValue().compareTo(valueOf(0.01)) > 0 || x.getUsdValue().compareTo(valueOf(0.01)) < 0))
+                .filter(x -> x != null && (x.getUsdValue().compareTo(valueOf(0.01)) > 0 || x.getUsdValue().compareTo(valueOf(-0.01)) < 0))
                 .sorted(comparing(TokenBalance::getTokenId))
                 .toList();
     }
