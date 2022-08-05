@@ -10,7 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
 @ApplicationScoped
-@RegisterRestClient(baseUri = "https://api.dotscanner.com")
+@RegisterRestClient(baseUri = "https://api.dotscanner.com", configKey = "polkadot")
 public interface PolkadotRestClient {
 
     @GET

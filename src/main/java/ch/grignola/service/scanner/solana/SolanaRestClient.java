@@ -12,7 +12,7 @@ import javax.ws.rs.QueryParam;
 import java.util.List;
 
 @ApplicationScoped
-@RegisterRestClient(baseUri = "https://public-api.solscan.io/account/")
+@RegisterRestClient(baseUri = "https://public-api.solscan.io/account/", configKey = "solana")
 public interface SolanaRestClient {
 
     @GET
