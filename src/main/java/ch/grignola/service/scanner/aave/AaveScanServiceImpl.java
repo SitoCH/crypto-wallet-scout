@@ -109,7 +109,7 @@ public class AaveScanServiceImpl implements AaveScanService {
         Document document = document(
                 operation(
                         field("userReserves",
-                                args(arg("where", inputObject(prop("user", address)))),
+                                args(arg("where", inputObject(prop("user", address.toLowerCase())))),
                                 field("reserve",
                                         field("symbol"),
                                         field("decimals")
@@ -118,7 +118,7 @@ public class AaveScanServiceImpl implements AaveScanService {
                                 field("currentTotalDebt")
                         ),
                         field("userRewards",
-                                args(arg("where", inputObject(prop("user", address)))),
+                                args(arg("where", inputObject(prop("user", address.toLowerCase())))),
                                 field("reward",
                                         field("rewardTokenSymbol"),
                                         field("rewardTokenDecimals")
