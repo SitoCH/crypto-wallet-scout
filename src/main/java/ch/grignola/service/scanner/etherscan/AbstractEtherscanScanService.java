@@ -78,9 +78,7 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
         ContractStatus contractStatus = getContractStatus(network);
         Stream<ScannerTokenBalance> networkTokenBalance = Stream.of(getNetworkTokenBalanceAsTokenBalance(address));
         Stream<ScannerTokenBalance> tokenBalances = getTokenBalances(contractStatus, address);
-        return Stream.concat(networkTokenBalance, tokenBalances)
-                .filter(x -> x.nativeValue().compareTo(BigDecimal.valueOf(0.01)) > 0)
-                .toList();
+        return Stream.concat(networkTokenBalance, tokenBalances).toList();
     }
 
     private Stream<ScannerTokenBalance> getTokenBalances(ContractStatus contractStatus, String address) {
