@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static ch.grignola.model.Allocation.LIQUID;
+import static java.math.BigDecimal.ZERO;
 import static java.time.OffsetDateTime.ofInstant;
 import static java.time.ZoneOffset.UTC;
 import static java.util.Comparator.comparing;
@@ -78,7 +79,9 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
         ContractStatus contractStatus = getContractStatus(network);
         Stream<ScannerTokenBalance> networkTokenBalance = Stream.of(getNetworkTokenBalanceAsTokenBalance(address));
         Stream<ScannerTokenBalance> tokenBalances = getTokenBalances(contractStatus, address);
-        return Stream.concat(networkTokenBalance, tokenBalances).toList();
+        return Stream.concat(networkTokenBalance, tokenBalances)
+                .filter(x -> !x.nativeValue().equals(ZERO))
+                .toList();
     }
 
     private Stream<ScannerTokenBalance> getTokenBalances(ContractStatus contractStatus, String address) {
