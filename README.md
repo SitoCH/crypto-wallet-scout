@@ -27,6 +27,7 @@ BITQUERY_API_KEY=
 OPTIMISTIC_API_KEY=
 POLYGON_API_KEY=
 SNOWTRACE_API_KEY=
+ETHERSCAN_API_KEY=
 ```
 
 ## Running the application in dev mode
