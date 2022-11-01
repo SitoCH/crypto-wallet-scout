@@ -54,11 +54,11 @@ public class BitqueryClientImpl implements BitqueryClient {
     }
 
     @Override
-    public double getBitcoinBalances(String address) {
-        String key = "bitcoin-" + address;
+    public double getDogecoinBalances(String address) {
+        String key = "dogecoin-" + address;
         return cache.get(key, x -> {
             try {
-                return bitcoinBalances(address);
+                return bitcoinBalances(address, "dogecoin");
             } catch (ExecutionException | InterruptedException | JsonProcessingException e) {
                 Thread.currentThread().interrupt();
                 LOG.warnf("Unable to load Bitcoin balance for address %s", address);
@@ -67,11 +67,25 @@ public class BitqueryClientImpl implements BitqueryClient {
         }).await().indefinitely();
     }
 
-    private double bitcoinBalances(String address) throws ExecutionException, InterruptedException, JsonProcessingException {
+    @Override
+    public double getBitcoinBalances(String address) {
+        String key = "bitcoin-" + address;
+        return cache.get(key, x -> {
+            try {
+                return bitcoinBalances(address, "bitcoin");
+            } catch (ExecutionException | InterruptedException | JsonProcessingException e) {
+                Thread.currentThread().interrupt();
+                LOG.warnf("Unable to load Bitcoin balance for address %s", address);
+                return 0d;
+            }
+        }).await().indefinitely();
+    }
+
+    private double bitcoinBalances(String address, String network) throws ExecutionException, InterruptedException, JsonProcessingException {
         Document bitcoinDocument = document(
                 operation(
                         field("bitcoin",
-                                args(arg("network", gqlEnum("bitcoin"))),
+                                args(arg("network", gqlEnum(network))),
                                 field("inputs",
                                         args(arg("inputAddress", inputObject(prop("is", address)))),
                                         field(VALUE)

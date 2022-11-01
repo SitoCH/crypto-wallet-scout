@@ -8,6 +8,7 @@ import ch.grignola.service.scanner.common.ScanServiceException;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
 import ch.grignola.service.scanner.cosmos.CosmosScanService;
 import ch.grignola.service.scanner.cronos.CronosScanService;
+import ch.grignola.service.scanner.dogecoin.DogecoinScanService;
 import ch.grignola.service.scanner.ethereum.EthereumEtherscanService;
 import ch.grignola.service.scanner.optimism.OptimismScanService;
 import ch.grignola.service.scanner.polygon.PolygonEtherscanService;
@@ -60,11 +61,13 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     EthereumEtherscanService ethereumEtherscanService;
     @Inject
     AaveScanService aaveScanService;
+    @Inject
+    DogecoinScanService dogecoinScanService;
 
     private List<ScanService> getScanServices() {
         return List.of(polygonService, avalancheService, terraScanService, terraClassicScanService,
                 cronosScanService, solanaScanService, cosmosScanService, bitcoinScanService,
-                optimismScanService, aaveScanService, ethereumEtherscanService);
+                optimismScanService, aaveScanService, ethereumEtherscanService, dogecoinScanService);
     }
 
     private List<ScannerTokenBalance> getBalancesFromScanServices(String address) {

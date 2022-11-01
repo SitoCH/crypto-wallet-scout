@@ -8,6 +8,8 @@ public interface BitqueryClient {
 
     double getBitcoinBalances(String address);
 
+    double getDogecoinBalances(String address);
+
     List<BitqueryEthereumBalance> getEthereumBalances(String network, String address);
 
 }

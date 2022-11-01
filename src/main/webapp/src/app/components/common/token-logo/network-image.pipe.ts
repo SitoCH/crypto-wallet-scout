@@ -30,6 +30,8 @@ export class NetworkImagePipe implements PipeTransform {
         return 'assets/images/network/Optimism.png';
       case Network.ETHEREUM:
         return 'assets/images/network/Ethereum.png';
+      case Network.DOGECOIN:
+        return 'assets/images/network/Dogecoin.png';
     }
 
     return null;
