@@ -31,7 +31,11 @@ export class TokenBalanceChartsComponent implements OnChanges {
       tooltip: {
         callbacks: {
           label: (tooltipItem) => {
-            return tooltipItem.label + ': $' + formatNumber(<number>tooltipItem.raw, this.locale, '1.2-2');
+            let sum = 0;
+            tooltipItem.chart.data.datasets[0].data.forEach(x => sum += <number>x);
+            let percentage = (<number>tooltipItem.raw * 100 / sum).toFixed(2) + "%";
+            let amount = formatNumber(<number>tooltipItem.raw, this.locale, '1.2-2');
+            return tooltipItem.label + ': $' + amount + ' (' + percentage + ')';
           }
         }
       }
@@ -52,7 +56,9 @@ export class TokenBalanceChartsComponent implements OnChanges {
 
       this.tokens.forEach(tokenBalance => {
         let currentBalance = tokensByTokenId.get(tokenBalance.parentTokenId || tokenBalance.tokenId) || 0;
-        tokensByTokenId.set(tokenBalance.parentTokenId || tokenBalance.tokenId, currentBalance + tokenBalance.usdValue);
+        if (tokenBalance.usdValue > 0) {
+          tokensByTokenId.set(tokenBalance.parentTokenId || tokenBalance.tokenId, currentBalance + tokenBalance.usdValue);
+        }
 
         let currentAllocationBalance = tokensByAllocation.get(tokenBalance.allocation) || 0;
         tokensByAllocation.set(tokenBalance.allocation, currentAllocationBalance + tokenBalance.usdValue);
