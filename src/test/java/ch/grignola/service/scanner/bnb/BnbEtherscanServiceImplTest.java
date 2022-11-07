@@ -1,4 +1,4 @@
-package ch.grignola.service.scanner.ethereum;
+package ch.grignola.service.scanner.bnb;
 
 import ch.grignola.model.ContractVerificationStatus;
 import ch.grignola.repository.AddressTokenValueRepository;
@@ -25,24 +25,23 @@ import static ch.grignola.model.ContractVerificationStatus.Status.BANNED;
 import static ch.grignola.model.Network.*;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-class EthereumEtherscanServiceImplTest {
+class BnbEtherscanServiceImplTest {
 
     private static final String ADDRESS = "0x1234";
-    private static final String NATIVE_SYMBOL = "ETH";
+    private static final String NATIVE_SYMBOL = "BNB";
     private static final String TST_SYMBOL = "TST";
     private static final String TST_TKN_ADDRESS = "0x1234";
 
     @InjectMock
     @RestClient
-    EthereumScanRestClient restClient;
+    BnbScanRestClient restClient;
 
     @InjectMock
     AddressTokenValueRepository addressTokenValueRepository;
@@ -51,7 +50,7 @@ class EthereumEtherscanServiceImplTest {
     ContractVerificationStatusRepository contractVerificationStatusRepository;
 
     @Inject
-    EthereumEtherscanService ethereumEtherscanService;
+    BnbEtherscanService bnbEtherscanService;
 
     @Inject
     CacheManager cacheManager;
@@ -79,7 +78,7 @@ class EthereumEtherscanServiceImplTest {
 
     @Test
     void getEmptyAddressBalance() {
-        List<ScannerTokenBalance> balance = ethereumEtherscanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> balance = bnbEtherscanService.getAddressBalance(ADDRESS);
 
         verify(restClient).getBalance(any(), any(), eq(ADDRESS));
 
@@ -94,7 +93,7 @@ class EthereumEtherscanServiceImplTest {
         when(restClient.getBalance(any(), any(), eq(ADDRESS)))
                 .thenReturn(balanceResult);
 
-        List<ScannerTokenBalance> addressBalance = ethereumEtherscanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = bnbEtherscanService.getAddressBalance(ADDRESS);
 
         verify(restClient).getBalance(any(), any(), eq(ADDRESS));
 
@@ -121,7 +120,7 @@ class EthereumEtherscanServiceImplTest {
         when(restClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_TKN_ADDRESS)))
                 .thenReturn(tokenBalance);
 
-        List<ScannerTokenBalance> addressBalance = ethereumEtherscanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = bnbEtherscanService.getAddressBalance(ADDRESS);
 
         verify(restClient).getBalance(any(), any(), eq(ADDRESS));
         verify(restClient).getTokenEvents(any(), any(), eq(ADDRESS));
@@ -136,9 +135,9 @@ class EthereumEtherscanServiceImplTest {
 
         ContractVerificationStatus contractVerificationStatus = new ContractVerificationStatus();
         contractVerificationStatus.setContractId(TST_TKN_ADDRESS);
-        contractVerificationStatus.setNetwork(ETHEREUM);
+        contractVerificationStatus.setNetwork(BNB);
         contractVerificationStatus.setStatus(BANNED);
-        when(contractVerificationStatusRepository.findByNetwork(ETHEREUM))
+        when(contractVerificationStatusRepository.findByNetwork(BNB))
                 .thenReturn(singletonList(contractVerificationStatus));
 
 
@@ -156,11 +155,11 @@ class EthereumEtherscanServiceImplTest {
         when(restClient.getTokenBalance(any(), any(), eq(ADDRESS), eq(TST_TKN_ADDRESS)))
                 .thenReturn(tokenBalance);
 
-        List<ScannerTokenBalance> addressBalance = ethereumEtherscanService.getAddressBalance(ADDRESS);
+        List<ScannerTokenBalance> addressBalance = bnbEtherscanService.getAddressBalance(ADDRESS);
 
         verify(restClient).getBalance(any(), any(), eq(ADDRESS));
         verify(restClient).getTokenEvents(any(), any(), eq(ADDRESS));
-        verify(contractVerificationStatusRepository).findByNetwork(ETHEREUM);
+        verify(contractVerificationStatusRepository).findByNetwork(BNB);
 
         assertTrue(addressBalance.isEmpty());
     }

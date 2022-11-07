@@ -3,6 +3,7 @@ package ch.grignola.service.balance;
 import ch.grignola.service.scanner.aave.AaveScanService;
 import ch.grignola.service.scanner.avalanche.AvalancheEtherscanService;
 import ch.grignola.service.scanner.bitcoin.BitcoinScanService;
+import ch.grignola.service.scanner.bnb.BnbEtherscanService;
 import ch.grignola.service.scanner.common.ScanService;
 import ch.grignola.service.scanner.common.ScanServiceException;
 import ch.grignola.service.scanner.common.ScannerTokenBalance;
@@ -63,10 +64,12 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     AaveScanService aaveScanService;
     @Inject
     DogecoinScanService dogecoinScanService;
+    @Inject
+    BnbEtherscanService bnbEtherscanService;
 
     private List<ScanService> getScanServices() {
         return List.of(polygonService, avalancheService, terraScanService, terraClassicScanService,
-                cronosScanService, solanaScanService, cosmosScanService, bitcoinScanService,
+                cronosScanService, solanaScanService, cosmosScanService, bitcoinScanService, bnbEtherscanService,
                 optimismScanService, aaveScanService, ethereumEtherscanService, dogecoinScanService);
     }
 

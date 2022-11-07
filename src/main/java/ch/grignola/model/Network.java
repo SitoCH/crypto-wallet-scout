@@ -12,5 +12,6 @@ public enum Network {
     POLKADOT,
     OPTIMISM,
     ETHEREUM,
+    BNB,
     DOGECOIN
 }
