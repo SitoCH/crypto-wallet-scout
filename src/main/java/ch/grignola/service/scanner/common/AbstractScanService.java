@@ -20,14 +20,16 @@ public abstract class AbstractScanService {
     ContractVerificationStatusRepository contractVerificationStatusRepository;
 
 
-    protected void checkContractVerificationStatus(Set<String> allVerifiedContracts, Network network, String contractAddress) {
+    protected void checkContractVerificationStatus(Set<String> allVerifiedContracts, Network network,
+                                                   String contractAddress, String symbol) {
         if (contractAddress.startsWith("0x") && !allVerifiedContracts.contains(contractAddress)) {
             ContractVerificationStatus contractVerificationStatus = new ContractVerificationStatus();
             contractVerificationStatus.setNetwork(network);
             contractVerificationStatus.setContractId(contractAddress);
             contractVerificationStatus.setStatus(UNKNOWN);
             contractVerificationStatusRepository.persist(contractVerificationStatus);
-            LOG.infof("Contract status for %s and network %s has been flagged as UNKNOWN", contractAddress, network);
+            LOG.infof("Contract status for %s (%s) and network %s has been flagged as UNKNOWN",
+                    contractAddress, symbol, network);
         }
     }
 

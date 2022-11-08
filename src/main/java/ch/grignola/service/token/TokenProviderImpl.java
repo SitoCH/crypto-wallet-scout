@@ -22,15 +22,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static ch.grignola.model.Network.OPTIMISM;
-import static ch.grignola.model.Network.POLYGON;
 import static ch.grignola.service.token.TokenContractStatus.*;
 import static java.lang.String.join;
 import static java.time.Duration.ofMinutes;
 import static java.time.Duration.ofSeconds;
 import static java.util.Comparator.comparing;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ApplicationScoped
@@ -139,22 +135,10 @@ public class TokenProviderImpl implements TokenProvider {
         LOG.infof("Token cache refreshed for %s", join(", ", refreshedTokens));
     }
 
-    private Optional<String> getPlatformId(Network network) {
-        if (network == POLYGON) {
-            return of("polygon-pos");
-        }
-
-        if (network == OPTIMISM) {
-            return of("optimistic-ethereum");
-        }
-
-        return empty();
-    }
-
     public TokenContract getContract(Network network, String contractAddress) {
         try {
             rateLimiter.acquirePermission();
-            return getPlatformId(network)
+            return network.getCoingeckoNetworkId()
                     .map(platformId -> coingeckoRestClient.getContract(platformId, contractAddress))
                     .map(contract -> new TokenContract(contract.name, contract.liquidityScore == 0 ? BANNED : VERIFIED))
                     .orElse(new TokenContract("", PLATFORM_NOT_FOUND));

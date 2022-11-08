@@ -41,7 +41,7 @@ public abstract class AbstractEthereumBitqueryScanService extends AbstractScanSe
         return bitqueryClient.getEthereumBalances(getBitqueryNetwork(network), address).stream()
                 .filter(x -> filterBannedContracts(contractStatus.bannedContracts(), address, x))
                 .map(x -> {
-                    checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.currency.address);
+                    checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.currency.address, x.currency.symbol);
                     return toAddressBalance(address, x);
                 })
                 .toList();

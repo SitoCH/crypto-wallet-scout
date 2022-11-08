@@ -103,7 +103,7 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
                     .filter(new DistinctByKey<EthereumTokenEventResult>(x -> x.contractAddress)::filterByKey)
                     .filter(x -> filterContracts(contractStatus.bannedContracts(), address, x))
                     .map(x -> {
-                        checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress);
+                        checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress, x.tokenSymbol);
                         EthereumTokenBalanceResult tokenBalance = getTokenBalance(address, x.contractAddress);
                         LOG.infof("Token balance for address %s on %s based on event for symbol %s (%s): %s", address, network, x.tokenSymbol, x.contractAddress, tokenBalance.result);
                         BigDecimal nativeValue = new BigDecimal(tokenBalance.result).divide((new BigDecimal(rightPad("1", x.tokenDecimal + 1, '0'))), MathContext.DECIMAL64);
