@@ -12,6 +12,7 @@ public class AddressTokenValue {
     private String address;
     private OffsetDateTime dateTime;
     private String tokenSymbol;
+    private String tokenContract;
     private BigDecimal nativeValue;
 
 
@@ -67,6 +68,14 @@ public class AddressTokenValue {
         this.nativeValue = nativeValue;
     }
 
+    public String getTokenContract() {
+        return tokenContract;
+    }
+
+    public void setTokenContract(String tokenContract) {
+        this.tokenContract = tokenContract;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -76,11 +85,11 @@ public class AddressTokenValue {
             return false;
         }
         AddressTokenValue that = (AddressTokenValue) o;
-        return Objects.equals(id, that.id) && network == that.network && Objects.equals(address, that.address) && Objects.equals(dateTime, that.dateTime) && Objects.equals(tokenSymbol, that.tokenSymbol) && Objects.equals(nativeValue, that.nativeValue);
+        return Objects.equals(id, that.id) && network == that.network && Objects.equals(address, that.address) && Objects.equals(dateTime, that.dateTime) && Objects.equals(tokenSymbol, that.tokenSymbol) && Objects.equals(tokenContract, that.tokenContract) && Objects.equals(nativeValue, that.nativeValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, network, address, dateTime, tokenSymbol, nativeValue);
+        return Objects.hash(id, network, address, dateTime, tokenSymbol, tokenContract, nativeValue);
     }
 }

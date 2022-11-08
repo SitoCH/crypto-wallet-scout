@@ -58,14 +58,15 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
         return address.startsWith("0x") && address.length() == 42;
     }
 
-    private boolean filterContracts(Set<String> bannedContracts, String address, EthereumTokenEventResult balance) {
-        if (bannedContracts.contains(balance.contractAddress)) {
-            LOG.infof("Found banned contract for address %s on %s: %s (%s)", address, network, balance.tokenSymbol, balance.contractAddress);
+    private boolean filterContracts(Set<String> bannedContracts, String address, String tokenContract,
+                                    String tokenSymbol, String tokenName) {
+        if (bannedContracts.contains(tokenContract)) {
+            LOG.infof("Found banned contract for address %s on %s: %s (%s)", address, network, tokenSymbol, tokenContract);
             return false;
         }
 
-        if (containsIgnoreCase(balance.tokenName, "AAVE")) {
-            LOG.infof("Found AAVE token for address %s on %s: %s (%s)", address, network, balance.tokenSymbol, balance.contractAddress);
+        if (containsIgnoreCase(tokenName, "AAVE")) {
+            LOG.infof("Found AAVE token for address %s on %s: %s (%s)", address, network, tokenSymbol, tokenContract);
             return false;
         }
         return true;
@@ -101,30 +102,34 @@ public abstract class AbstractEtherscanScanService extends AbstractScanService i
             addressTokenValueRepository.delete(network, address);
             return tokenEvents.stream()
                     .filter(new DistinctByKey<EthereumTokenEventResult>(x -> x.contractAddress)::filterByKey)
-                    .filter(x -> filterContracts(contractStatus.bannedContracts(), address, x))
+                    .filter(x -> filterContracts(contractStatus.bannedContracts(), address, x.contractAddress, x.tokenSymbol, x.tokenName))
                     .map(x -> {
                         checkContractVerificationStatus(contractStatus.allVerifiedContracts(), network, x.contractAddress, x.tokenSymbol);
                         EthereumTokenBalanceResult tokenBalance = getTokenBalance(address, x.contractAddress);
                         LOG.infof("Token balance for address %s on %s based on event for symbol %s (%s): %s", address, network, x.tokenSymbol, x.contractAddress, tokenBalance.result);
                         BigDecimal nativeValue = new BigDecimal(tokenBalance.result).divide((new BigDecimal(rightPad("1", x.tokenDecimal + 1, '0'))), MathContext.DECIMAL64);
-                        saveCurrentNativeValue(address, lastEtherscanDateTime, x.tokenSymbol, nativeValue);
+                        saveCurrentNativeValue(address, lastEtherscanDateTime, x.tokenSymbol, x.contractAddress, nativeValue);
                         return new ScannerTokenBalance(network, LIQUID, nativeValue, x.tokenSymbol);
                     });
         }
 
         return addressTokenValueRepository.find(network, address)
-                .stream().map(x -> {
+                .stream()
+                .filter(x -> filterContracts(contractStatus.bannedContracts(), address, x.getTokenContract(), x.getTokenSymbol(), "-"))
+                .map(x -> {
                     LOG.infof("Token balance for address %s on %s based on event for symbol %s: %s", address, network, x.getTokenSymbol(), x.getNativeValue());
                     return new ScannerTokenBalance(network, LIQUID, x.getNativeValue(), x.getTokenSymbol());
                 });
     }
 
-    private void saveCurrentNativeValue(String address, OffsetDateTime dateTime, String tokenSymbol, BigDecimal nativeValue) {
+    private void saveCurrentNativeValue(String address, OffsetDateTime dateTime, String tokenSymbol,
+                                        String tokenContract, BigDecimal nativeValue) {
         AddressTokenValue addressTokenValue = new AddressTokenValue();
         addressTokenValue.setNetwork(network);
         addressTokenValue.setAddress(address);
         addressTokenValue.setDateTime(dateTime);
         addressTokenValue.setTokenSymbol(tokenSymbol);
+        addressTokenValue.setTokenContract(tokenContract);
         addressTokenValue.setNativeValue(nativeValue);
         addressTokenValueRepository.persist(addressTokenValue);
     }
