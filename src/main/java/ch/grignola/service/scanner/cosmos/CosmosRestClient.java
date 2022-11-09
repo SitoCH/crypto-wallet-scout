@@ -12,7 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 @ApplicationScoped
-@RegisterRestClient(baseUri = "https://node.atomscan.com")
+@RegisterRestClient(baseUri = "https://node.atomscan.com", configKey = "cosmos")
 public interface CosmosRestClient {
 
     @GET
