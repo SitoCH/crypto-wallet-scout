@@ -105,7 +105,6 @@ public class AddressBalanceCheckerImpl implements AddressBalanceChecker {
     }
 
     @Override
-    @Transactional
     public List<TokenBalance> getBalance(String address) {
         return getTokenBalances(getBalancesFromScanServices(address));
     }
