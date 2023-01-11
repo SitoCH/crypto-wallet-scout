@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 2.34.976 on 2022-11-09 21:48:15.
+// Generated using typescript-generator version 2.34.976 on 2023-01-11 22:53:55.
 
 export interface HistoricalAddressBalance {
     snapshots: { [index: string]: number };
@@ -56,6 +56,36 @@ export interface HttpClient {
     request<R>(requestConfig: { method: string; url: string; queryParams?: any; data?: any; copyFn?: (data: R) => R; }): RestResponse<R>;
 }
 
+export class AsynchronousDispatcherClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
+     */
+    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP POST /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
+     */
+    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
+        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
+    }
+
+    /**
+     * HTTP DELETE /{job-id}
+     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
+     */
+    remove(jobId: string): RestResponse<void> {
+        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
+    }
+}
+
 export class ConfigurationResourceClient {
 
     constructor(protected httpClient: HttpClient) {
@@ -67,6 +97,28 @@ export class ConfigurationResourceClient {
      */
     getConfiguration(): RestResponse<Configuration> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`public/api/configuration` });
+    }
+}
+
+export class AddressBalanceResourceClient {
+
+    constructor(protected httpClient: HttpClient) {
+    }
+
+    /**
+     * HTTP GET /api/address/balance/{address}
+     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
+     */
+    getAddressBalance(address: string): RestResponse<TokenBalance[]> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
+    }
+
+    /**
+     * HTTP GET /api/address/balance/{address}/balance/history
+     * Java method: ch.grignola.web.AddressBalanceResource.getHistoricalAddressBalance
+     */
+    getHistoricalAddressBalance(address: string): RestResponse<HistoricalAddressBalance> {
+        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}/balance/history` });
     }
 }
 
@@ -113,58 +165,6 @@ export class UserCollectionResourceClient {
      */
     getHistoricalCollectionBalance(collectionId: number): RestResponse<HistoricalAddressBalance> {
         return this.httpClient.request({ method: "GET", url: uriEncoding`api/collection/${collectionId}/balance/history` });
-    }
-}
-
-export class AddressBalanceResourceClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /api/address/balance/{address}
-     * Java method: ch.grignola.web.AddressBalanceResource.getAddressBalance
-     */
-    getAddressBalance(address: string): RestResponse<TokenBalance[]> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}` });
-    }
-
-    /**
-     * HTTP GET /api/address/balance/{address}/balance/history
-     * Java method: ch.grignola.web.AddressBalanceResource.getHistoricalAddressBalance
-     */
-    getHistoricalAddressBalance(address: string): RestResponse<HistoricalAddressBalance> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`api/address/balance/${address}/balance/history` });
-    }
-}
-
-export class AsynchronousDispatcherClient {
-
-    constructor(protected httpClient: HttpClient) {
-    }
-
-    /**
-     * HTTP GET /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.get
-     */
-    get(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "GET", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP POST /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.readAndRemove
-     */
-    readAndRemove(jobId: string, queryParams?: { wait?: number; }): RestResponse<any> {
-        return this.httpClient.request({ method: "POST", url: uriEncoding`${jobId}`, queryParams: queryParams });
-    }
-
-    /**
-     * HTTP DELETE /{job-id}
-     * Java method: org.jboss.resteasy.core.AsynchronousDispatcher.remove
-     */
-    remove(jobId: string): RestResponse<void> {
-        return this.httpClient.request({ method: "DELETE", url: uriEncoding`${jobId}` });
     }
 }
 
